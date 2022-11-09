@@ -60,7 +60,7 @@ export const BankDetails = (props) => {
   };
 
   useEffect(() => {
-   getAllBankDetailsByID();
+   if(recordForEdit) getAllBankDetailsByID();
   }, [recordForEdit]);
 
   const getAllBankDetailsByID = async () => {
