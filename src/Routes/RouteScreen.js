@@ -32,7 +32,7 @@ export const RouteScreen = () => {
   return (
     <div className="appcontainer">
       <Routes>
-        <Route path="/crm-frontend" exact element={<Home />} />
+        <Route path="/crmfrontend-glutape" exact element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
