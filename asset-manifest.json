@@ -1,15 +1,15 @@
 {
-  "main.css": "/crm-frontend/static/css/main.55e789a5.chunk.css",
-  "main.js": "/crm-frontend/static/js/main.5cc60048.chunk.js",
-  "main.js.map": "/crm-frontend/static/js/main.5cc60048.chunk.js.map",
-  "runtime~main.js": "/crm-frontend/static/js/runtime~main.c21cafe3.js",
-  "runtime~main.js.map": "/crm-frontend/static/js/runtime~main.c21cafe3.js.map",
-  "static/css/2.d208c741.chunk.css": "/crm-frontend/static/css/2.d208c741.chunk.css",
-  "static/js/2.d1bef481.chunk.js": "/crm-frontend/static/js/2.d1bef481.chunk.js",
-  "static/js/2.d1bef481.chunk.js.map": "/crm-frontend/static/js/2.d1bef481.chunk.js.map",
-  "index.html": "/crm-frontend/index.html",
-  "precache-manifest.f72ef767b8a2f9d35320fa3633b0a127.js": "/crm-frontend/precache-manifest.f72ef767b8a2f9d35320fa3633b0a127.js",
-  "service-worker.js": "/crm-frontend/service-worker.js",
-  "static/css/2.d208c741.chunk.css.map": "/crm-frontend/static/css/2.d208c741.chunk.css.map",
-  "static/css/main.55e789a5.chunk.css.map": "/crm-frontend/static/css/main.55e789a5.chunk.css.map"
+  "main.css": "/crmfrontend-glutape/static/css/main.55e789a5.chunk.css",
+  "main.js": "/crmfrontend-glutape/static/js/main.94fb04c5.chunk.js",
+  "main.js.map": "/crmfrontend-glutape/static/js/main.94fb04c5.chunk.js.map",
+  "runtime~main.js": "/crmfrontend-glutape/static/js/runtime~main.bb2441e5.js",
+  "runtime~main.js.map": "/crmfrontend-glutape/static/js/runtime~main.bb2441e5.js.map",
+  "static/css/2.d208c741.chunk.css": "/crmfrontend-glutape/static/css/2.d208c741.chunk.css",
+  "static/js/2.d1bef481.chunk.js": "/crmfrontend-glutape/static/js/2.d1bef481.chunk.js",
+  "static/js/2.d1bef481.chunk.js.map": "/crmfrontend-glutape/static/js/2.d1bef481.chunk.js.map",
+  "index.html": "/crmfrontend-glutape/index.html",
+  "precache-manifest.faeb3503f26d880870ad55aa27ceddec.js": "/crmfrontend-glutape/precache-manifest.faeb3503f26d880870ad55aa27ceddec.js",
+  "service-worker.js": "/crmfrontend-glutape/service-worker.js",
+  "static/css/2.d208c741.chunk.css.map": "/crmfrontend-glutape/static/css/2.d208c741.chunk.css.map",
+  "static/css/main.55e789a5.chunk.css.map": "/crmfrontend-glutape/static/css/main.55e789a5.chunk.css.map"
 }
