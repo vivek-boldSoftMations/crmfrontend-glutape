@@ -18,7 +18,7 @@ import { useFormik } from "formik";
 import CustomerServices from "../../../services/CustomerService";
 import { useSelector } from "react-redux";
 export const CreateContactDetails = (props) => {
-  const { setOpenPopup, getAllBankDetailsByID } = props;
+  const { setOpenPopup,getAllContactDetailsByID } = props;
   const [open, setOpen] = useState(false);
   const [designation, setDesignation] = useState("");
   const [phone, setPhone] = useState("");
@@ -77,6 +77,7 @@ export const CreateContactDetails = (props) => {
         setMessage(res.data.message);
         setOpenPopup(false);
         setOpen(false);
+        getAllContactDetailsByID()
       } catch (error) {
         console.log("error", error);
         setOpen(false);

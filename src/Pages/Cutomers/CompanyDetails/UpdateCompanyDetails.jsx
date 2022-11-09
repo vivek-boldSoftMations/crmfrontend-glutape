@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { getCompanyName } from "../../../Redux/Action/Action";
 
 export const UpdateCompanyDetails = (props) => {
-  const { setOpenPopup, getAllCompanyDetails, recordForEdit } = props;
+  const { setOpenPopup, getAllContactDetailsByID, recordForEdit } = props;
   const [open, setOpen] = useState(false);
   const [typeData, setTypeData] = useState("");
   const [category, setCategory] = useState("");
@@ -80,7 +80,7 @@ export const UpdateCompanyDetails = (props) => {
       await CustomerServices.updateCompanyData(recordForEdit, req);
       setOpenPopup(false);
       setOpen(false);
-      getAllCompanyDetails();
+      getAllContactDetailsByID();
     } catch (error) {
       console.log("createing company detail error", error);
       setOpen(false);

@@ -213,7 +213,7 @@ export const ContactDetails = (props) => {
         openPopup={openPopup2}
         setOpenPopup={setOpenPopup2}
       >
-        <CreateContactDetails setOpenPopup={setOpenPopup2} />
+        <CreateContactDetails getAllContactDetailsByID={getAllContactDetailsByID} setOpenPopup={setOpenPopup2} />
       </Popup>
       <Popup
         title={"Update Contact Details"}
