@@ -226,7 +226,7 @@ export const SecurityChequesDetails = (props) => {
         setOpenPopup={setOpenPopup}
       >
         <UpdateSecurityChequesDetails
-          IDForEdit={IDForEdit || null}
+          IDForEdit={IDForEdit}
           getSecurityChequeDetailsByID={getSecurityChequeDetailsByID}
           setOpenPopup={setOpenPopup}
         />
