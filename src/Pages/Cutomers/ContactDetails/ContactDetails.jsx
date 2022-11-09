@@ -18,8 +18,9 @@ import {
 import { tableCellClasses } from "@mui/material/TableCell";
 
 import { Popup } from "./../../../Components/Popup";
-import { CreateContactDetails } from "./CreateContactDetails";
-import { UpdateContactDetails } from "./UpdateContactDetails";
+import { CreateContactDetails } from './CreateContactDetails';
+import { UpdateContactDetails } from './UpdateContactDetails';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
