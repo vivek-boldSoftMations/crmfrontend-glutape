@@ -20,8 +20,8 @@ export const UpdateContactDetails = (props) => {
   const [open, setOpen] = useState(false);
   const [designation, setDesignation] = useState("");
   const [inputValue, setInputValue] = useState([]);
-  const [phone, setPhone] = useState("");
-  const [phone2, setPhone2] = useState("");
+  const [phone, setPhone] = useState();
+  const [phone2, setPhone2] = useState();
 
   const handlePhoneChange = (value) => {
     if (value) {
@@ -48,7 +48,6 @@ export const UpdateContactDetails = (props) => {
     try {
       setOpen(true);
       const response = await CustomerServices.getContactDataById(IDForEdit);
-      console.log("response update contact", response);
       setInputValue(response.data);
       setPhone({ phone: response.data.contact });
       setPhone2({ phone2: response.data.alternate_contact });

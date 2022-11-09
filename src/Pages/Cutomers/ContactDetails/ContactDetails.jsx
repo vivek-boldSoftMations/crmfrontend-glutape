@@ -159,7 +159,7 @@ export const ContactDetails = (props) => {
             <TableBody>
               {contactData.map((row, i) => {
                 return (
-                  <StyledTableRow>
+                  <StyledTableRow key={i}>
                     <StyledTableCell align="center">{row.name}</StyledTableCell>
                     <StyledTableCell align="center">
                       {row.company}

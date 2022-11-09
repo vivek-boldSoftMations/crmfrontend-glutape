@@ -21,10 +21,9 @@ export const CreateContactDetails = (props) => {
   const { setOpenPopup,getAllContactDetailsByID } = props;
   const [open, setOpen] = useState(false);
   const [designation, setDesignation] = useState("");
-  const [phone, setPhone] = useState("");
-  const [phone2, setPhone2] = useState("");
+  const [phone, setPhone] = useState();
+  const [phone2, setPhone2] = useState();
   const [inputValue, setInputValue] = useState([]);
-  const [message, setMessage] = useState("");
   const data = useSelector((state) => state.auth);
 
   const handlePhoneChange = (value) => {
@@ -74,7 +73,7 @@ export const CreateContactDetails = (props) => {
         };
         setOpen(true);
         const res = await CustomerServices.createContactData(req);
-        setMessage(res.data.message);
+     
         setOpenPopup(false);
         setOpen(false);
         getAllContactDetailsByID()
@@ -126,9 +125,7 @@ export const CreateContactDetails = (props) => {
                 <MenuItem value={"quality"}>Quality</MenuItem>
                 <MenuItem value={"stores"}>Stores</MenuItem>
               </Select>
-              {/* <FormHelperText>
-                Applicable Only For Distribution Customer
-              </FormHelperText> */}
+      
             </FormControl>
           </Grid>
 
@@ -141,7 +138,7 @@ export const CreateContactDetails = (props) => {
               label="Phone Number"
               data-cy="user-phone"
               defaultCountry={"in"}
-              value={phone}
+              // value={phone}
               onChange={handlePhoneChange}
             />
           </Grid>
@@ -154,7 +151,7 @@ export const CreateContactDetails = (props) => {
               label="Phone Number"
               data-cy="user-phone"
               defaultCountry={"in"}
-              value={phone2}
+              // value={phone2}
               onChange={handlePhoneChange2}
             />
           </Grid>
