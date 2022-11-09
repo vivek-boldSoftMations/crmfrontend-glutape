@@ -173,7 +173,7 @@ export const CreateAllCompanyDetails = (props) => {
         <WareHouseDetails wareHousedata={wareHousedata}  open={open} getWareHouseDetailsByID={getWareHouseDetailsByID} />
       </TabPanel>
       <TabPanel value={value} index={4} dir={theme.direction}>
-        <SecurityChequesDetails securityChequedata={wareHousedata}  open={open} getSecurityChequeDetailsByID={getSecurityChequeDetailsByID} />
+        <SecurityChequesDetails securityChequedata={securityChequedata}  open={open} getSecurityChequeDetailsByID={getSecurityChequeDetailsByID} />
       </TabPanel>
     </div>
   );
