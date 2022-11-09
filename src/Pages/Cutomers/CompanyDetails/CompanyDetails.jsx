@@ -48,7 +48,7 @@ export const CompanyDetails = () => {
   const errRef = useRef();
   const [errMsg, setErrMsg] = useState("");
   const [companyData, setCompanyData] = useState([]);
-  const [recordForEdit, setRecordForEdit] = useState(null);
+  const [recordForEdit, setRecordForEdit] = useState();
 
   useEffect(() => {
     getAllCompanyDetails();

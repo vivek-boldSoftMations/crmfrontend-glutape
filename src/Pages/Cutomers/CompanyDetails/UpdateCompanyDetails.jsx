@@ -22,7 +22,6 @@ import { getCompanyName } from "../../../Redux/Action/Action";
 
 export const UpdateCompanyDetails = (props) => {
   const { setOpenPopup, getAllCompanyDetails, recordForEdit } = props;
-  console.log("recordForEdit :>> ", recordForEdit);
   const [open, setOpen] = useState(false);
   const [typeData, setTypeData] = useState("");
   const [category, setCategory] = useState("");
