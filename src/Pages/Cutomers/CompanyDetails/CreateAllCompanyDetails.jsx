@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { BankDetails } from "../BankDetails/BankDetails";
 
 import {
-  Backdrop,
   Box,
-  CircularProgress,
   useTheme,
   Tab,
   Tabs,
@@ -47,7 +45,6 @@ function a11yProps(index) {
 export const CreateAllCompanyDetails = (props) => {
   const { setOpenPopup, getAllCompanyDetails, recordForEdit } = props;
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
 
   const handleChangeTab = (event, newValue) => {
@@ -56,14 +53,6 @@ export const CreateAllCompanyDetails = (props) => {
 
   return (
     <div>
-      <div>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      </div>
       <AppBar position="static">
         <Tabs
           value={value}
