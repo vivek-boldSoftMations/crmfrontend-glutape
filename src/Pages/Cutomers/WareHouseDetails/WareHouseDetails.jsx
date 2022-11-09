@@ -11,7 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
+
   TableCell,
   Button,
 } from "@mui/material";
@@ -19,7 +19,7 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { Popup } from "./../../../Components/Popup";
 import { CreateWareHouseDetails } from "./CreateWareHouseDetails";
 import { UpdateWareHouseDetails } from "./UpdateWareHouseDetails";
-import CustomerServices from "../../../services/CustomerService";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,11 +42,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const WareHouseDetails = (props) => {
-  const { recordForEdit } = props;
+  const { getWareHouseDetailsByID,wareHousedata,open } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+ 
   const [IDForEdit, setIDForEdit] = useState();
 
   // const getResetData = () => {
@@ -54,22 +53,7 @@ export const WareHouseDetails = (props) => {
   //   // getUnits();
   // };
 
-  useEffect(() => {
-    getWareHouseDetailsByID();
-  }, []);
 
-  const getWareHouseDetailsByID = async () => {
-    try {
-      setOpen(true);
-      const response = await CustomerServices.getCompanyDataById(recordForEdit);
-      console.log("response watehouse :>> ", response);
-      setData(response.data.warehouse);
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-      console.log("err", err);
-    }
-  };
 
   const openInPopup = (item) => {
     setIDForEdit(item);
@@ -172,7 +156,7 @@ export const WareHouseDetails = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, i) => {
+              {wareHousedata.map((row, i) => {
                 return (
                   <StyledTableRow>
                     <StyledTableCell align="center">

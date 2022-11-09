@@ -11,7 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
+
   TableCell,
   Button,
 } from "@mui/material";
@@ -20,7 +20,7 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { Popup } from "./../../../Components/Popup";
 import { CreateContactDetails } from "./CreateContactDetails";
 import { UpdateContactDetails } from "./UpdateContactDetails";
-import CustomerServices from "../../../services/CustomerService";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,11 +43,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const ContactDetails = (props) => {
-  const { recordForEdit } = props;
+  const { contactData,getAllContactDetailsByID,open } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState([]);
   const [IDForEdit, setIDForEdit] = useState();
 
   // const getResetData = () => {
@@ -60,23 +58,7 @@ export const ContactDetails = (props) => {
     setOpenPopup(true);
   };
 
-  useEffect(() => {
-    getAllContactDetailsByID();
-  }, []);
 
-  const getAllContactDetailsByID = async () => {
-    try {
-      setOpen(true);
-      const response = await CustomerServices.getCompanyDataById(recordForEdit);
-      console.log("response", response);
-      setInputValue(response.data.contacts);
-
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-      console.log("company data by id error", err);
-    }
-  };
 
   return (
     <>
@@ -175,7 +157,7 @@ export const ContactDetails = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {inputValue.map((row, i) => {
+              {contactData.map((row, i) => {
                 return (
                   <StyledTableRow>
                     <StyledTableCell align="center">{row.name}</StyledTableCell>

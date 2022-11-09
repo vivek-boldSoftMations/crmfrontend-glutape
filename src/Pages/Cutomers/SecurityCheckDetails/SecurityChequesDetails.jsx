@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   TableCell,
   Button,
 } from "@mui/material";
@@ -19,7 +18,6 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { Popup } from "../../../Components/Popup";
 import { CreateSecurityChequesDetails } from "./CreateSecurityChequesDetails";
 import { UpdateSecurityChequesDetails } from "./UpdateSecurityChequesDetails";
-import CustomerServices from "../../../services/CustomerService";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,11 +40,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const SecurityChequesDetails = (props) => {
-  const { recordForEdit } = props;
+  const { securityChequedata,getSecurityChequeDetailsByID,open } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
   const [IDForEdit, setIDForEdit] = useState();
 
   // const [recordForEdit, setRecordForEdit] = useState(null);
@@ -56,22 +52,7 @@ export const SecurityChequesDetails = (props) => {
   //   // getUnits();
   // };
 
-  useEffect(() => {
-    getSecurityChequeDetailsByID();
-  }, []);
 
-  const getSecurityChequeDetailsByID = async () => {
-    try {
-      setOpen(true);
-      const response = await CustomerServices.getCompanyDataById(recordForEdit);
-      console.log("response security cheque :>> ", response);
-      setData(response.data.security_cheque);
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-      console.log("err", err);
-    }
-  };
 
   const openInPopup = (item) => {
     setIDForEdit(item);
@@ -175,7 +156,7 @@ export const SecurityChequesDetails = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, i) => {
+              {securityChequedata.map((row, i) => {
                 return (
                   <StyledTableRow>
                     <StyledTableCell align="center">

@@ -11,11 +11,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import PropTypes from "prop-types";
-// import { ContactDetails } from "../ContactDetails/ContactDetails";
-// import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
+import { ContactDetails } from "../ContactDetails/ContactDetails";
+import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
 import { UpdateCompanyDetails } from "./UpdateCompanyDetails";
 import CustomerServices from "../../../services/CustomerService";
-// import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
+import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -51,7 +51,10 @@ export const CreateAllCompanyDetails = (props) => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const [bankData, setBankData] = useState([]);
-
+  const [contactData, setContactData] = useState([]);
+  const [wareHousedata, setWareHouseData] = useState([]);
+  const [securityChequedata, setSecurityChequeData] = useState([]);
+// Bank Api
   useEffect(() => {
     if(recordForEdit) getAllBankDetailsByID();
    }, [recordForEdit]);
@@ -60,7 +63,7 @@ export const CreateAllCompanyDetails = (props) => {
      try {
        setOpen(true);
        const response = await CustomerServices.getCompanyDataById(recordForEdit);
-       console.log("response", response);
+ 
  
        setBankData(response.data.bank);
        setOpen(false);
@@ -72,6 +75,58 @@ export const CreateAllCompanyDetails = (props) => {
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
+  };
+
+  // Contact api
+  useEffect(() => {
+    if(recordForEdit) getAllContactDetailsByID();
+  }, [recordForEdit]);
+
+  const getAllContactDetailsByID = async () => {
+    try {
+      setOpen(true);
+      const response = await CustomerServices.getCompanyDataById(recordForEdit);
+
+      setContactData(response.data.contacts);
+
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      console.log("company data by id error", err);
+    }
+  };
+
+  useEffect(() => {
+    if(recordForEdit) getWareHouseDetailsByID();
+  }, [recordForEdit]);
+
+  const getWareHouseDetailsByID = async () => {
+    try {
+      setOpen(true);
+      const response = await CustomerServices.getCompanyDataById(recordForEdit);
+
+      setWareHouseData(response.data.warehouse);
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      console.log("err", err);
+    }
+  };
+  
+  useEffect(() => {
+    if(recordForEdit)  getSecurityChequeDetailsByID();
+  }, [recordForEdit]);
+
+  const getSecurityChequeDetailsByID = async () => {
+    try {
+      setOpen(true);
+      const response = await CustomerServices.getCompanyDataById(recordForEdit);
+      setSecurityChequeData(response.data.security_cheque);
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      console.log("err", err);
+    }
   };
 
   return (
@@ -111,15 +166,15 @@ export const CreateAllCompanyDetails = (props) => {
       <TabPanel value={value} index={1} dir={theme.direction}>
         <BankDetails bankData={bankData}  open={open} getAllBankDetailsByID={getAllBankDetailsByID}/>
       </TabPanel>
-      {/* <TabPanel value={value} index={2} dir={theme.direction}>
-        <ContactDetails recordForEdit={recordForEdit} />
+      <TabPanel value={value} index={2} dir={theme.direction}>
+        <ContactDetails contactData={contactData}  open={open} getAllContactDetailsByID={getAllContactDetailsByID} />
       </TabPanel>
       <TabPanel value={value} index={3} dir={theme.direction}>
-        <WareHouseDetails recordForEdit={recordForEdit} />
+        <WareHouseDetails wareHousedata={wareHousedata}  open={open} getWareHouseDetailsByID={getWareHouseDetailsByID} />
       </TabPanel>
       <TabPanel value={value} index={4} dir={theme.direction}>
-        <SecurityChequesDetails recordForEdit={recordForEdit} />
-      </TabPanel> */}
+        <SecurityChequesDetails securityChequedata={wareHousedata}  open={open} getSecurityChequeDetailsByID={getSecurityChequeDetailsByID} />
+      </TabPanel>
     </div>
   );
 };
