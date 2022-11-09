@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-// import { BankDetails } from "../BankDetails/BankDetails";
+import React, { useState,useEffect } from "react";
+import { BankDetails } from "../BankDetails/BankDetails";
 
 import {
   Box,
@@ -7,11 +7,14 @@ import {
   Tab,
   Tabs,
   AppBar,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import PropTypes from "prop-types";
 // import { ContactDetails } from "../ContactDetails/ContactDetails";
 // import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
 import { UpdateCompanyDetails } from "./UpdateCompanyDetails";
+import CustomerServices from "../../../services/CustomerService";
 // import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,9 +46,29 @@ function a11yProps(index) {
 }
 
 export const CreateAllCompanyDetails = (props) => {
+  const [open, setOpen] = useState(false);
   const { setOpenPopup, getAllCompanyDetails, recordForEdit } = props;
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const [bankData, setBankData] = useState([]);
+
+  useEffect(() => {
+    if(recordForEdit) getAllBankDetailsByID();
+   }, [recordForEdit]);
+ 
+   const getAllBankDetailsByID = async () => {
+     try {
+       setOpen(true);
+       const response = await CustomerServices.getCompanyDataById(recordForEdit);
+       console.log("response", response);
+ 
+       setBankData(response.data.bank);
+       setOpen(false);
+     } catch (err) {
+       setOpen(false);
+       console.log("company data by id error", err);
+     }
+   };
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
@@ -53,6 +76,14 @@ export const CreateAllCompanyDetails = (props) => {
 
   return (
     <div>
+          <div>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -77,9 +108,9 @@ export const CreateAllCompanyDetails = (props) => {
           recordForEdit={recordForEdit}
         />
       </TabPanel>
-      {/* <TabPanel value={value} index={1} dir={theme.direction}>
-        <BankDetails recordForEdit={recordForEdit} />
-      </TabPanel> */}
+      <TabPanel value={value} index={1} dir={theme.direction}>
+        <BankDetails bankData={bankData}  open={open} getAllBankDetailsByID={getAllBankDetailsByID}/>
+      </TabPanel>
       {/* <TabPanel value={value} index={2} dir={theme.direction}>
         <ContactDetails recordForEdit={recordForEdit} />
       </TabPanel>

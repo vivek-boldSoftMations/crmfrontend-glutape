@@ -42,11 +42,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const BankDetails = (props) => {
-  const { recordForEdit } = props;
+  const { bankData,open,getAllBankDetailsByID } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [bankData, setBankData] = useState([]);
   const [idForEdit, setIDForEdit] = useState();
 
   // const getResetData = () => {
@@ -59,23 +57,7 @@ export const BankDetails = (props) => {
     setOpenPopup(true);
   };
 
-  useEffect(() => {
-   if(recordForEdit) getAllBankDetailsByID();
-  }, [recordForEdit]);
 
-  const getAllBankDetailsByID = async () => {
-    try {
-      setOpen(true);
-      const response = await CustomerServices.getCompanyDataById(recordForEdit);
-      console.log("response", response);
-
-      setBankData(response.data.bank);
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-      console.log("company data by id error", err);
-    }
-  };
   console.log("bankData :>> ", bankData);
   return (
     <>
