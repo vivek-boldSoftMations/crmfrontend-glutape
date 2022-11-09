@@ -27,8 +27,6 @@ export const UpdateCompanyDetails = (props) => {
   const [category, setCategory] = useState("");
   const [inputValue, setInputValue] = useState([]);
   const [businessType, setBusinessType] = useState("");
-  const errRef = useRef();
-  const [errMsg, setErrMsg] = useState("");
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setTypeData(event.target.value);

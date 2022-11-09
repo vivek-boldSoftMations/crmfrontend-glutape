@@ -47,7 +47,7 @@ export const SecurityChequesDetails = (props) => {
   const [openPopup2, setOpenPopup2] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [IDForEdit, setIDForEdit] = useState(null);
+  const [IDForEdit, setIDForEdit] = useState();
 
   // const [recordForEdit, setRecordForEdit] = useState(null);
 

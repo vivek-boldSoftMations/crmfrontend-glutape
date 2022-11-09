@@ -47,7 +47,7 @@ export const BankDetails = (props) => {
   const [openPopup2, setOpenPopup2] = useState(false);
   const [open, setOpen] = useState(false);
   const [bankData, setBankData] = useState([]);
-  const [idForEdit, setIDForEdit] = useState(null);
+  const [idForEdit, setIDForEdit] = useState();
 
   // const getResetData = () => {
   //   setSearchQuery("");

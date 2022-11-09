@@ -48,7 +48,7 @@ export const ContactDetails = (props) => {
   const [openPopup2, setOpenPopup2] = useState(false);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState([]);
-  const [IDForEdit, setIDForEdit] = useState(null);
+  const [IDForEdit, setIDForEdit] = useState();
 
   // const getResetData = () => {
   //   setSearchQuery("");
