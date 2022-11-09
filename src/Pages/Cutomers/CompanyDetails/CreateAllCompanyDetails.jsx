@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 // import { ContactDetails } from "../ContactDetails/ContactDetails";
-import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
+// import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
 import { UpdateCompanyDetails } from "./UpdateCompanyDetails";
 import CustomerServices from "../../../services/CustomerService";
 import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
@@ -169,9 +169,9 @@ export const CreateAllCompanyDetails = (props) => {
       {/* <TabPanel value={value} index={2} dir={theme.direction}>
         <ContactDetails contactData={contactData}  open={open} getAllContactDetailsByID={getAllContactDetailsByID} />
       </TabPanel> */}
-      <TabPanel value={value} index={3} dir={theme.direction}>
+      {/* <TabPanel value={value} index={3} dir={theme.direction}>
         <WareHouseDetails wareHousedata={wareHousedata}  open={open} getWareHouseDetailsByID={getWareHouseDetailsByID} />
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={4} dir={theme.direction}>
         <SecurityChequesDetails securityChequedata={securityChequedata}  open={open} getSecurityChequeDetailsByID={getSecurityChequeDetailsByID} />
       </TabPanel>
