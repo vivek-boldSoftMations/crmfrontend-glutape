@@ -8,7 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter basename="/crm-frontend">
+    <BrowserRouter basename="/crmfrontend-glutape">
       <CssBaseline />
       <Header />
       <div className="appcontainer">
