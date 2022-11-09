@@ -11,10 +11,10 @@ import {
   AppBar,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { ContactDetails } from "../ContactDetails/ContactDetails";
-import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
+// import { ContactDetails } from "../ContactDetails/ContactDetails";
+// import { WareHouseDetails } from "../WareHouseDetails/WareHouseDetails";
 import { UpdateCompanyDetails } from "./UpdateCompanyDetails";
-import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
+// import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -91,7 +91,7 @@ export const CreateAllCompanyDetails = (props) => {
       <TabPanel value={value} index={1} dir={theme.direction}>
         <BankDetails recordForEdit={recordForEdit} />
       </TabPanel>
-      <TabPanel value={value} index={2} dir={theme.direction}>
+      {/* <TabPanel value={value} index={2} dir={theme.direction}>
         <ContactDetails recordForEdit={recordForEdit} />
       </TabPanel>
       <TabPanel value={value} index={3} dir={theme.direction}>
@@ -99,7 +99,7 @@ export const CreateAllCompanyDetails = (props) => {
       </TabPanel>
       <TabPanel value={value} index={4} dir={theme.direction}>
         <SecurityChequesDetails recordForEdit={recordForEdit} />
-      </TabPanel>
+      </TabPanel> */}
     </div>
   );
 };
