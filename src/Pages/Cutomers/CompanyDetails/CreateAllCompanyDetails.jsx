@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BankDetails } from "../BankDetails/BankDetails";
+// import { BankDetails } from "../BankDetails/BankDetails";
 
 import {
   Box,
@@ -77,9 +77,9 @@ export const CreateAllCompanyDetails = (props) => {
           recordForEdit={recordForEdit}
         />
       </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
+      {/* <TabPanel value={value} index={1} dir={theme.direction}>
         <BankDetails recordForEdit={recordForEdit} />
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={2} dir={theme.direction}>
         <ContactDetails recordForEdit={recordForEdit} />
       </TabPanel>

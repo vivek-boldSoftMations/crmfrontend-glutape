@@ -246,7 +246,7 @@ export const CompanyDetails = () => {
         <CreateAllCompanyDetails
           setOpenPopup={setOpenPopup}
           getAllCompanyDetails={getAllCompanyDetails}
-          recordForEdit={recordForEdit || null}
+          recordForEdit={recordForEdit}
         />
       </Popup>
     </>
