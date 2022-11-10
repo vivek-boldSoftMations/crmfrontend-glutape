@@ -28,7 +28,7 @@ import LeadServices from "./../../services/LeadService";
 import { useDispatch } from "react-redux";
 import { getProfileUser } from "./../../Redux/Action/Action";
 import ProductService from "../../services/ProductService";
-import MuiPhoneNumber from "material-ui-phone-number";
+import PhoneInput from "react-phone-input-2";
 function getSteps() {
   return [
     <b style={{ color: "purple" }}>'Enter Basic Details'</b>,
@@ -101,16 +101,12 @@ export const CreateLeads = (props) => {
   const [users, setUsers] = useState("");
   const [personName, setPersonName] = useState([]);
 
-  const handlePhoneChange = (value) => {
-    if (value) {
-      setPhone({ phone: value });
-    }
+  const handlePhoneChange = (newPhone) => {
+    setPhone(newPhone);
   };
 
-  const handlePhoneChange2 = (value) => {
-    if (value) {
-      setPhone2({ phone2: value });
-    }
+  const handlePhoneChange2 = (newPhone) => {
+    setPhone2(newPhone);
   };
   const handleChange = (event) => {
     const {
@@ -307,7 +303,12 @@ export const CreateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <MuiPhoneNumber
+                  <PhoneInput
+                      country={"in"}
+                      // value={phone ? phone.phone : ""}
+                      onChange={handlePhoneChange}
+                    />
+                  {/* <MuiPhoneNumber
               name="phone"
               size="small"
               fullWidth
@@ -317,10 +318,15 @@ export const CreateLeads = (props) => {
               defaultCountry={"in"}
               // value={phone}
               onChange={handlePhoneChange}
-            />
+            /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <MuiPhoneNumber
+                  <PhoneInput
+                      country={"in"}
+                      value={phone2 ? phone2.phone2 : ""}
+                      onChange={handlePhoneChange2}
+                    />
+                  {/* <MuiPhoneNumber
               size="small"
               fullWidth
               name="phone2"
@@ -330,7 +336,7 @@ export const CreateLeads = (props) => {
               defaultCountry={"in"}
               // value={phone2}
               onChange={handlePhoneChange2}
-            />
+            /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
