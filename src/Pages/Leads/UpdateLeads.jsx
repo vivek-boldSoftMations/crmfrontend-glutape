@@ -125,7 +125,8 @@ export const UpdateLeads = (props) => {
   const [personName, setPersonName] = useState([]);
   const [phone, setPhone] = useState("");
   const [phone2, setPhone2] = useState("");
-
+  let contact1;
+  let contact2;
   const handlePhoneChange = (newPhone) => {
     setPhone(newPhone);
   };
@@ -230,9 +231,8 @@ export const UpdateLeads = (props) => {
       try {
         e.preventDefault();
         setOpen(true);
-        let contact1;
-        let contact2;
-        if (phone2 !== null) {
+   
+        if (phone !== null) {
           const phoneLength = phone.length;
           if (phoneLength === 10) {
             contact1 = phone ? `+91${phone}` : "";
@@ -362,7 +362,7 @@ export const UpdateLeads = (props) => {
                   <Grid item xs={12} sm={6}>
                     <PhoneInput
                       country={"in"}
-                      value={phone ? phone.phone : ""}
+                      value={phone && phone.length === 10  ? `+91${phone}` : phone}
                       onChange={handlePhoneChange}
                     />
                     {/* <MuiTelInput
@@ -391,7 +391,7 @@ export const UpdateLeads = (props) => {
                   <Grid item xs={12} sm={6}>
                     <PhoneInput
                       country={"in"}
-                      value={phone2 ? phone2.phone2 : ""}
+                      value={phone2 && phone2.length === 10  ? `+91${phone2}` : phone2}
                       onChange={handlePhoneChange2}
                     />
                     {/* <MuiPhoneNumber
