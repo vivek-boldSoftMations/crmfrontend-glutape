@@ -32,6 +32,7 @@ import { useSelector } from "react-redux";
 import ProductService from "../../services/ProductService";
 import { ViewAllFollowUp } from "./../FollowUp/ViewAllFollowUp";
 import { ViewAllPotential } from "../Potential/ViewAllPotential";
+import MuiPhoneNumber from "material-ui-phone-number";
 
 function getSteps() {
   return [
@@ -123,7 +124,20 @@ export const UpdateLeads = (props) => {
   const { id } = useParams();
   const desc = useSelector((state) => state.auth);
   const [personName, setPersonName] = useState([]);
+  const [phone, setPhone] = useState();
+  const [phone2, setPhone2] = useState();
 
+  const handlePhoneChange = (value) => {
+    if (value) {
+      setPhone( value );
+    }
+  };
+
+  const handlePhoneChange2 = (value) => {
+    if (value) {
+      setPhone2(value );
+    }
+  };
   const handleChange = (event) => {
     const {
       target: { value },
@@ -194,6 +208,8 @@ export const UpdateLeads = (props) => {
       setBusinesTypes(res.data.business_type);
       setBusinessMismatch(res.data.business_mismatch);
       setPersonName(res.data.description);
+      setPhone(res.data.contact );
+      setPhone2( res.data.alternate_contact );
       setLeads(res.data);
       setOpen(false);
     } catch (error) {
@@ -219,6 +235,20 @@ export const UpdateLeads = (props) => {
       try {
         e.preventDefault();
         setOpen(true);
+        let contact1
+        let contact2
+        if(phone2 !== null){
+      const phoneLength = phone.length
+      if(phoneLength === 10){
+      contact1 = phone ? `+91${phone}` : "";
+      }
+    }
+      if(phone2 !== null){
+      const phone2Length = phone2.length
+      if(phone2Length === 10){
+      contact2 = phone2 ? `+91${phone2}` : "";
+      }
+    }
         const data = {
           name: leads.name,
           alternate_contact_name: leads.altContactName
@@ -226,8 +256,8 @@ export const UpdateLeads = (props) => {
             : "",
           email: leads.email ? leads.email : "",
           alternate_email: leads.alternate_email ? leads.alternate_email : "",
-          contact: leads.contact,
-          alternate_contact: leads.alternate_contact,
+          contact: contact1 ? contact1 : "",
+          alternate_contact:contact2 ? contact2 : "",
           description: descriptionValue,
           business_type: businesTypesValue ? businesTypesValue : "",
           business_mismatch: businessMismatchValue
@@ -249,7 +279,6 @@ export const UpdateLeads = (props) => {
         setOpenPopup(false);
 
         setOpen(false);
-
 
         getleads();
       } catch (error) {
@@ -336,28 +365,29 @@ export const UpdateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      name="contact"
+                    <MuiPhoneNumber
+                      name="phone"
                       size="small"
-                      label="Contact"
+                      fullWidth
                       variant="outlined"
-                      value={leads.contact ? leads.contact : ""}
-                      onChange={handleInputChange}
+                      label="Contact"
+                      data-cy="user-phone"
+                      defaultCountry={"in"}
+                      value={phone ? phone.phone : ""}
+                      onChange={handlePhoneChange}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      name="alternate_contact"
+                    <MuiPhoneNumber
                       size="small"
-                      label="Alternate Contact"
+                      fullWidth
+                      name="phone2"
                       variant="outlined"
-                      value={
-                        leads.alternate_contact ? leads.alternate_contact : ""
-                      }
-                      onChange={handleInputChange}
+                      label="Alternate Contact"
+                      data-cy="user-phone"
+                      defaultCountry={"in"}
+                      value={phone2 ? phone2.phone2 : ""}
+                      onChange={handlePhoneChange2}
                     />
                   </Grid>
 
@@ -483,6 +513,7 @@ export const UpdateLeads = (props) => {
                       variant="outlined"
                       value={assignValue ? assignValue : ""}
                       onChange={(e) => setAssign(e.target.value)}
+             
                     >
                       {assigned.map((option) => (
                         <MenuItem key={option.emp_id} value={option.email}>
@@ -654,10 +685,10 @@ export const UpdateLeads = (props) => {
                     Alt. Email : {leads.alternate_email}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    Contact : {leads.contact}
+                    Contact : {phone}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    Alt. Contact : {leads.alternate_contact}
+                    Alt. Contact : {phone2}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     Busniess Type : {businesTypes}

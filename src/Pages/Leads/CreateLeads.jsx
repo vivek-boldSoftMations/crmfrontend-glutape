@@ -25,12 +25,10 @@ import { CircularProgress } from "@mui/material";
 import { Backdrop } from "@mui/material";
 import "../CommonStyle.css";
 import LeadServices from "./../../services/LeadService";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { getProfileUser } from "./../../Redux/Action/Action";
 import ProductService from "../../services/ProductService";
-
+import MuiPhoneNumber from "material-ui-phone-number";
 function getSteps() {
   return [
     <b style={{ color: "purple" }}>'Enter Basic Details'</b>,
@@ -96,12 +94,24 @@ export const CreateLeads = (props) => {
   const [assign, setAssign] = useState([]);
   const [businesTypes, setBusinesTypes] = useState("");
   const [descriptionMenuData, setDescriptionMenuData] = useState([]);
-
+  const [phone, setPhone] = useState();
+  const [phone2, setPhone2] = useState();
   const dispatch = useDispatch();
 
   const [users, setUsers] = useState("");
   const [personName, setPersonName] = useState([]);
 
+  const handlePhoneChange = (value) => {
+    if (value) {
+      setPhone({ phone: value });
+    }
+  };
+
+  const handlePhoneChange2 = (value) => {
+    if (value) {
+      setPhone2({ phone2: value });
+    }
+  };
   const handleChange = (event) => {
     const {
       target: { value },
@@ -189,8 +199,8 @@ export const CreateLeads = (props) => {
           alternate_contact_name: leads.altContactName,
           email: leads.email,
           alternate_email: leads.altEmail,
-          contact: leads.contact,
-          alternate_contact: leads.altContact,
+          contact: phone.phone,
+          alternate_contact:  phone2.phone2,
           business_type: businesTypes,
           company: leads.companyName,
           gst_number: leads.gstNumber,
@@ -297,27 +307,30 @@ export const CreateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      name="contact"
-                      size="small"
-                      label="Contact"
-                      variant="outlined"
-                      value={leads.contact ? leads.contact : ""}
-                      onChange={handleInputChange}
-                    />
+                  <MuiPhoneNumber
+              name="phone"
+              size="small"
+              fullWidth
+              variant="outlined"
+              label="Contact"
+              data-cy="user-phone"
+              defaultCountry={"in"}
+              // value={phone}
+              onChange={handlePhoneChange}
+            />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      name="altContact"
-                      size="small"
-                      label="Alternate Contact"
-                      variant="outlined"
-                      value={leads.altContact ? leads.altContact : ""}
-                      onChange={handleInputChange}
-                    />
+                  <MuiPhoneNumber
+              size="small"
+              fullWidth
+              name="phone2"
+              variant="outlined"
+              label="Alternate Contact"
+              data-cy="user-phone"
+              defaultCountry={"in"}
+              // value={phone2}
+              onChange={handlePhoneChange2}
+            />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
