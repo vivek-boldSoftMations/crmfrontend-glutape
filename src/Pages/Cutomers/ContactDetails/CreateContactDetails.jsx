@@ -106,7 +106,7 @@ console.log('phone :>> ', phone);
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth size="small">
               <InputLabel id="demo-select-small">Designation</InputLabel>
               <Select
