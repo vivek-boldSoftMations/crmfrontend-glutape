@@ -4,22 +4,15 @@ import {
   Autocomplete,
   Box,
   Button,
-  Checkbox,
   Chip,
-  FormControl,
   Grid,
-  InputLabel,
-  ListItemText,
   MenuItem,
-  OutlinedInput,
   Paper,
-  Select,
   Step,
   StepLabel,
   Stepper,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { Backdrop } from "@mui/material";
@@ -29,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { getProfileUser } from "./../../Redux/Action/Action";
 import ProductService from "../../services/ProductService";
 import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/material.css";
 function getSteps() {
   return [
     <b style={{ color: "purple" }}>'Enter Basic Details'</b>,
@@ -61,29 +55,8 @@ const BusinessTypeData = [
   },
 ];
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 3.5 + ITEM_PADDING_TOP,
-      minWidth: 250,
-    },
-  },
-};
-
-function getStyles(desc, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(desc) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 export const CreateLeads = (props) => {
   const { setOpenPopup, getleads } = props;
-  const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
   const [open, setOpen] = useState(false);
@@ -108,20 +81,7 @@ export const CreateLeads = (props) => {
   const handlePhoneChange2 = (newPhone) => {
     setPhone2(newPhone);
   };
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
 
-  const handleDelete = (data) => {
-    console.log("You clicked the delete icon.", data);
-  };
-  console.log("personName", personName);
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setLeads({ ...leads, [name]: value });
@@ -196,7 +156,7 @@ export const CreateLeads = (props) => {
           email: leads.email,
           alternate_email: leads.altEmail,
           contact: phone.phone,
-          alternate_contact:  phone2.phone2,
+          alternate_contact: phone2.phone2,
           business_type: businesTypes,
           company: leads.companyName,
           gst_number: leads.gstNumber,
@@ -303,40 +263,28 @@ export const CreateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <PhoneInput
+                    <PhoneInput
+                      specialLabel="Contact"
+                      inputStyle={{
+                        backgroundColor: "#F5F5F5",
+                        height: "15px",
+                        minWidth: "500px",
+                      }}
                       country={"in"}
-                      // value={phone ? phone.phone : ""}
                       onChange={handlePhoneChange}
                     />
-                  {/* <MuiPhoneNumber
-              name="phone"
-              size="small"
-              fullWidth
-              variant="outlined"
-              label="Contact"
-              data-cy="user-phone"
-              defaultCountry={"in"}
-              // value={phone}
-              onChange={handlePhoneChange}
-            /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <PhoneInput
+                    <PhoneInput
+                      specialLabel="Alternate Contact"
+                      inputStyle={{
+                        backgroundColor: "#F5F5F5",
+                        height: "15px",
+                        minWidth: "500px",
+                      }}
                       country={"in"}
-                      value={phone2 ? phone2.phone2 : ""}
                       onChange={handlePhoneChange2}
                     />
-                  {/* <MuiPhoneNumber
-              size="small"
-              fullWidth
-              name="phone2"
-              variant="outlined"
-              label="Alternate Contact"
-              data-cy="user-phone"
-              defaultCountry={"in"}
-              // value={phone2}
-              onChange={handlePhoneChange2}
-            /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -388,66 +336,36 @@ export const CreateLeads = (props) => {
                     </TextField>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <FormControl v sx={{ minWidth: 300 }}>
-                      <InputLabel id="demo-multiple-chip-label">
-                        Description
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-chip-label"
-                        id="demo-multiple-chip"
-                        multiple
-                        value={personName}
-                        onChange={handleChange}
-                        input={
-                          <OutlinedInput
-                            id="select-multiple-chip"
-                            label=" Description"
-                            fullWidth
-                            required
-                            sx={{ minHeight: "40px" }}
+                    <Autocomplete
+                      size="small"
+                      value={personName}
+                      onChange={(event, newValue) => {
+                        setPersonName(newValue);
+                      }}
+                      multiple
+                      limitTags={3}
+                      id="multiple-limit-tags"
+                      options={descriptionMenuData.map((option) => option.name)}
+                      freeSolo
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip
+                            variant="outlined"
+                            label={option}
+                            {...getTagProps({ index })}
                           />
-                        }
-                        renderValue={(selected) => (
-                          <Box
-                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
-                          >
-                            {selected.map((value, i) => (
-                              <Chip
-                                size="small"
-                                key={i}
-                                label={value}
-                                color="primary"
-                                deleteIcon={(value) => handleDelete(value)}
-                                // onDelete={handleDelete}
-                              />
-                            ))}
-                          </Box>
-                        )}
-                        MenuProps={MenuProps}
-                      >
-                        {descriptionMenuData.map((desc, i) => (
-                          <MenuItem
-                            key={i}
-                            value={desc.name}
-                            style={getStyles(desc, personName, theme)}
-                          >
-                            <Checkbox
-                              checked={personName.indexOf(desc.name) > -1}
-                            />
-                            <ListItemText primary={desc.name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                        ))
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Description"
+                          placeholder="Description"
+                        />
+                      )}
+                    />
                   </Grid>
                 </Grid>
-                {/* <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2, textAlign: "right" }}
-                >
-                  Submit
-                </Button> */}
               </Box>
             </Box>
           </>
