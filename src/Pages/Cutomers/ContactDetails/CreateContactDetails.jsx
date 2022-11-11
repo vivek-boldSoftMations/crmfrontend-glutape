@@ -10,32 +10,29 @@ import {
   MenuItem,
   Select,
   TextField,
-
 } from "@mui/material";
-import MuiPhoneNumber from "material-ui-phone-number";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import CustomerServices from "../../../services/CustomerService";
 import { useSelector } from "react-redux";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/material.css";
+import MuiPhoneNumber from 'material-ui-phone-number-2'
 export const CreateContactDetails = (props) => {
-  const { setOpenPopup,getAllContactDetailsByID } = props;
+  const { setOpenPopup, getAllContactDetailsByID } = props;
   const [open, setOpen] = useState(false);
   const [designation, setDesignation] = useState("");
-  const [phone, setPhone] = useState();
-  const [phone2, setPhone2] = useState();
+  const [phone, setPhone] = useState('');
+  const [phone2, setPhone2] = useState('');
   const [inputValue, setInputValue] = useState([]);
   const data = useSelector((state) => state.auth);
 
-  const handlePhoneChange = (value) => {
-    if (value) {
-      setPhone({ phone: value });
-    }
+  const handlePhoneChange = (newPhone) => {
+    setPhone(newPhone);
   };
-
-  const handlePhoneChange2 = (value) => {
-    if (value) {
-      setPhone2({ phone2: value });
-    }
+console.log('phone :>> ', phone);
+  const handlePhoneChange2 = (newPhone) => {
+    setPhone2(newPhone);
   };
 
   const handleInputChange = (event) => {
@@ -60,23 +57,26 @@ export const CreateContactDetails = (props) => {
 
     onSubmit: async (values) => {
       try {
+        let contact = phone.length === 12 ? `+${phone}` : phone;
+        let contact2 = phone2.length === 12 ? `+${phone2}` : phone2;
+
         const req = {
           company: data ? data.companyName : "",
           name: inputValue.name,
           designation: designation,
-          contact: phone.phone,
-          alternate_contact: phone2.phone2,
+          contact: phone ? phone : '',
+          alternate_contact: contact2 ? contact2 : '',
           email: values.email,
           alternate_email: values.alternate_email,
-          pan_number: inputValue.pan_no,
+          pan_number: inputValue.pan_no.toUpperCase(),
           aadhaar: inputValue.aadhar_no,
         };
         setOpen(true);
         const res = await CustomerServices.createContactData(req);
-     
+
         setOpenPopup(false);
         setOpen(false);
-        getAllContactDetailsByID()
+        getAllContactDetailsByID();
       } catch (error) {
         console.log("error", error);
         setOpen(false);
@@ -125,34 +125,31 @@ export const CreateContactDetails = (props) => {
                 <MenuItem value={"quality"}>Quality</MenuItem>
                 <MenuItem value={"stores"}>Stores</MenuItem>
               </Select>
-      
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <MuiPhoneNumber
-              name="phone"
-              size="small"
-              fullWidth
-              variant="outlined"
-              label="Phone Number"
-              data-cy="user-phone"
+            <MuiPhoneNumber 
+              label="Contact"
+              inputStyle={{
+                height: "15px",
+                width: "250px",
+              }}
               defaultCountry={"in"}
-              // value={phone}
               onChange={handlePhoneChange}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <MuiPhoneNumber
-              size="small"
-              fullWidth
-              name="phone"
-              variant="outlined"
-              label="Phone Number"
-              data-cy="user-phone"
-              defaultCountry={"in"}
-              // value={phone2}
+            <PhoneInput
+              specialLabel="Alternate Contact"
+              inputStyle={{
+                height: "15px",
+                width: "250px",
+              }}
+              
+              country={"in"}
               onChange={handlePhoneChange2}
+              // onChange={phone => console.log( phone )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
