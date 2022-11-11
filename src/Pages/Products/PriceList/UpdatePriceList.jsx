@@ -47,8 +47,8 @@ export const UpdatePriceList = (props) => {
       setOpen(true);
       const res = await ProductService.getPriceListById(recordForEdit);
       setInputValue(res.data);
-      setChecked(res.data.discontinued)
-      setProductName(res.data.product)
+      setChecked(res.data.discontinued);
+      setProductName(res.data.product);
       setOpen(false);
     } catch (error) {
       console.log("error", error);
@@ -70,10 +70,10 @@ export const UpdatePriceList = (props) => {
       e.preventDefault();
       setOpen(true);
       const req = {
-        product: productName ? productName : '',
+        product: productName ? productName : "",
         price: inputValue.price,
         validity: inputValue.validity,
-        discontinued: checked 
+        discontinued: checked,
       };
       if (recordForEdit) {
         await ProductService.updatePriceList(inputValue.id, req);
@@ -141,7 +141,7 @@ export const UpdatePriceList = (props) => {
                 minWidth: 180,
               }}
               size="small"
-              value={productName ? productName : ''}
+              value={productName ? productName : ""}
               onChange={(e, value) => setProductName(value)}
               name="productName"
               options={product.map((option) => option.name)}
@@ -158,7 +158,7 @@ export const UpdatePriceList = (props) => {
               size="small"
               label="Price"
               variant="outlined"
-              value={inputValue.price ?  inputValue.price : ''}
+              value={inputValue.price ? inputValue.price : ""}
               onChange={handleInputChange}
             />
           </Grid>
@@ -170,7 +170,7 @@ export const UpdatePriceList = (props) => {
               size="small"
               label="Validity"
               variant="outlined"
-              value={inputValue.validity ? inputValue.validity : ''}
+              value={inputValue.validity ? inputValue.validity : ""}
               onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true,
@@ -178,14 +178,17 @@ export const UpdatePriceList = (props) => {
             />
           </Grid>
           <Grid item xs={12}>
-
-          <FormControlLabel
-          control={
-            <Switch checked={checked} onChange={handleCheckedChange} name="Validity" />
-          }
-          label="Gilad Gray"
-        />
-        </Grid>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={checked}
+                  onChange={handleCheckedChange}
+                  name="validity"
+                />
+              }
+              label="Validity"
+            />
+          </Grid>
         </Grid>
         <Button
           fullWidth
