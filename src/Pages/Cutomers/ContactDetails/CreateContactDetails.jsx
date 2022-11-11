@@ -17,7 +17,6 @@ import CustomerServices from "../../../services/CustomerService";
 import { useSelector } from "react-redux";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
-import MuiPhoneNumber from 'material-ui-phone-number-2'
 export const CreateContactDetails = (props) => {
   const { setOpenPopup, getAllContactDetailsByID } = props;
   const [open, setOpen] = useState(false);
@@ -64,7 +63,7 @@ console.log('phone :>> ', phone);
           company: data ? data.companyName : "",
           name: inputValue.name,
           designation: designation,
-          contact: phone ? phone : '',
+          contact: contact ? contact : '',
           alternate_contact: contact2 ? contact2 : '',
           email: values.email,
           alternate_email: values.alternate_email,
@@ -129,13 +128,13 @@ console.log('phone :>> ', phone);
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <MuiPhoneNumber 
-              label="Contact"
+            <PhoneInput 
+              specialLabel="Contact"
               inputStyle={{
                 height: "15px",
                 width: "250px",
               }}
-              defaultCountry={"in"}
+              country={"in"}
               onChange={handlePhoneChange}
             />
           </Grid>
