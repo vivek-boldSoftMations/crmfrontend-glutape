@@ -95,7 +95,7 @@ export const PriceList = () => {
       setOpen(true);
       const response = await ProductService.getAllSearchPriceList(searchQuery);
       if (response) {
-        setPriceListData(response.data);
+        setPriceListData(response.data.results);
       } else {
         getPriceList();
       }
