@@ -16,7 +16,6 @@ export const CreateWareHouseDetails = (props) => {
   const { setOpenPopup, getWareHouseDetailsByID,contactData } = props;
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState([]);
-  const [contact, setContact] = useState([]);
   const [pinCodeData, setPinCodeData] = useState([]);
   const [selectedcontact, setSelectedContact] = useState("");
   const data = useSelector((state) => state.auth);
@@ -25,10 +24,6 @@ export const CreateWareHouseDetails = (props) => {
     const { name, value } = event.target;
     setInputValue({ ...inputValue, [name]: value });
   };
-
-  useEffect(() => {
-    getAllCompanyDetails();
-  }, []);
 
   const validatePinCode = async () => {
     try {

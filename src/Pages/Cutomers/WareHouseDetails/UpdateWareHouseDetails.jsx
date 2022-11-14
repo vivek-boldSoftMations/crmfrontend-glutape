@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Grid,
   TextField,
+  Autocomplete
 } from "@mui/material";
 import CustomerServices from "../../../services/CustomerService";
 import axios from "axios";
@@ -17,6 +18,7 @@ export const UpdateWareHouseDetails = (props) => {
   const [inputValue, setInputValue] = useState([]);
   const data = useSelector((state) => state.auth);
   const [pinCodeData, setPinCodeData] = useState([]);
+  const [selectedcontact, setSelectedContact] = useState("");
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputValue({ ...inputValue, [name]: value });
@@ -52,14 +54,15 @@ export const UpdateWareHouseDetails = (props) => {
       console.log("company data by id error", err);
     }
   };
-
+  
   const UpdateWareHouseDetails = async (e) => {
     try {
+      
       e.preventDefault();
       setOpen(true);
       const req = {
         company: data ? data.companyName : "",
-        contact: inputValue.contact,
+        contact: selectedcontact.name ? selectedcontact.name : inputValue.contact,
         address: inputValue.address,
         pincode: inputValue.pincode,
         state: pinCodeData.State ? pinCodeData.State : inputValue.state,
@@ -92,8 +95,8 @@ export const UpdateWareHouseDetails = (props) => {
         noValidate
         onSubmit={(e) => UpdateWareHouseDetails(e)}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container spacing={2} >
+          <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               onChange={handleInputChange}
@@ -104,7 +107,23 @@ export const UpdateWareHouseDetails = (props) => {
               value={inputValue.contact ? inputValue.contact : ""}
             />
           </Grid>
-
+ 
+          <Grid item xs={12} sm={6}>
+            <Autocomplete
+              fullWidth
+              size="small"
+              id="grouped-demo"
+               value={selectedcontact.name ? selectedcontact.name : inputValue.contact}
+              onChange={(event, value) => setSelectedContact(value)}
+              options={contactData.map((option) => option)}
+              groupBy={(option) => option.designation}
+              getOptionLabel={(option) => option.name}
+              // sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Update Contact" />
+              )}
+            />
+          </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
