@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 export const CreateWareHouseDetails = (props) => {
-  const { setOpenPopup, getWareHouseDetailsByID } = props;
+  const { setOpenPopup, getWareHouseDetailsByID,contactData } = props;
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState([]);
   const [contact, setContact] = useState([]);
@@ -46,18 +46,6 @@ export const CreateWareHouseDetails = (props) => {
     }
   };
 
-  const getAllCompanyDetails = async () => {
-    try {
-      setOpen(true);
-      const response = await CustomerServices.getAllContactData();
-      setContact(response.data.results);
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-    }
-  };
-
-  console.log("selectedcontact :>> ", selectedcontact);
 
   const createWareHouseDetails = async (e) => {
     try {
@@ -104,7 +92,7 @@ export const CreateWareHouseDetails = (props) => {
               size="small"
               id="grouped-demo"
               onChange={(event, value) => setSelectedContact(value)}
-              options={contact.map((option) => option)}
+              options={contactData.map((option) => option)}
               groupBy={(option) => option.designation}
               getOptionLabel={(option) => option.name}
               // sx={{ minWidth: 300 }}

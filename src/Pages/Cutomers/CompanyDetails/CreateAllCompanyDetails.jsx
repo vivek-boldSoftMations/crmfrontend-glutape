@@ -178,6 +178,7 @@ export const CreateAllCompanyDetails = (props) => {
       </TabPanel>
       <TabPanel value={value} index={3} dir={theme.direction}>
         <WareHouseDetails
+        contactData={contactData}
           wareHousedata={wareHousedata}
           open={open}
           getWareHouseDetailsByID={getWareHouseDetailsByID}
