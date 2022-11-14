@@ -54,7 +54,7 @@ export const UpdateWareHouseDetails = (props) => {
       console.log("company data by id error", err);
     }
   };
-  
+
   const UpdateWareHouseDetails = async (e) => {
     try {
       
@@ -99,7 +99,6 @@ export const UpdateWareHouseDetails = (props) => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              onChange={handleInputChange}
               size="small"
               name="contact"
               label="Contact"
@@ -113,7 +112,6 @@ export const UpdateWareHouseDetails = (props) => {
               fullWidth
               size="small"
               id="grouped-demo"
-               value={selectedcontact.name ? selectedcontact.name : inputValue.contact}
               onChange={(event, value) => setSelectedContact(value)}
               options={contactData.map((option) => option)}
               groupBy={(option) => option.designation}
