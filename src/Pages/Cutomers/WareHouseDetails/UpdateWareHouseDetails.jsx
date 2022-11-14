@@ -12,10 +12,9 @@ import CustomerServices from "../../../services/CustomerService";
 import axios from "axios";
 
 export const UpdateWareHouseDetails = (props) => {
-  const { IDForEdit, getWareHouseDetailsByID, setOpenPopup } = props;
+  const { IDForEdit, getWareHouseDetailsByID, setOpenPopup,contactData } = props;
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState([]);
-  // const [contact, setContact] = useState([]);
   const data = useSelector((state) => state.auth);
   const [pinCodeData, setPinCodeData] = useState([]);
   const handleInputChange = (event) => {
@@ -37,21 +36,6 @@ export const UpdateWareHouseDetails = (props) => {
       setOpen(false);
     }
   };
-
-  // useEffect(() => {
-  //   getAllCompanyDetails();
-  // }, []);
-
-  // const getAllCompanyDetails = async () => {
-  //   try {
-  //     setOpen(true);
-  //     const response = await CustomerServices.getAllContactData();
-  //     setContact(response.data.results);
-  //     setOpen(false);
-  //   } catch (err) {
-  //     setOpen(false);
-  //   }
-  // };
 
   useEffect(() => {
     getWareHouseDataByID();
