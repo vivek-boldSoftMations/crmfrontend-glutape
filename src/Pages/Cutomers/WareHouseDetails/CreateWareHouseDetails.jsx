@@ -5,22 +5,19 @@ import {
   Box,
   Button,
   CircularProgress,
-  FormControl,
   Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import CustomerServices from "../../../services/CustomerService";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 export const CreateWareHouseDetails = (props) => {
   const { setOpenPopup, getWareHouseDetailsByID } = props;
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState([]);
   const [contact, setContact] = useState([]);
+  const [pinCodeData, setPinCodeData] = useState([]);
   const [selectedcontact, setSelectedContact] = useState("");
   const data = useSelector((state) => state.auth);
 
@@ -32,6 +29,22 @@ export const CreateWareHouseDetails = (props) => {
   useEffect(() => {
     getAllCompanyDetails();
   }, []);
+
+  const validatePinCode = async () => {
+    try {
+      setOpen(true);
+      const PINCODE = inputValue.pincode;
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${PINCODE}`
+      );
+
+      setPinCodeData(response.data[0].PostOffice[0]);
+      setOpen(false);
+    } catch (error) {
+      console.log("Creating Bank error ", error);
+      setOpen(false);
+    }
+  };
 
   const getAllCompanyDetails = async () => {
     try {
@@ -55,8 +68,8 @@ export const CreateWareHouseDetails = (props) => {
         contact: selectedcontact.name,
         address: inputValue.address,
         pincode: inputValue.pincode,
-        state: inputValue.state,
-        city: inputValue.city,
+        state: pinCodeData.State,
+        city: pinCodeData.District,
       };
       await CustomerServices.createWareHouseData(req);
       setOpenPopup(false);
@@ -100,7 +113,6 @@ export const CreateWareHouseDetails = (props) => {
               )}
             />
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -113,9 +125,9 @@ export const CreateWareHouseDetails = (props) => {
               value={inputValue.address}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12}>
             <TextField
-              fullWidth
+              sx={{ minWidth: "400px" }}
               onChange={handleInputChange}
               size="small"
               name="pincode"
@@ -123,27 +135,33 @@ export const CreateWareHouseDetails = (props) => {
               variant="outlined"
               value={inputValue.pincode}
             />
+            <Button
+              onClick={() => validatePinCode()}
+              variant="contained"
+              sx={{ marginLeft: "1rem" }}
+            >
+              Validate
+            </Button>
           </Grid>
-          <Grid item xs={12} sm={4}>
+
+          <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              onChange={handleInputChange}
               size="small"
               name="state"
               label="State"
               variant="outlined"
-              value={inputValue.state}
+              value={pinCodeData.State ? pinCodeData.State : ""}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              onChange={handleInputChange}
               size="small"
               name="city"
               label="City"
               variant="outlined"
-              value={inputValue.city}
+              value={pinCodeData.District ? pinCodeData.District : ""}
             />
           </Grid>
         </Grid>

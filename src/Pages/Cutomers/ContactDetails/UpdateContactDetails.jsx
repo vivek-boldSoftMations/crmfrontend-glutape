@@ -86,8 +86,8 @@ console.log('contact1 :>> ', contact1);
           ? inputValue.alternate_email
           : "",
         contact: contact1 ? contact1 : "",
-        alternate_contact: contact2 ? contact2 : "",
-        pan_number:panNumber ? inputValue.pan_number : "",
+        alternate_contact: contact2 ? contact2 : null,
+        pan_number:panNumber ? inputValue.pan_number : null,
         aadhaar: aadhaarNumber ? aadhaarNumber : null,
       };
       await CustomerServices.updateContactData(IDForEdit, req);
