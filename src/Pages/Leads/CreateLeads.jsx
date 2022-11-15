@@ -140,6 +140,7 @@ export const CreateLeads = (props) => {
       console.error(err);
     }
   };
+  console.log("assign", assign);
 
   useEffect(() => {
     getDescriptionNoData();
@@ -149,14 +150,17 @@ export const CreateLeads = (props) => {
       try {
         e.preventDefault();
         setOpen(true);
+        let contact1 = phone ? `+${phone}` : phone;
+        let contact2 = phone2 ? `+${phone2}` : phone2;
+        console.log('assign :>> ', assign ? assign.emp_id : '');
         const data = {
           name: leads.name,
-          assigned_to: assign,
+          assigned_to: assign ? assign.email : '',
           alternate_contact_name: leads.altContactName,
           email: leads.email,
-          alternate_email: leads.altEmail,
-          contact: phone.phone,
-          alternate_contact: phone2.phone2,
+          alternate_email: leads.altEmail ? leads.altEmail : "",
+          contact: contact1,
+          alternate_contact: contact2 ,
           business_type: businesTypes,
           company: leads.companyName,
           gst_number: leads.gstNumber,
@@ -167,6 +171,7 @@ export const CreateLeads = (props) => {
           pincode: leads.pinCode,
           references: reference,
           description: personName,
+
         };
 
         await LeadServices.createLeads(data);
@@ -314,26 +319,25 @@ export const CreateLeads = (props) => {
                       options={referenceData.map((option) => option.source)}
                       getOptionLabel={(option) => `${option}`}
                       renderInput={(params) => (
-                        <TextField required {...params} label="Reference" />
+                        <TextField required {...params} helperText={'This field is required'} label="Reference" />
                       )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      select
+                    <Autocomplete
                       fullWidth
-                      name="assigned"
                       size="small"
-                      label="Assignied To"
-                      variant="outlined"
-                      onChange={(e, value) => setAssign(value)}
-                    >
-                      {assigned.map((option) => (
-                        <MenuItem key={option.emp_id} value={option.email}>
-                          {`${option.first_name}  ${option.last_name}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      id="grouped-demo"
+                      onChange={(event, value) => setAssign(value)}
+                      options={assigned.map((option) => option)}
+                      getOptionLabel={(option) =>
+                        `${option.first_name}  ${option.last_name}`
+                      }
+                      // sx={{ minWidth: 300 }}
+                      renderInput={(params) => (
+                        <TextField {...params} required helperText={'This field is required'} label="Assignied To" />
+                      )}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
@@ -531,10 +535,10 @@ export const CreateLeads = (props) => {
                     Alt. Email : {leads.altEmail}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    Contact : {leads.contact}
+                    Contact : {phone}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    Alt. Contact : {leads.altContact}
+                    Alt. Contact : {phone2}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     Company Name : {leads.companyName}
@@ -556,6 +560,9 @@ export const CreateLeads = (props) => {
                   </Grid>{" "}
                   <Grid item xs={12} sm={6}>
                     Pin Code : {leads.pinCode}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Assigned to : {`${assign.first_name}  ${assign.last_name}`}
                   </Grid>
                 </Grid>
                 {/* <Button
