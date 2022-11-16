@@ -62,10 +62,10 @@ export const CreateLeads = (props) => {
   const [open, setOpen] = useState(false);
   const [leads, setLeads] = useState([]);
   const [referenceData, setReferenceData] = useState([]);
-  const [reference, setReference] = useState([]);
+  const [reference, setReference] = useState();
   const [assigned, setAssigned] = useState([]);
   const [assign, setAssign] = useState([]);
-  const [businesTypes, setBusinesTypes] = useState("");
+  const [businesTypes, setBusinesTypes] = useState();
   const [descriptionMenuData, setDescriptionMenuData] = useState([]);
   const [phone, setPhone] = useState();
   const [phone2, setPhone2] = useState();
@@ -150,6 +150,7 @@ export const CreateLeads = (props) => {
       try {
         e.preventDefault();
         setOpen(true);
+        let REFERENCE = reference ;
         let contact1 = phone ? `+${phone}` : phone;
         let contact2 = phone2 ? `+${phone2}` : phone2;
         console.log("assign :>> ", assign ? assign.emp_id : "");
@@ -169,7 +170,7 @@ export const CreateLeads = (props) => {
           state: leads.state,
           country: leads.country,
           pincode: leads.pinCode,
-          references: reference,
+          references: REFERENCE,
           description: personName,
         };
 
@@ -319,9 +320,7 @@ export const CreateLeads = (props) => {
                       getOptionLabel={(option) => `${option}`}
                       renderInput={(params) => (
                         <TextField
-                          required
                           {...params}
-                          helperText={"This field is required"}
                           label="Reference"
                         />
                       )}
@@ -341,8 +340,6 @@ export const CreateLeads = (props) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          required
-                          helperText={"This field is required"}
                           label="Assignied To"
                         />
                       )}
