@@ -168,7 +168,7 @@ export const UpdateLeads = (props) => {
     }
   };
 
-  console.log("phone :>> ", phone);
+
   const updateLeadsData = async (e) => {
     if (activeStep === steps.length - 1) {
       try {
