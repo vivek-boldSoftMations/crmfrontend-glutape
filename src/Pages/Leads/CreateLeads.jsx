@@ -152,15 +152,15 @@ export const CreateLeads = (props) => {
         setOpen(true);
         let contact1 = phone ? `+${phone}` : phone;
         let contact2 = phone2 ? `+${phone2}` : phone2;
-        console.log('assign :>> ', assign ? assign.emp_id : '');
+        console.log("assign :>> ", assign ? assign.emp_id : "");
         const data = {
           name: leads.name,
-          assigned_to: assign ? assign.email : '',
+          assigned_to: assign ? assign.email : "",
           alternate_contact_name: leads.altContactName,
           email: leads.email,
           alternate_email: leads.altEmail ? leads.altEmail : "",
           contact: contact1,
-          alternate_contact: contact2 ,
+          alternate_contact: contact2,
           business_type: businesTypes,
           company: leads.companyName,
           gst_number: leads.gstNumber,
@@ -171,7 +171,6 @@ export const CreateLeads = (props) => {
           pincode: leads.pinCode,
           references: reference,
           description: personName,
-
         };
 
         await LeadServices.createLeads(data);
@@ -319,7 +318,12 @@ export const CreateLeads = (props) => {
                       options={referenceData.map((option) => option.source)}
                       getOptionLabel={(option) => `${option}`}
                       renderInput={(params) => (
-                        <TextField required {...params} helperText={'This field is required'} label="Reference" />
+                        <TextField
+                          required
+                          {...params}
+                          helperText={"This field is required"}
+                          label="Reference"
+                        />
                       )}
                     />
                   </Grid>
@@ -335,7 +339,12 @@ export const CreateLeads = (props) => {
                       }
                       // sx={{ minWidth: 300 }}
                       renderInput={(params) => (
-                        <TextField {...params} required helperText={'This field is required'} label="Assignied To" />
+                        <TextField
+                          {...params}
+                          required
+                          helperText={"This field is required"}
+                          label="Assignied To"
+                        />
                       )}
                     />
                   </Grid>
@@ -450,7 +459,6 @@ export const CreateLeads = (props) => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      required
                       name="state"
                       size="small"
                       label="State"
@@ -541,6 +549,12 @@ export const CreateLeads = (props) => {
                     Alt. Contact : {phone2}
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    Business Type : {businesTypes}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Reference : {reference}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     Company Name : {leads.companyName}
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -562,7 +576,10 @@ export const CreateLeads = (props) => {
                     Pin Code : {leads.pinCode}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    Assigned to : {`${assign.first_name}  ${assign.last_name}`}
+                    Assigned to :{" "}
+                    {assign.first_name
+                      ? `${assign.first_name}  ${assign.last_name}`
+                      : ""}
                   </Grid>
                 </Grid>
                 {/* <Button
