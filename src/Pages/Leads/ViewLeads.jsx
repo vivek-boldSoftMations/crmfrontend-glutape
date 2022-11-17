@@ -204,7 +204,6 @@ console.log('filter', filterQuery)
               <Autocomplete
               noOptionsText={'No Options'}
                 disablePortal
-                selectOnFocus
                 size="small"
                 id="combo-box-demo"
                 options={FilterOptions}

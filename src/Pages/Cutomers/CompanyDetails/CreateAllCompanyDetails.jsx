@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import CustomerServices from "../../../services/CustomerService";
-import { BankDetails } from './../BankDetails/BankDetails';
-import { ContactDetails } from './../ContactDetails/ContactDetails';
-import { WareHouseDetails } from './../WareHouseDetails/WareHouseDetails';
-import { SecurityChequesDetails } from './../SecurityCheckDetails/SecurityChequesDetails';
+import { BankDetails } from "./../BankDetails/BankDetails";
+import { ContactDetails } from "./../ContactDetails/ContactDetails";
+import { WareHouseDetails } from "./../WareHouseDetails/WareHouseDetails";
+import { SecurityChequesDetails } from "./../SecurityCheckDetails/SecurityChequesDetails";
+import { useDispatch } from "react-redux";
+import { getCompanyName } from "../../../Redux/Action/Action";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -53,6 +55,22 @@ export const CreateAllCompanyDetails = (props) => {
   const [contactData, setContactData] = useState([]);
   const [wareHousedata, setWareHouseData] = useState([]);
   const [securityChequedata, setSecurityChequeData] = useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getAllCompanyDetailsByID();
+  }, []);
+
+  const getAllCompanyDetailsByID = async () => {
+    try {
+      setOpen(true);
+      const response = await CustomerServices.getCompanyDataById(recordForEdit);
+      dispatch(getCompanyName(response.data.name));
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      console.log("company data by id error", err);
+    }
+  };
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
@@ -128,11 +146,9 @@ export const CreateAllCompanyDetails = (props) => {
     }
   };
 
-
-
   return (
     <div>
-     <div>
+      <div>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
@@ -157,21 +173,21 @@ export const CreateAllCompanyDetails = (props) => {
       </AppBar>
 
       <TabPanel value={value} index={0} dir={theme.direction}>
-      <BankDetails
+        <BankDetails
           bankData={bankData}
           open={open}
           getAllBankDetailsByID={getAllBankDetailsByID}
         />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-      <ContactDetails
+        <ContactDetails
           contactData={contactData}
           open={open}
           getAllContactDetailsByID={getAllContactDetailsByID}
         />
       </TabPanel>
       <TabPanel value={value} index={2} dir={theme.direction}>
-      <WareHouseDetails
+        <WareHouseDetails
           contactData={contactData}
           wareHousedata={wareHousedata}
           open={open}
@@ -179,7 +195,7 @@ export const CreateAllCompanyDetails = (props) => {
         />
       </TabPanel>
       <TabPanel value={value} index={3} dir={theme.direction}>
-      <SecurityChequesDetails
+        <SecurityChequesDetails
           securityChequedata={securityChequedata}
           open={open}
           getSecurityChequeDetailsByID={getSecurityChequeDetailsByID}

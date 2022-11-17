@@ -21,7 +21,8 @@ import {
   TimelineContent,
   TimelineDot,
   TimelineItem,
-  timelineItemClasses,
+  TimelineOppositeContent,
+  timelineOppositeContentClasses,
   TimelineSeparator,
 } from "@mui/lab";
 
@@ -253,14 +254,20 @@ export const ViewAllFollowUp = (props) => {
                   return (
                     <div key={data.id}>
                       <Timeline
-                        sx={{
-                          [`& .${timelineItemClasses.root}:before`]: {
-                            flex: 0,
-                            padding: 0,
+                         sx={{
+                          [`& .${timelineOppositeContentClasses.root}`]: {
+                            flex: 0.2,
                           },
                         }}
                       >
                         <TimelineItem>
+                          <TimelineOppositeContent sx={{  px: 2 }}>
+                          <Typography variant="h6" component="span">
+                          {moment(data.current_date).format(
+                                "DD/MM/YYYY h:mm:ss"
+                              )}
+                              </Typography>
+                          </TimelineOppositeContent>
                           <TimelineSeparator>
                             <TimelineDot />
                             <TimelineConnector />
