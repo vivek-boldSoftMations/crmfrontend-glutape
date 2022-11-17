@@ -299,7 +299,7 @@ export const UpdateLeads = (props) => {
                         minWidth: "500px",
                       }}
                       country={"in"}
-                      value={phone ? `+${phone}` : contacts1}
+                      value={phone ? `+${phone}` : contacts1 ? contacts1 : ''}
                       onChange={handlePhoneChange}
                     />
                   </Grid>
@@ -312,7 +312,7 @@ export const UpdateLeads = (props) => {
                         minWidth: "500px",
                       }}
                       country={"in"}
-                      value={phone2 ? `+${phone2}` : contacts2}
+                      value={phone2 ? `+${phone2}` : contacts2 ? contacts2 : ''}
                       onChange={handlePhoneChange2}
                     />
                   </Grid>
