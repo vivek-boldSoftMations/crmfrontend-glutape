@@ -165,6 +165,7 @@ export const CreateLeads = (props) => {
           business_type: businesTypes,
           company: leads.companyName,
           gst_number: leads.gstNumber,
+          pan_number: leads.pan_number,
           address: leads.address,
           city: leads.city,
           state: leads.state,
@@ -434,6 +435,17 @@ export const CreateLeads = (props) => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
+                      name="pan_number"
+                      size="small"
+                      label="Pan Number"
+                      variant="outlined"
+                      value={leads.pan_number ? leads.pan_number : ""}
+                      onChange={handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
                       name="address"
                       size="small"
                       label="Address"
@@ -556,7 +568,10 @@ export const CreateLeads = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     Gst Number : {leads.gstNumber}
-                  </Grid>{" "}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Pan Number : {leads.pan_number}
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     Address : {leads.address}
                   </Grid>{" "}
