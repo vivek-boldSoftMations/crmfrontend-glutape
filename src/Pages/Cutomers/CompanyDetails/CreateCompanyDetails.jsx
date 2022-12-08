@@ -74,6 +74,7 @@ export const CreateCompanyDetails = (props) => {
         pan_number: inputValue.pan_no,
         business_type: businessType,
         category: category,
+        assigned_to:  inputValue.assigned_to,
         total_sales_turnover: inputValue.total_sale,
       };
       const response = await CustomerServices.createCompanyData(req);
@@ -287,6 +288,17 @@ export const CreateCompanyDetails = (props) => {
                 Applicable Only For Distribution Customer
               </FormHelperText>
             </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              fullWidth
+              name="assigned_to"
+              size="small"
+              label="Assigned To"
+              variant="outlined"
+              value={inputValue.assigned_to}
+              onChange={handleInputChange}
+            />
           </Grid>
           <Grid item xs={12}>
             <TextField
