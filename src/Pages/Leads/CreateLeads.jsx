@@ -5,14 +5,21 @@ import {
   Box,
   Button,
   Chip,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
+  InputLabel,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Step,
   StepLabel,
   Stepper,
   TextField,
   Typography,
+  Select
 } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { Backdrop } from "@mui/material";
@@ -23,35 +30,33 @@ import { getProfileUser } from "./../../Redux/Action/Action";
 import ProductService from "../../services/ProductService";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
+import axios from "axios";
 function getSteps() {
   return [
     <b style={{ color: "purple" }}>'Enter Basic Details'</b>,
     <b style={{ color: "purple" }}>'Enter Company Details'</b>,
+    <b style={{ color: "purple" }}>'Enter Shipping Details'</b>,
     <b style={{ color: "purple" }}>'Review'</b>,
   ];
 }
 
 const BusinessTypeData = [
   {
-    id: 1,
     value: "trader",
-    name: "Trader",
+    label: "Trader",
   },
 
   {
-    id: 2,
     value: "distributor",
-    name: "Distributor",
+    label: "Distributor",
   },
   {
-    id: 3,
     value: "retailer",
-    name: "Retailer",
+    label: "Retailer",
   },
   {
-    id: 4,
     value: "end_user",
-    name: "End User",
+    label: "End User",
   },
 ];
 
@@ -69,10 +74,16 @@ export const CreateLeads = (props) => {
   const [descriptionMenuData, setDescriptionMenuData] = useState([]);
   const [phone, setPhone] = useState();
   const [phone2, setPhone2] = useState();
+  const [typeData, setTypeData] = useState("");
+  const [pinCodeData, setPinCodeData] = useState([]);
   const dispatch = useDispatch();
 
   const [users, setUsers] = useState("");
   const [personName, setPersonName] = useState([]);
+
+  const handleChange = (event) => {
+    setTypeData(event.target.value);
+  };
 
   const handlePhoneChange = (newPhone) => {
     setPhone(newPhone);
@@ -86,7 +97,7 @@ export const CreateLeads = (props) => {
     const { name, value } = event.target;
     setLeads({ ...leads, [name]: value });
   };
-  console.log("users", users);
+ 
   useEffect(() => {
     getReference();
   }, []);
@@ -94,6 +105,22 @@ export const CreateLeads = (props) => {
   useEffect(() => {
     getLAssignedData();
   }, []);
+
+  const validatePinCode = async () => {
+    try {
+      setOpen(true);
+      const PINCODE = leads.shipping_pincode;
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${PINCODE}`
+      );
+
+      setPinCodeData(response.data[0].PostOffice[0]);
+      setOpen(false);
+    } catch (error) {
+      console.log("Creating Bank error ", error);
+      setOpen(false);
+    }
+  };
 
   const getLAssignedData = async (id) => {
     try {
@@ -150,7 +177,7 @@ export const CreateLeads = (props) => {
       try {
         e.preventDefault();
         setOpen(true);
-        let REFERENCE = reference ;
+        let REFERENCE = reference;
         let contact1 = phone ? `+${phone}` : phone;
         let contact2 = phone2 ? `+${phone2}` : phone2;
         console.log("assign :>> ", assign ? assign.emp_id : "");
@@ -171,8 +198,14 @@ export const CreateLeads = (props) => {
           state: leads.state,
           country: leads.country,
           pincode: leads.pinCode,
+          website: leads.website,
           references: REFERENCE,
           description: personName,
+          type_of_customer: typeData,
+          shipping_address: leads.shipping_address,
+          shipping_city: pinCodeData.District,
+          shipping_state: pinCodeData.State,
+          shipping_pincode: leads.shipping_pincode,
         };
 
         await LeadServices.createLeads(data);
@@ -293,22 +326,29 @@ export const CreateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      select
-                      fullWidth
-                      name="business_type"
-                      size="small"
-                      label="Business Type"
-                      variant="outlined"
-                      onChange={(e, value) => setBusinesTypes(value)}
-                    >
-                      {BusinessTypeData.map((option) => (
-                        <MenuItem key={option.id} value={option.value}>
-                          {option.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Busniess Type
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Busniess Type"
+                        onChange={(e, value) =>
+                          setBusinesTypes(e.target.value)
+                        }
+                      >
+                        {BusinessTypeData.map((option, i) => (
+                          <MenuItem key={i} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+        
                   </Grid>
+                  
+                  {referenceData &&
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       style={{
@@ -320,13 +360,11 @@ export const CreateLeads = (props) => {
                       options={referenceData.map((option) => option.source)}
                       getOptionLabel={(option) => `${option}`}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Reference"
-                        />
+                        <TextField {...params} label="Reference" />
                       )}
                     />
                   </Grid>
+    }
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       fullWidth
@@ -339,10 +377,7 @@ export const CreateLeads = (props) => {
                       }
                       // sx={{ minWidth: 300 }}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Assignied To"
-                        />
+                        <TextField {...params} label="Assignied To" />
                       )}
                     />
                   </Grid>
@@ -498,6 +533,17 @@ export const CreateLeads = (props) => {
                       onChange={handleInputChange}
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="website"
+                      size="small"
+                      label="Website"
+                      variant="outlined"
+                      value={leads.website ? leads.website : ""}
+                      onChange={handleInputChange}
+                    />
+                  </Grid>
                 </Grid>
                 {/* <Button
                   type="submit"
@@ -511,6 +557,119 @@ export const CreateLeads = (props) => {
           </>
         );
       case 2:
+        return (
+          <>
+            <div className="Auth-form-container">
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            </div>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <h3 className="Auth-form-title">Create Shipping Detail</h3>
+              <Box
+                component="form"
+                noValidate
+                onSubmit={createLeadsData}
+                sx={{ mt: 1 }}
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <>
+                      <FormControl>
+                        <FormLabel id="demo-row-radio-buttons-group-label">
+                          Type
+                        </FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                          value={typeData}
+                          onChange={handleChange}
+                        >
+                          <FormControlLabel
+                            value="industrial_customer"
+                            control={<Radio />}
+                            label="Industrial Customer"
+                          />
+                          <FormControlLabel
+                            value="distribution_customer"
+                            control={<Radio />}
+                            label="Distribution Customer"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="shipping_address"
+                      size="small"
+                      label="Shipping Address"
+                      variant="outlined"
+                      value={
+                        leads.shipping_address ? leads.shipping_address : ""
+                      }
+                      onChange={handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      sx={{ minWidth: "300px" }}
+                      name="shipping_pincode"
+                      size="small"
+                      type={"number"}
+                      label="Pin Code"
+                      variant="outlined"
+                      value={leads.shipping_pincode}
+                      onChange={handleInputChange}
+                    />
+                    <Button
+                      onClick={() => validatePinCode()}
+                      variant="contained"
+                      sx={{ marginLeft: "1rem" }}
+                    >
+                      Validate
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="shipping_city"
+                      size="small"
+                      label="Shipping City"
+                      variant="outlined"
+                      value={pinCodeData.District ? pinCodeData.District : ""}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="shipping_state"
+                      size="small"
+                      label="Shipping State"
+                      variant="outlined"
+                      value={pinCodeData.State ? pinCodeData.State : ""}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </>
+        );
+      case 3:
         return (
           <>
             <div className="Auth-form-container">
@@ -593,6 +752,21 @@ export const CreateLeads = (props) => {
                       ? `${assign.first_name}  ${assign.last_name}`
                       : ""}
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    type : {typeData}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Shipping Address : {leads.shipping_address}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Shipping City : {pinCodeData.District}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Shipping State : {pinCodeData.State}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    Shipping Pincode : {leads.shipping_pincode}
+                  </Grid>{" "}
                 </Grid>
                 {/* <Button
                   type="submit"
