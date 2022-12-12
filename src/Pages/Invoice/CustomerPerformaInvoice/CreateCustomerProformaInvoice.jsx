@@ -37,6 +37,10 @@ const tfStyle = {
   },
 };
 
+const values = {
+  someDate: new Date().toISOString().substring(0, 10),
+};
+
 export const CreateCustomerProformaInvoice = (props) => {
   const { setOpenPopup, getCustomerPIDetails } = props;
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -56,11 +60,18 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
   const [products, setProducts] = useState([
-    { product: "", quantity: 0, rate: 0, amount: 0, requested_date: "" },
+    {
+      product: "",
+      quantity: 0,
+      rate: 0,
+      amount: 0,
+      requested_date: values.someDate,
+    },
   ]);
   const handleFormChange = (index, event) => {
     let data = [...products];
     data[index][event.target.name] = event.target.value;
+    setProducts(data);
   };
 
   const addFields = () => {
@@ -69,16 +80,16 @@ export const CreateCustomerProformaInvoice = (props) => {
       quantity: 0,
       rate: 0,
       amount: 0,
-      requested_date: "",
+      requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
   };
-  
+
   const removeFields = (index) => {
     let data = [...products];
-    data.splice(index, 1)
-    setProducts(data)
-}
+    data.splice(index, 1);
+    setProducts(data);
+  };
 
   useEffect(() => {
     getAllSellerAccountsDetails();
@@ -95,7 +106,6 @@ export const CreateCustomerProformaInvoice = (props) => {
       setOpen(false);
     }
   };
-
 
   useEffect(() => {
     getAllleadsData();
@@ -146,7 +156,7 @@ export const CreateCustomerProformaInvoice = (props) => {
     }
   };
   // const extendJSON = (...objs) => objs.reduce((result, current) => ({...result, ...JSON.parse(current)}), {});
-  
+
   // console.log(extendJSON(inputFields));
   console.log("companyData :>> ", companyData);
   const createCustomerProformaInvoiceDetails = async (e) => {
@@ -169,7 +179,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         delivery_terms: deliveryTermData,
         status: "raised",
         // amount: Amount,
-        products:products,
+        products: products,
       };
 
       console.log("req :>> ", req);
@@ -179,7 +189,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         warehouseData.address !== null &&
         warehouseData.state !== null &&
         warehouseData.city !== null &&
-        warehouseData.pincode !== null 
+        warehouseData.pincode !== null
       ) {
         await InvoiceServices.createCustomerProformaInvoiceData(req);
         setOpenPopup(false);
@@ -227,7 +237,7 @@ export const CreateCustomerProformaInvoice = (props) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-          <FormControl fullWidth size="small">
+            <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Seller Account
               </InputLabel>
@@ -315,7 +325,7 @@ export const CreateCustomerProformaInvoice = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-          <Autocomplete
+            <Autocomplete
               name="contact"
               size="small"
               disablePortal
@@ -328,7 +338,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                 <TextField {...params} label="Contact" sx={tfStyle} />
               )}
             />
-        
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
@@ -350,7 +359,7 @@ export const CreateCustomerProformaInvoice = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-          <Autocomplete
+            <Autocomplete
               name="address"
               size="small"
               disablePortal
@@ -363,7 +372,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                 <TextField {...params} label="Address" sx={tfStyle} />
               )}
             />
-
           </Grid>
 
           <Grid item xs={12} sm={4}>
@@ -374,7 +382,13 @@ export const CreateCustomerProformaInvoice = (props) => {
               size="small"
               label="City"
               variant="outlined"
-              value={warehouseData ? (warehouseData.city ? warehouseData.city : "") : ""}
+              value={
+                warehouseData
+                  ? warehouseData.city
+                    ? warehouseData.city
+                    : ""
+                  : ""
+              }
               InputLabelProps={{
                 shrink: true,
               }}
@@ -389,7 +403,11 @@ export const CreateCustomerProformaInvoice = (props) => {
               label="State"
               variant="outlined"
               value={
-                warehouseData ? (warehouseData.state ? warehouseData.state : "") : ""
+                warehouseData
+                  ? warehouseData.state
+                    ? warehouseData.state
+                    : ""
+                  : ""
               }
               InputLabelProps={{
                 shrink: true,
@@ -406,7 +424,11 @@ export const CreateCustomerProformaInvoice = (props) => {
               label="Pin Code"
               variant="outlined"
               value={
-                warehouseData ? (warehouseData.pincode ? warehouseData.pincode : "") : ""
+                warehouseData
+                  ? warehouseData.pincode
+                    ? warehouseData.pincode
+                    : ""
+                  : ""
               }
               InputLabelProps={{
                 shrink: true,
@@ -417,7 +439,6 @@ export const CreateCustomerProformaInvoice = (props) => {
             <TextField
               fullWidth
               required
-              type={"number"}
               name="buyer_order_no"
               size="small"
               label="Buyer Order No"
@@ -436,7 +457,11 @@ export const CreateCustomerProformaInvoice = (props) => {
               size="small"
               label="Buyer Order Date"
               variant="outlined"
-              value={inputValue.buyer_order_date}
+              value={
+                inputValue.buyer_order_date
+                  ? inputValue.buyer_order_date
+                  : values.someDate
+              }
               onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true,
@@ -456,7 +481,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                 <Grid item xs={12} sm={4}>
                   <FormControl fullWidth size="small">
                     <InputLabel id="demo-simple-select-label">
-                    Product Name
+                      Product Name
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
@@ -472,7 +497,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                       ))}
                     </Select>
                   </FormControl>
- 
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -517,7 +541,11 @@ export const CreateCustomerProformaInvoice = (props) => {
                     size="small"
                     label="Request Date"
                     variant="outlined"
-                    value={input.requested_date}
+                    value={
+                      input.requested_date
+                        ? input.requested_date
+                        : values.someDate
+                    }
                     onChange={(event) => handleFormChange(index, event)}
                     InputLabelProps={{
                       shrink: true,
@@ -525,13 +553,22 @@ export const CreateCustomerProformaInvoice = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4} alignContent="right">
-                  <Button onClick={addFields} variant="contained" sx={{marginRight:'1em'}}>
+                  <Button
+                    onClick={addFields}
+                    variant="contained"
+                    sx={{ marginRight: "1em" }}
+                  >
                     Add More...
                   </Button>
-                  {index !== 0 &&
-                  <Button disabled={index === 0} onClick={() => removeFields(index)} variant="contained">
-                  Remove
-                  </Button>}
+                  {index !== 0 && (
+                    <Button
+                      disabled={index === 0}
+                      onClick={() => removeFields(index)}
+                      variant="contained"
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </Grid>
               </>
             );
@@ -553,7 +590,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         setOpenPopup={setOpenPopup2}
       >
         <Typography>
-          Kindly update all required field  WareHouse Details in Company  
+          Kindly update all required field WareHouse Details in Company
         </Typography>
         <Button variant="contained" onClick={() => openInPopup()}>
           Update Company Details

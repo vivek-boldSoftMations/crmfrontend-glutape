@@ -15,7 +15,6 @@ import React, { useEffect, useState, useRef } from "react";
 import InvoiceServices from "../../../services/InvoiceService";
 import "../../CommonStyle.css";
 import logo from " ../../../public/images.ico";
-
 const typographyStyling = {
   fontWeight: "bold",
 };
@@ -36,6 +35,7 @@ export const LeadsPerformaInvoice = (props) => {
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
   const [sellerData, setSellerData] = useState([]);
+
   useEffect(() => {
     getAllProformaInvoiceDetails();
   }, []);
@@ -115,125 +115,193 @@ export const LeadsPerformaInvoice = (props) => {
   };
 
   return (
-    <Box component={Paper} noValidate sx={{ m: "2em", p: "2em" }}>
-      <Grid container spacing={2} sx={{ border: 2 }}>
-        <Grid item xs={12} sm={2}>
-          <img
-            style={{ marginLeft: "2em", marginTop: "2em" }}
-            src={logo}
-            alt="Glutape India Pvt Ltd"
-          />
-          <Typography sx={{ fontSize: "10px", marginTop: "1em" }}>
-            AN ISO 9001-2009 Certified Company
-          </Typography>
-        </Grid>
-        <Grid item xs={10}>
-          <Typography align="center" variant="h4" sx={{...typographyStyling, mb: "2em", mt: "1em" }}>
-            PROFORMA INVOICE
-          </Typography>
-        </Grid>
-        {/* seller Details */}
-        {sellerData.map((row, i) => {
-          return (
-            <>
-              <Grid item xs={12} sm={6} sx={{ pl: "2em", border: 1 }}>
-                <Typography sx={{...typographyStyling}}>Seller :-</Typography>
-                <Typography>{row.name}</Typography>
-                <Typography>
-                  {row.address},{row.state}
-                </Typography>
-              </Grid>
-            </>
-          );
-        })}
-        {/* PI Details */}
-        <Grid item xs={12} sm={4} sx={{ border: 1 }}>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>PI Number :- </Box> {invoiceData.pi_number}</Typography>
-          <Typography >
-          <Box sx={{...typographyStyling}} >Payment Terms :- </Box> {invoiceData.payment_terms}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={2} sx={{ border: 1 }}>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>Date :- </Box>{invoiceData.generation_date}</Typography>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>Advance :- </Box>{invoiceData.amount_recieved}</Typography>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>Balance :- </Box>{invoiceData.balance_amount}</Typography>
-        </Grid>
-        {/* Buyer Details */}
-        <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>Buyer :- </Box>{invoiceData.company}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography>
-          <Box sx={{...typographyStyling}} display='inline'> Buyer Order No. :- </Box>{invoiceData.buyer_order_no}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography>{invoiceData.address}</Typography>
-          <Typography>
-            {invoiceData.city},{invoiceData.state}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography>
-          <Box sx={{...typographyStyling}} display='inline'>Delivery Terms :- </Box>{invoiceData.delivery_terms}
-          </Typography>
-          <Typography><Box sx={{...typographyStyling}} display='inline'>Sales Person :- </Box>{invoiceData.raised_by}</Typography>
-        </Grid>
+      <Box component={Paper} noValidate sx={{ m: "2em", p: "2em" }}>
+        <Grid id="divToPrint" container spacing={2} sx={{ border: 2 }}>
+          <Grid item xs={12} sm={2}>
+            <img
+              style={{ marginLeft: "2em", marginTop: "2em" }}
+              src={logo}
+              alt="Glutape India Pvt Ltd"
+            />
+            <Typography sx={{ fontSize: "10px", marginTop: "1em" }}>
+              AN ISO 9001-2009 Certified Company
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography
+              align="center"
+              variant="h4"
+              sx={{ ...typographyStyling, mb: "2em", mt: "1em" }}
+            >
+              PROFORMA INVOICE
+            </Typography>
+          </Grid>
+          {/* seller Details */}
+          {sellerData.map((row, i) => {
+            return (
+              <>
+                <Grid item xs={12} sm={6} sx={{ pl: "2em", border: 1 }}>
+                  <Typography sx={{ ...typographyStyling }}>
+                    Seller :-
+                  </Typography>
+                  <Typography>{row.name}</Typography>
+                  <Typography>
+                    {row.address},{row.state}
+                  </Typography>
+                </Grid>
+              </>
+            );
+          })}
+          {/* PI Details */}
+          <Grid item xs={12} sm={4} sx={{ border: 1 }}>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                PI Number :-{" "}
+              </Box>{" "}
+              {invoiceData.pi_number}
+            </Typography>
+            <Typography>
+              <Box sx={{ ...typographyStyling }}>Payment Terms :- </Box>{" "}
+              {invoiceData.payment_terms}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={2} sx={{ border: 1 }}>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                Date :-{" "}
+              </Box>
+              {invoiceData.generation_date}
+            </Typography>
+            {invoiceData.amount_recieved && (
+              <Typography>
+                <Box sx={{ ...typographyStyling }} display="inline">
+                  Advance :-{" "}
+                </Box>
+                {invoiceData.amount_recieved}
+              </Typography>
+            )}
+            {invoiceData.balance_amount && (
+              <Typography>
+                <Box sx={{ ...typographyStyling }} display="inline">
+                  Balance :-{" "}
+                </Box>
+                {invoiceData.balance_amount}
+              </Typography>
+            )}
+          </Grid>
+          {/* Buyer Details */}
+          <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                Buyer :-{" "}
+              </Box>
+              {invoiceData.company}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                {" "}
+                Buyer Order No. :-{" "}
+              </Box>
+              {invoiceData.buyer_order_no}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+            <Typography>{invoiceData.address}</Typography>
+            <Typography>
+              {invoiceData.city},{invoiceData.state}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                Delivery Terms :-{" "}
+              </Box>
+              {invoiceData.delivery_terms}
+            </Typography>
+            <Typography>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                Sales Person :-{" "}
+              </Box>
+              {invoiceData.raised_by}
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12} sx={{ p: "2em", border: 1 }}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="spanning table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{...typographyStyling}} align="center" colSpan={3}>
-                    Details
-                  </TableCell>
-                  <TableCell sx={{...typographyStyling}} colSpan={3} align="center">
-                    Price
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{...typographyStyling}}>Descrription of Goods</TableCell>
-                  <TableCell sx={{...typographyStyling}} align="right">QTY.</TableCell>
-                  <TableCell sx={{...typographyStyling}} align="right">RATE</TableCell>
-                  <TableCell sx={{...typographyStyling}} align="right">AMOUNT</TableCell>
-                  <TableCell sx={{...typographyStyling}} align="right">GST</TableCell>
-                  <TableCell sx={{...typographyStyling}} align="right">TOTAL</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {productData.map((row) => (
-                  <TableRow key={row.proformainvoice}>
-                    <TableCell>{row.product}</TableCell>
-                    <TableCell align="right">{row.quantity}</TableCell>
-                    <TableCell align="right">{row.rate}</TableCell>
-                    <TableCell align="right">{row.amount}</TableCell>
-                    <TableCell align="right">{row.gst}</TableCell>
-                    <TableCell align="right">{row.total}</TableCell>
+          <Grid item xs={12} sx={{ p: "2em", border: 1 }}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      sx={{ ...typographyStyling }}
+                      align="center"
+                      colSpan={3}
+                    >
+                      Details
+                    </TableCell>
+                    <TableCell
+                      sx={{ ...typographyStyling }}
+                      colSpan={3}
+                      align="center"
+                    >
+                      Price
+                    </TableCell>
                   </TableRow>
-                ))}
+                  <TableRow>
+                    <TableCell sx={{ ...typographyStyling }}>
+                      Descrription of Goods
+                    </TableCell>
+                    <TableCell sx={{ ...typographyStyling }} align="right">
+                      QTY.
+                    </TableCell>
+                    <TableCell sx={{ ...typographyStyling }} align="right">
+                      RATE
+                    </TableCell>
+                    <TableCell sx={{ ...typographyStyling }} align="right">
+                      AMOUNT
+                    </TableCell>
+                    <TableCell sx={{ ...typographyStyling }} align="right">
+                      GST
+                    </TableCell>
+                    <TableCell sx={{ ...typographyStyling }} align="right">
+                      TOTAL
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {productData.map((row) => (
+                    <TableRow key={row.proformainvoice}>
+                      <TableCell>{row.product}</TableCell>
+                      <TableCell align="right">{row.quantity}</TableCell>
+                      <TableCell align="right">{row.rate}</TableCell>
+                      <TableCell align="right">{row.amount}</TableCell>
+                      <TableCell align="right">{row.gst}</TableCell>
+                      <TableCell align="right">{row.total}</TableCell>
+                    </TableRow>
+                  ))}
 
-                <TableRow>
-                  <TableCell rowSpan={1} />
-                  <TableCell colSpan={2} align="right"></TableCell>
-                  <TableCell colSpan={1} align="right">
-                    {invoiceData.amount}
-                  </TableCell>
-                  {invoiceData.igst && (
+                  <TableRow>
+                    <TableCell rowSpan={1} />
+                    <TableCell colSpan={2} align="right"></TableCell>
                     <TableCell colSpan={1} align="right">
-                      {invoiceData.igst}
+                      {invoiceData.amount}
                     </TableCell>
-                  )}
-                  {invoiceData.sgst && invoiceData.cgst && (
+                    {invoiceData.igst && (
+                      <TableCell colSpan={1} align="right">
+                        {invoiceData.igst}
+                      </TableCell>
+                    )}
+                    {invoiceData.sgst && invoiceData.cgst && (
+                      <TableCell colSpan={1} align="right">
+                        {invoiceData.sgst + invoiceData.cgst}
+                      </TableCell>
+                    )}
                     <TableCell colSpan={1} align="right">
-                      {invoiceData.sgst + invoiceData.cgst}
+                      {invoiceData.total}
                     </TableCell>
-                  )}
-                  <TableCell colSpan={1} align="right">
-                    {invoiceData.total}
-                  </TableCell>
-                </TableRow>
-                {/* {invoiceData.igst && (
+                  </TableRow>
+                  {/* {invoiceData.igst && (
                   <TableRow>
                     <TableCell colSpan={2}>IGST</TableCell>
                     <TableCell colSpan={2} align="right">
@@ -265,49 +333,76 @@ export const LeadsPerformaInvoice = (props) => {
                   <TableCell colSpan={3} align="right">
                     {invoiceData.total}
                   </TableCell> */}
-                {/* </TableRow> */}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-        {sellerData.map((bankdata, i) => {
-          return (
-            <>
-              <Grid item xs={12} sx={{ border: 1 }}>
-                <Typography sx={{...typographyStyling, ml: "2em" }}>Bank Details :-</Typography>
-                <Typography sx={{ ml: "2em" }}>{bankdata.bank_name}</Typography>
-                <Typography sx={{ ml: "2em" }}>
-                <Box sx={{...typographyStyling}} display='inline'>Account No. </Box> {bankdata.current_account_no}
-                </Typography>
-                <Typography sx={{ ml: "2em" }}>
-                <Box sx={{...typographyStyling}} display='inline'>IFSC Code : </Box> {bankdata.ifsc_code}
-                </Typography>
-                <Typography sx={{ ml: "2em" }}>
-                <Box sx={{...typographyStyling}} display='inline'>BRANCH : </Box> {bankdata.branch}
-                </Typography>
-              </Grid>
+                  {/* </TableRow> */}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+          {sellerData.map((bankdata, i) => {
+            return (
+              <>
+                <Grid item xs={12} sx={{ border: 1 }}>
+                  <Typography sx={{ ...typographyStyling, ml: "2em" }}>
+                    Bank Details :-
+                  </Typography>
+                  <Typography sx={{ ml: "2em" }}>
+                    {bankdata.bank_name}
+                  </Typography>
+                  <Typography sx={{ ml: "2em" }}>
+                    <Box sx={{ ...typographyStyling }} display="inline">
+                      Account No.{" "}
+                    </Box>{" "}
+                    {bankdata.current_account_no}
+                  </Typography>
+                  <Typography sx={{ ml: "2em" }}>
+                    <Box sx={{ ...typographyStyling }} display="inline">
+                      IFSC Code :{" "}
+                    </Box>{" "}
+                    {bankdata.ifsc_code}
+                  </Typography>
+                  <Typography sx={{ ml: "2em" }}>
+                    <Box sx={{ ...typographyStyling }} display="inline">
+                      BRANCH :{" "}
+                    </Box>{" "}
+                    {bankdata.branch}
+                  </Typography>
+                </Grid>
 
-              <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-                <Typography sx={{ ml: "2em" }}>
-                <Box sx={{...typographyStyling}} display='inline'>Company GST No :- </Box>{bankdata.gst_number}
-                </Typography>
-                <Typography sx={{ ml: "2em" }}>
-                <Box sx={{...typographyStyling}} display='inline'>  Buyer GST No :- </Box> {invoiceData.gst_number}
-                </Typography>
-              </Grid>
-            </>
-          );
-        })}
-        <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography align={"center"}>Glutape India Pvt. Ltd.</Typography>
-          <Typography align={"center"}><Box sx={{...typographyStyling}} display='inline'>ATHORISED SIGNATORY</Box></Typography>
+                <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+                  <Typography sx={{ ml: "2em" }}>
+                    <Box sx={{ ...typographyStyling }} display="inline">
+                      Company GST No :-{" "}
+                    </Box>
+                    {bankdata.gst_number}
+                  </Typography>
+                  <Typography sx={{ ml: "2em" }}>
+                    <Box sx={{ ...typographyStyling }} display="inline">
+                      {" "}
+                      Buyer GST No :-{" "}
+                    </Box>{" "}
+                    {invoiceData.gst_number}
+                  </Typography>
+                </Grid>
+              </>
+            );
+          })}
+          <Grid item xs={12} sm={6} sx={{ border: 1 }}>
+            <Typography align={"center"}>Glutape India Pvt. Ltd.</Typography>
+            <Typography align={"center"}>
+              <Box sx={{ ...typographyStyling }} display="inline">
+                ATHORISED SIGNATORY
+              </Box>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
+            <Button
+              variant="contained"
+              onClick={(e) => SendForApprovalStatus(e)}
+            >
+              Send For Approval
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
-          <Button variant="contained" onClick={(e) => SendForApprovalStatus(e)}>
-            Send For Approval
-          </Button>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
   );
 };

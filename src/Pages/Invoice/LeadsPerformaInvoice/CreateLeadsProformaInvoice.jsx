@@ -15,7 +15,7 @@ import {
 import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import InvoiceServices from "../../../services/InvoiceService";
 import LeadServices from "../../../services/LeadService";
 import ProductService from "../../../services/ProductService";
@@ -36,6 +36,10 @@ const tfStyle = {
   },
 };
 
+const values = {
+  someDate: new Date().toISOString().substring(0, 10),
+};
+
 export const CreateLeadsProformaInvoice = (props) => {
   const { setOpenPopup, getAllLeadsPIDetails } = props;
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -52,31 +56,42 @@ export const CreateLeadsProformaInvoice = (props) => {
   const [leadsOptions, setLeadsOptions] = useState([]);
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
+  const [validationPrice, setValidationPrice] = useState("");
+
   const [products, setProducts] = useState([
-    { product: "", quantity: 0, rate: 0, amount: 0, requested_date: 0 },
+    {
+      product: "",
+      quantity: 0,
+      rate: 0,
+      amount: 0,
+      requested_date: values.someDate,
+    },
   ]);
 
   const handleFormChange = (index, event) => {
+    console.log('index :>> ', index);
+    console.log('event', event.target)
     let data = [...products];
     data[index][event.target.name] = event.target.value;
+    setProducts(data);
   };
-
+  console.log('products :>> ', products);
   const addFields = () => {
     let newfield = {
       product: "",
       quantity: 0,
       rate: 0,
       amount: 0,
-      requested_date: 0,
+      requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
   };
-  
+
   const removeFields = (index) => {
     let data = [...products];
-    data.splice(index, 1)
-    setProducts(data)
-}
+    data.splice(index, 1);
+    setProducts(data);
+  };
 
   useEffect(() => {
     getAllSellerAccountsDetails();
@@ -93,7 +108,6 @@ export const CreateLeadsProformaInvoice = (props) => {
       setOpen(false);
     }
   };
-
 
   useEffect(() => {
     getAllleadsData();
@@ -159,11 +173,13 @@ export const CreateLeadsProformaInvoice = (props) => {
         state: leadIDData.shipping_state,
         city: leadIDData.shipping_city,
         buyer_order_no: inputValue.buyer_order_no,
-        buyer_order_date: inputValue.buyer_order_date,
+        buyer_order_date: inputValue.buyer_order_date
+          ? inputValue.buyer_order_date
+          : values.someDate,
         payment_terms: paymentTermData,
         delivery_terms: deliveryTermData,
         status: "raised",
-        products:products,
+        products: products,
       };
 
       console.log("req :>> ", req);
@@ -193,6 +209,7 @@ export const CreateLeadsProformaInvoice = (props) => {
     } catch (err) {
       if (err.response.status === 400) {
         setErrorMessage(err.response.data.errors.buyer_order_no);
+        setValidationPrice(err.response.data.errors);
       }
       setOpen(false);
       setLeadIDData([]);
@@ -224,7 +241,7 @@ export const CreateLeadsProformaInvoice = (props) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-          <FormControl fullWidth size="small">
+            <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Seller Account
               </InputLabel>
@@ -487,7 +504,6 @@ export const CreateLeadsProformaInvoice = (props) => {
             <TextField
               fullWidth
               required
-              type={"number"}
               name="buyer_order_no"
               size="small"
               label="Buyer Order No"
@@ -506,7 +522,11 @@ export const CreateLeadsProformaInvoice = (props) => {
               size="small"
               label="Buyer Order Date"
               variant="outlined"
-              value={inputValue.buyer_order_date}
+              value={
+                inputValue.buyer_order_date
+                  ? inputValue.buyer_order_date
+                  : values.someDate
+              }
               onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true,
@@ -526,7 +546,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                 <Grid item xs={12} sm={4}>
                   <FormControl fullWidth size="small">
                     <InputLabel id="demo-simple-select-label">
-                    Product Name
+                      Product Name
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
@@ -542,19 +562,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                       ))}
                     </Select>
                   </FormControl>
-                  {/* <Autocomplete
-              style={{
-                minWidth: 180,
-              }}
-              size="small"
-              onChange={event => handleFormChange(index, event)}
-              name="productName"
-              options={product.map((option) => option.product)}
-              getOptionLabel={(option) => `${option ? option : "No Options"}`}
-              renderInput={(params) => (
-                <TextField {...params} label="Product Name" />
-              )}
-            /> */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -575,6 +582,8 @@ export const CreateLeadsProformaInvoice = (props) => {
                     size="small"
                     label="Rate"
                     variant="outlined"
+                    error={validationPrice}
+                    helperText={validationPrice}
                     // value={input.rate}
                     onChange={(event) => handleFormChange(index, event)}
                   />
@@ -592,14 +601,18 @@ export const CreateLeadsProformaInvoice = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <TextField
+                <TextField
                     fullWidth
                     type={"date"}
                     name="requested_date"
                     size="small"
                     label="Request Date"
                     variant="outlined"
-                    value={input.requested_date}
+                    value={
+                      input.requested_date
+                        ? input.requested_date
+                        : values.someDate
+                    }
                     onChange={(event) => handleFormChange(index, event)}
                     InputLabelProps={{
                       shrink: true,
@@ -607,13 +620,22 @@ export const CreateLeadsProformaInvoice = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4} alignContent="right">
-                  <Button onClick={addFields} variant="contained" sx={{marginRight:'1em'}}>
+                  <Button
+                    onClick={addFields}
+                    variant="contained"
+                    sx={{ marginRight: "1em" }}
+                  >
                     Add More...
                   </Button>
-                  {index !== 0 &&
-                  <Button disabled={index === 0} onClick={() => removeFields(index)} variant="contained">
-                  Remove
-                  </Button>}
+                  {index !== 0 && (
+                    <Button
+                      disabled={index === 0}
+                      onClick={() => removeFields(index)}
+                      variant="contained"
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </Grid>
               </>
             );
