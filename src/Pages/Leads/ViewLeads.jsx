@@ -590,7 +590,7 @@ const StageOptions = [
   { label: "Opportunity", value: "opportunity" },
   { label: "Potential", value: "potential" },
   { label: "Interested", value: "interested" },
-  { label: "Converted", value: "not_interested" },
-  { label: "Not Interested", value: "assigned_to__email" },
+  { label: "Converted", value: "converted" },
+  { label: "Not Interested", value: "not_interested" },
   { label: "Close", value: "close" },
 ];
