@@ -194,11 +194,11 @@ export const CreatePriceList = (props) => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              name="slab2_price"
+              name="slab3_price"
               size="small"
               label="Slab3  Price"
               variant="outlined"
-              value={inputValue.slab2_price}
+              value={inputValue.slab3_price}
               onChange={handleInputChange}
             />
           </Grid>

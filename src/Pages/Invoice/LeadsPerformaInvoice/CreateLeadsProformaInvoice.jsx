@@ -3,9 +3,12 @@ import {
   Backdrop,
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   FormControl,
+  FormControlLabel,
   Grid,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -13,14 +16,16 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
 import React, { useState, useEffect } from "react";
+
+import { Popup } from "./../../../Components/Popup";
+import { UpdateLeads } from "./../../Leads/UpdateLeads";
 import InvoiceServices from "../../../services/InvoiceService";
 import LeadServices from "../../../services/LeadService";
 import ProductService from "../../../services/ProductService";
-import { UpdateLeads } from "./../../Leads/UpdateLeads";
-import { Popup } from "./../../../Components/Popup";
+
 const Root = styled("div")(({ theme }) => ({
   width: "100%",
   ...theme.typography.body2,
@@ -57,6 +62,7 @@ export const CreateLeadsProformaInvoice = (props) => {
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
   const [validationPrice, setValidationPrice] = useState("");
+  const [checked, setChecked] = React.useState(true);
 
   const [products, setProducts] = useState([
     {
@@ -69,13 +75,10 @@ export const CreateLeadsProformaInvoice = (props) => {
   ]);
 
   const handleFormChange = (index, event) => {
-    console.log('index :>> ', index);
-    console.log('event', event.target)
     let data = [...products];
     data[index][event.target.name] = event.target.value;
     setProducts(data);
   };
-  console.log('products :>> ', products);
   const addFields = () => {
     let newfield = {
       product: "",
@@ -172,7 +175,7 @@ export const CreateLeadsProformaInvoice = (props) => {
         pincode: leadIDData.shipping_pincode,
         state: leadIDData.shipping_state,
         city: leadIDData.shipping_city,
-        buyer_order_no: inputValue.buyer_order_no,
+        buyer_order_no: checked === true ? "Verbal" : inputValue.buyer_order_no,
         buyer_order_date: inputValue.buyer_order_date
           ? inputValue.buyer_order_date
           : values.someDate,
@@ -501,14 +504,24 @@ export const CreateLeadsProformaInvoice = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
+            <FormControlLabel
+              label="Verbal"
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={(event) => setChecked(event.target.checked)}
+                />
+              }
+            />
+
             <TextField
-              fullWidth
               required
               name="buyer_order_no"
               size="small"
               label="Buyer Order No"
               variant="outlined"
-              value={inputValue.buyer_order_no}
+              disabled={checked === true}
+              value={checked === true ? "Verbal" : inputValue.buyer_order_no}
               onChange={handleInputChange}
               error={errorMessage}
               helperText={errorMessage}
@@ -533,6 +546,7 @@ export const CreateLeadsProformaInvoice = (props) => {
               }}
             />
           </Grid>
+
           <Grid item xs={12}>
             <Root>
               <Divider>
@@ -556,7 +570,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                       onChange={(event) => handleFormChange(index, event)}
                     >
                       {product.map((option, i) => (
-                        <MenuItem key={i} value={option.product}>
+                        <MenuItem key={i} value={option}>
                           {option.product}
                         </MenuItem>
                       ))}
@@ -570,10 +584,18 @@ export const CreateLeadsProformaInvoice = (props) => {
                     size="small"
                     label="Quantity"
                     variant="outlined"
-                    // value={input.quantity}
+                    value={input.quantity}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {input.product ? input.product.unit : ""}
+                        </InputAdornment>
+                      ),
+                    }}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
+       
                 <Grid item xs={12} sm={4}>
                   <TextField
                     type={"number"}
@@ -601,7 +623,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                <TextField
+                  <TextField
                     fullWidth
                     type={"date"}
                     name="requested_date"

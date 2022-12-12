@@ -3,9 +3,12 @@ import {
   Backdrop,
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   FormControl,
+  FormControlLabel,
   Grid,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -59,6 +62,7 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [warehouseData, setWarehouseData] = useState([]);
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
+  const [checked, setChecked] = React.useState(true);
   const [products, setProducts] = useState([
     {
       product: "",
@@ -155,10 +159,8 @@ export const CreateCustomerProformaInvoice = (props) => {
       console.error(err);
     }
   };
-  // const extendJSON = (...objs) => objs.reduce((result, current) => ({...result, ...JSON.parse(current)}), {});
 
-  // console.log(extendJSON(inputFields));
-  console.log("companyData :>> ", companyData);
+
   const createCustomerProformaInvoiceDetails = async (e) => {
     try {
       e.preventDefault();
@@ -173,7 +175,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         pincode: warehouseData.pincode,
         state: warehouseData.state,
         city: warehouseData.city,
-        buyer_order_no: inputValue.buyer_order_no,
+        buyer_order_no: checked === true ? "Verbal" : inputValue.buyer_order_no,
         buyer_order_date: inputValue.buyer_order_date,
         payment_terms: paymentTermData,
         delivery_terms: deliveryTermData,
@@ -310,7 +312,24 @@ export const CreateCustomerProformaInvoice = (props) => {
             </Root>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Autocomplete
+          <FormControl fullWidth size="small">
+              <InputLabel id="demo-simple-select-label">
+                Company Name
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Company Name"
+                onChange={(e, value) => setCompanyData(e.target.value)}
+              >
+                {companyOptions.map((option, i) => (
+                  <MenuItem key={i} value={option}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* <Autocomplete
               name="name"
               size="small"
               disablePortal
@@ -322,7 +341,7 @@ export const CreateCustomerProformaInvoice = (props) => {
               renderInput={(params) => (
                 <TextField {...params} label="Company Name" sx={tfStyle} />
               )}
-            />
+            /> */}
           </Grid>
           <Grid item xs={12} sm={4}>
             <Autocomplete
@@ -436,14 +455,24 @@ export const CreateCustomerProformaInvoice = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
+            <FormControlLabel
+              label="Verbal"
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={(event) => setChecked(event.target.checked)}
+                />
+              }
+            />
+
             <TextField
-              fullWidth
               required
               name="buyer_order_no"
               size="small"
               label="Buyer Order No"
               variant="outlined"
-              value={inputValue.buyer_order_no}
+              disabled={checked === true}
+              value={checked === true ? "Verbal" : inputValue.buyer_order_no}
               onChange={handleInputChange}
               error={errorMessage}
               helperText={errorMessage}
@@ -491,7 +520,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                       onChange={(event) => handleFormChange(index, event)}
                     >
                       {product.map((option, i) => (
-                        <MenuItem key={i} value={option.product}>
+                        <MenuItem key={i} value={option}>
                           {option.product}
                         </MenuItem>
                       ))}
@@ -505,7 +534,14 @@ export const CreateCustomerProformaInvoice = (props) => {
                     size="small"
                     label="Quantity"
                     variant="outlined"
-                    // value={input.quantity}
+                    value={input.quantity}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {input.product ? input.product.unit : ""}
+                        </InputAdornment>
+                      ),
+                    }}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
