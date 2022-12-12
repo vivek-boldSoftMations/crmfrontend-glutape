@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "49302a5da6b299410219",
+    "revision": "e24d0c81015e10882aa7",
     "url": "/crmfrontend-glutape/static/css/main.55e789a5.chunk.css"
   },
   {
-    "revision": "49302a5da6b299410219",
-    "url": "/crmfrontend-glutape/static/js/main.798e368e.chunk.js"
+    "revision": "e24d0c81015e10882aa7",
+    "url": "/crmfrontend-glutape/static/js/main.b1d9a793.chunk.js"
   },
   {
     "revision": "29902e70a1332aa7e93a",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/crmfrontend-glutape/static/media/images.bb00e136.ico"
   },
   {
-    "revision": "c1d5cbdc3bc3965197eb4182d5400abb",
+    "revision": "b8b90d7670670676e6b536d32a0c946c",
     "url": "/crmfrontend-glutape/index.html"
   }
 ];
