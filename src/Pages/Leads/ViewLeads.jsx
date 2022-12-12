@@ -17,7 +17,10 @@ import {
   TableContainer,
   TableFooter,
   Pagination,
-  Autocomplete,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,6 +31,7 @@ import "../CommonStyle.css";
 import { CreateLeads } from "./CreateLeads";
 import { UpdateLeads } from "./UpdateLeads";
 import { Popup } from "./../../Components/Popup";
+import ProductService from "../../services/ProductService";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -52,7 +56,8 @@ export const Viewleads = () => {
   const [leads, setLeads] = useState([]);
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterQuery,setFilterQuery] = useState("");
+  const [filterQuery, setFilterQuery] = useState("");
+  const [filterSelectedQuery, setFilterSelectedQuery] = useState("");
   const errRef = useRef();
   const [errMsg, setErrMsg] = useState("");
   const [pageCount, setpageCount] = useState(0);
@@ -60,10 +65,63 @@ export const Viewleads = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [assigned, setAssigned] = useState([]);
+  const [referenceData, setReferenceData] = useState([]);
+  const [descriptionMenuData, setDescriptionMenuData] = useState([]);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFilterSelectedQuery({ ...filterSelectedQuery, [name]: value });
+  };
+  console.log("filterSelectedQuery :>> ", filterSelectedQuery);
+  console.log("filterQuery :>> ", filterQuery);
+  console.log("searchQuery :>> ", searchQuery);
+  useEffect(() => {
+    getAssignedData();
+  }, []);
+
+  const getAssignedData = async () => {
+    try {
+      setOpen(true);
+      const res = await LeadServices.getAllAssignedUser();
+      setAssigned(res.data);
+      setOpen(false);
+    } catch (error) {
+      console.log("error", error);
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    getReference();
+  }, []);
+
+  const getReference = async () => {
+    try {
+      const res = await LeadServices.getAllRefernces();
+
+      setReferenceData(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getDescriptionNoData();
+  }, []);
+
+  const getDescriptionNoData = async () => {
+    try {
+      const res = await ProductService.getNoDescription();
+      setDescriptionMenuData(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getleads = async () => {
     try {
       setOpen(true);
+      console.log("curretPPage", currentPage);
       if (currentPage) {
         const response = await LeadServices.getAllPaginateLeads(
           currentPage,
@@ -103,15 +161,18 @@ export const Viewleads = () => {
 
   useEffect(() => {
     getleads();
-}, []);
-console.log('filter', filterQuery)
+  }, []);
+  // console.log("filter", filterQuery.value);
 
   const getSearchData = async () => {
     try {
       setOpen(true);
-      console.log('filter', filterQuery)
-      if(filterQuery === null){
-        const response = await LeadServices.getAllSearchLeads(searchQuery);
+      console.log("filter", filterQuery.value);
+      if (searchQuery) {
+        const response = await LeadServices.getAllSearchLeads(
+          filterQuery,
+          searchQuery
+        );
         if (response) {
           setLeads(response.data.results);
           const total = response.data.count;
@@ -119,9 +180,11 @@ console.log('filter', filterQuery)
         } else {
           getleads();
         }
-
-      }else {
-        const response = await LeadServices.getFilterSearchLeads(filterQuery.value,searchQuery);
+      } else if (filterQuery) {
+        const response = await LeadServices.getAllSearchLeads(
+          filterQuery,
+          filterSelectedQuery.values
+        );
         if (response) {
           setLeads(response.data.results);
           const total = response.data.count;
@@ -129,7 +192,7 @@ console.log('filter', filterQuery)
         } else {
           getleads();
         }
-    }
+      }
       setOpen(false);
     } catch (error) {
       console.log("error Search leads", error);
@@ -138,7 +201,8 @@ console.log('filter', filterQuery)
   };
 
   const getResetData = () => {
-    setFilterQuery("")
+    setFilterSelectedQuery("");
+    setFilterQuery("");
     setSearchQuery("");
     getleads();
   };
@@ -153,13 +217,31 @@ console.log('filter', filterQuery)
       const page = value;
       setCurrentPage(page);
       setOpen(true);
-      if (page) {
+
+      if (searchQuery) {
         const response = await LeadServices.getAllPaginateLeads(
           page,
           searchQuery
         );
         setLeads(response.data.results);
+      } else if (filterQuery) {
+        const response = await LeadServices.getFilterSearchLeads(
+          page,
+          filterQuery,
+          filterSelectedQuery.values
+        );
+        if (response) {
+          setLeads(response.data.results);
+          const total = response.data.count;
+          setpageCount(Math.ceil(total / 25));
+        } else {
+          getleads();
+        }
+      } else {
+        const response = await LeadServices.getAllPaginateLeads(page);
+        setLeads(response.data.results);
       }
+
       setOpen(false);
     } catch (error) {
       console.log("error", error);
@@ -167,6 +249,7 @@ console.log('filter', filterQuery)
     }
   };
 
+  console.log("leads", leads.length);
   return (
     <>
       <div className="Auth-form-container">
@@ -200,30 +283,138 @@ console.log('filter', filterQuery)
         </p>
         <Paper sx={{ p: 2, m: 3, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
-            <Box flexGrow={0.6} >
-              <Autocomplete
-              noOptionsText={'No Options'}
+            <Box flexGrow={0.6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">Fliter By</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  name="values"
+                  label="Fliter By"
+                  onChange={(event) => setFilterQuery(event.target.value)}
+                >
+                  {FilterOptions.map((option, i) => (
+                    <MenuItem key={i} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* <Autocomplete
+                noOptionsText={"No Options"}
                 disablePortal
                 size="small"
                 id="combo-box-demo"
                 options={FilterOptions}
                 onChange={(event, value) => setFilterQuery(value)}
+                
                 renderInput={(params) => (
                   <TextField {...params} label="Fliter By" />
                 )}
-              />
-              </Box>
-            <Box flexGrow={1} >
-
-              <TextField
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                name="search"
-                size="small"
-                label="Search"
-                variant="outlined"
-                sx={{ backgroundColor: "#ffffff",marginLeft:'1em' }}
-              />
+              /> */}
+            </Box>
+            <Box flexGrow={1}>
+              {filterQuery === "assigned_to__email" && (
+                <FormControl
+                  sx={{ minWidth: "200px", marginLeft: "1em" }}
+                  size="small"
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    Assigned To
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="values"
+                    label="Assigned To"
+                    onChange={(event) => handleInputChange(event)}
+                  >
+                    {assigned.map((option, i) => (
+                      <MenuItem key={i} value={option.email}>
+                        {option.email}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {filterQuery === "references__source" && (
+                <FormControl
+                  sx={{ minWidth: "200px", marginLeft: "1em" }}
+                  size="small"
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    Reference
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="values"
+                    label="Reference"
+                    onChange={(event) => handleInputChange(event)}
+                  >
+                    {referenceData.map((option) => (
+                      <MenuItem key={option.id} value={option.source}>
+                        {option.source}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {filterQuery === "stage" && (
+                <FormControl
+                  sx={{ minWidth: "200px", marginLeft: "1em" }}
+                  size="small"
+                >
+                  <InputLabel id="demo-simple-select-label">Stage</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="values"
+                    label="Stage"
+                    onChange={(event) => handleInputChange(event)}
+                  >
+                    {StageOptions.map((option, i) => (
+                      <MenuItem key={i} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {filterQuery === "description__name" && (
+                <FormControl
+                  sx={{ minWidth: "200px", marginLeft: "1em" }}
+                  size="small"
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    Description
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="values"
+                    label="Description"
+                    onChange={(event) => handleInputChange(event)}
+                  >
+                    {descriptionMenuData.map((option) => (
+                      <MenuItem key={option.id} value={option.name}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {filterQuery === "search" && (
+                <TextField
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  name="search"
+                  size="small"
+                  label="Search"
+                  variant="outlined"
+                  sx={{ backgroundColor: "#ffffff", marginLeft: "1em" }}
+                />
+              )}
               <Button
                 onClick={getSearchData}
                 size="medium"
@@ -288,42 +479,63 @@ console.log('filter', filterQuery)
                 </TableRow>
               </TableHead>
               <TableBody>
-                {leads.map((row, i) => {
-                  return (
-                    <StyledTableRow key={i}>
-                      <StyledTableCell align="center">
-                        {row.lead_id ? row.lead_id : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.name ? row.name : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.contact ? row.contact : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.email ? row.email : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.alternate_contact ? row.alternate_contact : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.assigned_to ? row.assigned_to : "-"}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.company ? row.company : "-"}
-                      </StyledTableCell>
+                {leads.length > 0 ? (
+                  <>
+                    {leads.map((row, i) => {
+                      console.log("row :>> ", row);
+                      return (
+                        <StyledTableRow key={i}>
+                          <StyledTableCell align="center">
+                            {row.lead_id ? row.lead_id : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.name ? row.name : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.contact ? row.contact : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.email ? row.email : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.alternate_contact
+                              ? row.alternate_contact
+                              : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.assigned_to ? row.assigned_to : "-"}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.company ? row.company : "-"}
+                          </StyledTableCell>
 
-                      <StyledTableCell align="center">
-                        <Button
-                          variant="contained"
-                          onClick={() => openInPopup(row.lead_id)}
-                        >
-                          View
-                        </Button>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  );
-                })}
+                          <StyledTableCell align="center">
+                            <Button
+                              variant="contained"
+                              onClick={() => openInPopup(row.lead_id)}
+                            >
+                              View
+                            </Button>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <StyledTableRow>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell align="center">
+                      No Data Found
+                    </StyledTableCell>
+
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell></StyledTableCell>
+                    <StyledTableCell></StyledTableCell>
+                  </StyledTableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -369,5 +581,16 @@ const FilterOptions = [
   { label: "Description", value: "description__name" },
   { label: "Stage", value: "stage" },
   { label: "Assigned To", value: "assigned_to__email" },
-  { label: "All", value: "search" },
+  { label: "Search", value: "search" },
+];
+
+const StageOptions = [
+  { label: "New", value: "new" },
+  { label: "Open", value: "open" },
+  { label: "Opportunity", value: "opportunity" },
+  { label: "Potential", value: "potential" },
+  { label: "Interested", value: "interested" },
+  { label: "Converted", value: "not_interested" },
+  { label: "Not Interested", value: "assigned_to__email" },
+  { label: "Close", value: "close" },
 ];

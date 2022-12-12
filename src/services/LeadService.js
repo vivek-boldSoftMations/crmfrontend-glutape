@@ -23,20 +23,21 @@ const getAllPaginateUnassigned = (currentPage, search) => {
   );
 };
 
-const getAllSearchUnassignedData = (search) => {
-  return CustomAxios.get(`/api/lead/list-unassigned/?search=${search}`);
+const getAllSearchUnassignedData = (filter,search) => {
+  return CustomAxios.get(`/api/lead/list-unassigned/?${filter}=${search}`);
 };
 
 const getAllAssignedUser = () => {
   return CustomAxios.get(`/api/user/sales-user`);
 };
 
-const getAllSearchLeads = (search) => {
-  return CustomAxios.get(`/api/lead/list-lead/?search=${search}`);
+const getAllSearchLeads = (filter,search) => {
+  return CustomAxios.get(`/api/lead/list-lead/?&${filter}=${search}`);
 };
 
-const getFilterSearchLeads = (filter,search) => {
-  return CustomAxios.get(`/api/lead/list-lead/?${filter}=${search}`);
+const getFilterSearchLeads = (currentPage,filter,search) => {
+  return CustomAxios.get(`/api/lead/list-lead/?page=${currentPage}&${filter}=${search}`);
+
 };
 
 
