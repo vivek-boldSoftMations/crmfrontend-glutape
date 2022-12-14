@@ -69,7 +69,6 @@ export const CreateLeadsProformaInvoice = (props) => {
       product: "",
       quantity: "",
       rate: "",
-      amount: "",
       requested_date: values.someDate,
     },
   ]);
@@ -99,7 +98,6 @@ export const CreateLeadsProformaInvoice = (props) => {
       product: "",
       quantity: "",
       rate: "",
-      amount: "",
       requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
@@ -385,9 +383,6 @@ export const CreateLeadsProformaInvoice = (props) => {
               value={
                 leadIDData ? (leadIDData.contact ? leadIDData.contact : "") : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -404,9 +399,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -421,9 +413,6 @@ export const CreateLeadsProformaInvoice = (props) => {
               value={
                 leadIDData ? (leadIDData.address ? leadIDData.address : "") : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
 
@@ -436,9 +425,6 @@ export const CreateLeadsProformaInvoice = (props) => {
               label="City"
               variant="outlined"
               value={leadIDData ? (leadIDData.city ? leadIDData.city : "") : ""}
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -452,9 +438,6 @@ export const CreateLeadsProformaInvoice = (props) => {
               value={
                 leadIDData ? (leadIDData.state ? leadIDData.state : "") : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -469,9 +452,6 @@ export const CreateLeadsProformaInvoice = (props) => {
               value={
                 leadIDData ? (leadIDData.pincode ? leadIDData.pincode : "") : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -489,9 +469,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -510,9 +487,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -530,9 +504,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -550,9 +521,6 @@ export const CreateLeadsProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -573,10 +541,19 @@ export const CreateLeadsProformaInvoice = (props) => {
               label="Buyer Order No"
               variant="outlined"
               disabled={checked === true}
-              value={checked === true ? "Verbal" : inputValue.buyer_order_no}
+              value={
+                checked === true
+                  ? "Verbal"
+                  : inputValue.buyer_order_no
+                  ? inputValue.buyer_order_no
+                  : ""
+              }
               onChange={handleInputChange}
               error={errorMessage}
               helperText={errorMessage}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -687,8 +664,8 @@ export const CreateLeadsProformaInvoice = (props) => {
                     size="small"
                     label="Amount"
                     variant="outlined"
-                    // value={input.amount}
-                    onChange={(event) => handleFormChange(index, event)}
+                    value={(input.quantity * input.rate).toFixed(2)}
+                    // onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>

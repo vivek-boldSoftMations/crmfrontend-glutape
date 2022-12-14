@@ -58,30 +58,32 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [paymentTermData, setPaymentTermData] = useState([]);
   const [deliveryTermData, setDeliveryTermData] = useState([]);
   const [companyOptions, setCompanyOptions] = useState([]);
+  const [contactOptions, setContactOptions] = useState([]);
+  const [warehouseOptions, setWarehouseOptions] = useState([]);
   const [companyData, setCompanyData] = useState([]);
   const [contactData, setContactData] = useState([]);
   const [warehouseData, setWarehouseData] = useState([]);
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
-  const [checked, setChecked] = React.useState(true);
-  const [productData, setProductData] = useState("");
+  const [checked, setChecked] = useState(true);
+  const [productData, setProductData] = useState();
 
   const [products, setProducts] = useState([
     {
       product: "",
       quantity: "",
       rate: "",
-      amount: "",
       requested_date: values.someDate,
     },
   ]);
 
-  let ContactOptions = companyData
-    ? companyData.contacts
-    : "Please Select First Company";
-  let AddressOption = companyData
-    ? companyData.warehouse
-    : "Please Select First Company";
+  // let ContactOptions = companyData
+  //   ? companyData.contacts
+  //   : "Please Select First Company";
+
+  // let AddressOption = companyData
+  //   ? companyData.warehouse
+  //   : "Please Select First Company";
 
   const handleFormChange = (index, event) => {
     setProductData(event.target.textContent);
@@ -108,7 +110,6 @@ export const CreateCustomerProformaInvoice = (props) => {
       product: "",
       quantity: "",
       rate: "",
-      amount: "",
       requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
@@ -137,10 +138,10 @@ export const CreateCustomerProformaInvoice = (props) => {
   };
 
   useEffect(() => {
-    getAllleadsData();
+    getAllCompanyDetails();
   }, [openPopup3]);
 
-  const getAllleadsData = async () => {
+  const getAllCompanyDetails = async () => {
     try {
       setOpen(true);
       let response = await CustomerServices.getAllCompanyData();
@@ -148,6 +149,25 @@ export const CreateCustomerProformaInvoice = (props) => {
       setOpen(false);
     } catch (err) {
       setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllCompanyDetailsByID();
+  }, [companyData]);
+
+  const getAllCompanyDetailsByID = async () => {
+    try {
+      setOpen(true);
+      const response = await CustomerServices.getCompanyDataById(
+        companyData.id
+      );
+      setContactOptions(response.data.contacts);
+      setWarehouseOptions(response.data.warehouse);
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      console.log("company data by id error", err);
     }
   };
 
@@ -239,7 +259,7 @@ export const CreateCustomerProformaInvoice = (props) => {
     setOpenPopup3(true);
     setOpenPopup2(false);
     setCompanyData([]);
-    getAllleadsData();
+    getAllCompanyDetails();
   };
 
   return (
@@ -387,8 +407,8 @@ export const CreateCustomerProformaInvoice = (props) => {
                 label="Contact"
                 onChange={(e, value) => setContactData(e.target.value)}
               >
-                {ContactOptions &&
-                  ContactOptions.map((option, i) => (
+                {contactOptions &&
+                  contactOptions.map((option, i) => (
                     <MenuItem key={i} value={option}>
                       {option ? option.name : "Please First Select Company"}
                     </MenuItem>
@@ -423,9 +443,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -437,8 +454,8 @@ export const CreateCustomerProformaInvoice = (props) => {
                 label="Address"
                 onChange={(e, value) => setWarehouseData(e.target.value)}
               >
-                {AddressOption &&
-                  AddressOption.map((option, i) => (
+                {warehouseOptions &&
+                  warehouseOptions.map((option, i) => (
                     <MenuItem key={i} value={option}>
                       {option ? option.address : "Please First Select Contact"}
                     </MenuItem>
@@ -481,9 +498,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -501,9 +515,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -545,10 +556,19 @@ export const CreateCustomerProformaInvoice = (props) => {
               label="Buyer Order No"
               variant="outlined"
               disabled={checked === true}
-              value={checked === true ? "Verbal" : inputValue.buyer_order_no}
+              value={
+                checked === true
+                  ? "Verbal"
+                  : inputValue.buyer_order_no
+                  ? inputValue.buyer_order_no
+                  : ""
+              }
               onChange={handleInputChange}
               error={errorMessage}
               helperText={errorMessage}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -657,8 +677,8 @@ export const CreateCustomerProformaInvoice = (props) => {
                     size="small"
                     label="Amount"
                     variant="outlined"
-                    // value={ input.rate * input.quantity}
-                    onChange={(event) => handleFormChange(index, event)}
+                    value={(input.quantity * input.rate).toFixed(2)}
+                    // onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -731,7 +751,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         setOpenPopup={setOpenPopup3}
       >
         <UpdateCompanyDetails
-          getAllleadsData={getAllleadsData}
+          getAllCompanyDetails={getAllCompanyDetails}
           recordForEdit={idForEdit}
           setOpenPopup={setOpenPopup3}
         />
