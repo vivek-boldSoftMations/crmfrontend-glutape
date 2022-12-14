@@ -63,28 +63,43 @@ export const CreateLeadsProformaInvoice = (props) => {
   const [errorMessage, setErrorMessage] = useState();
   const [validationPrice, setValidationPrice] = useState("");
   const [checked, setChecked] = React.useState(true);
-
+  const [productData, setProductData] = useState("");
   const [products, setProducts] = useState([
     {
       product: "",
-      quantity: 0,
-      rate: 0,
-      amount: 0,
+      quantity: "",
+      rate: "",
+      amount: "",
       requested_date: values.someDate,
     },
   ]);
 
   const handleFormChange = (index, event) => {
+    setProductData(event.target.textContent);
     let data = [...products];
-    data[index][event.target.name] = event.target.value;
+    data[index][event.target.name ? event.target.name : "product"] = event
+      .target.value
+      ? event.target.value
+      : event.target.textContent;
     setProducts(data);
   };
+
+  function searchUnit(nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].product === nameKey) {
+        return myArray[i].unit;
+      }
+    }
+  }
+
+  const UNITS = searchUnit(productData, product);
+
   const addFields = () => {
     let newfield = {
       product: "",
-      quantity: 0,
-      rate: 0,
-      amount: 0,
+      quantity: "",
+      rate: "",
+      amount: "",
       requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
@@ -167,7 +182,7 @@ export const CreateLeadsProformaInvoice = (props) => {
       const req = {
         type: "lead",
         raised_by: users.email,
-        seller_account: selectedSellerData,
+        seller_account: selectedSellerData.gst_number,
         lead: leadIDData.lead_id,
         contact: leadIDData.contact,
         alternate_contact: leadIDData.alternate_contact,
@@ -175,17 +190,15 @@ export const CreateLeadsProformaInvoice = (props) => {
         pincode: leadIDData.shipping_pincode,
         state: leadIDData.shipping_state,
         city: leadIDData.shipping_city,
-        buyer_order_no: checked === true ? "Verbal" : inputValue.buyer_order_no,
+        buyer_order_no: checked === true ? "verbal" : inputValue.buyer_order_no,
         buyer_order_date: inputValue.buyer_order_date
           ? inputValue.buyer_order_date
           : values.someDate,
-        payment_terms: paymentTermData,
-        delivery_terms: deliveryTermData,
+        payment_terms: paymentTermData.value,
+        delivery_terms: deliveryTermData.value,
         status: "raised",
         products: products,
       };
-
-      console.log("req :>> ", req);
       setOpen(true);
       if (
         leadIDData.contact !== null &&
@@ -244,7 +257,20 @@ export const CreateLeadsProformaInvoice = (props) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="seller_account"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setSelectedSellerData(value)}
+              options={sellerData}
+              getOptionLabel={(option) => option.state}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Seller Account" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Seller Account
               </InputLabel>
@@ -260,10 +286,23 @@ export const CreateLeadsProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="payment_terms"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setPaymentTermData(value)}
+              options={paymentTermsOptions}
+              getOptionLabel={(option) => option.label}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Payment Terms" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Payment Terms
               </InputLabel>
@@ -279,10 +318,23 @@ export const CreateLeadsProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="delivery_terms"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setDeliveryTermData(value)}
+              options={deliveryTermsOptions}
+              getOptionLabel={(option) => option.label}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Delivery Terms" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Delivery Terms
               </InputLabel>
@@ -298,7 +350,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item xs={12}>
             <Root>
@@ -558,7 +610,24 @@ export const CreateLeadsProformaInvoice = (props) => {
             return (
               <>
                 <Grid item xs={12} sm={4}>
-                  <FormControl fullWidth size="small">
+                  <Autocomplete
+                    name="product"
+                    size="small"
+                    disablePortal
+                    id="combo-box-demo"
+                    onChange={(event, value) => handleFormChange(index, event)}
+                    options={product.map((option) => option.product)}
+                    getOptionLabel={(option) => option}
+                    sx={{ minWidth: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Product Name"
+                        sx={tfStyle}
+                      />
+                    )}
+                  />
+                  {/* <FormControl fullWidth size="small">
                     <InputLabel id="demo-simple-select-label">
                       Product Name
                     </InputLabel>
@@ -575,7 +644,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -588,14 +657,14 @@ export const CreateLeadsProformaInvoice = (props) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          {input.product ? input.product.unit : ""}
+                          {UNITS ? UNITS : ""}
                         </InputAdornment>
                       ),
                     }}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
-       
+
                 <Grid item xs={12} sm={4}>
                   <TextField
                     type={"number"}

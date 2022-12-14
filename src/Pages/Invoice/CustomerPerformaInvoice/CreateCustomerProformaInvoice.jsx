@@ -18,13 +18,14 @@ import {
 import { styled } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import InvoiceServices from "../../../services/InvoiceService";
 import LeadServices from "../../../services/LeadService";
 import ProductService from "../../../services/ProductService";
 import { Popup } from "./../../../Components/Popup";
 import CustomerServices from "../../../services/CustomerService";
 import { UpdateCompanyDetails } from "../../Cutomers/CompanyDetails/UpdateCompanyDetails";
+
 const Root = styled("div")(({ theme }) => ({
   width: "100%",
   ...theme.typography.body2,
@@ -63,27 +64,51 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
   const [checked, setChecked] = React.useState(true);
+  const [productData, setProductData] = useState("");
+
   const [products, setProducts] = useState([
     {
       product: "",
-      quantity: 0,
-      rate: 0,
-      amount: 0,
+      quantity: "",
+      rate: "",
+      amount: "",
       requested_date: values.someDate,
     },
   ]);
+
+  let ContactOptions = companyData
+    ? companyData.contacts
+    : "Please Select First Company";
+  let AddressOption = companyData
+    ? companyData.warehouse
+    : "Please Select First Company";
+
   const handleFormChange = (index, event) => {
+    setProductData(event.target.textContent);
     let data = [...products];
-    data[index][event.target.name] = event.target.value;
+    data[index][event.target.name ? event.target.name : "product"] = event
+      .target.value
+      ? event.target.value
+      : event.target.textContent;
     setProducts(data);
   };
+
+  function searchUnit(nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].product === nameKey) {
+        return myArray[i].unit;
+      }
+    }
+  }
+
+  const UNITS = searchUnit(productData, product);
 
   const addFields = () => {
     let newfield = {
       product: "",
-      quantity: 0,
-      rate: 0,
-      amount: 0,
+      quantity: "",
+      rate: "",
+      amount: "",
       requested_date: values.someDate,
     };
     setProducts([...products, newfield]);
@@ -160,14 +185,13 @@ export const CreateCustomerProformaInvoice = (props) => {
     }
   };
 
-
   const createCustomerProformaInvoiceDetails = async (e) => {
     try {
       e.preventDefault();
       const req = {
         type: "customer",
         raised_by: users.email,
-        seller_account: selectedSellerData,
+        seller_account: selectedSellerData.gst_number,
         company: companyData.name,
         contact: contactData.contact,
         alternate_contact: contactData.alternate_contact,
@@ -175,16 +199,14 @@ export const CreateCustomerProformaInvoice = (props) => {
         pincode: warehouseData.pincode,
         state: warehouseData.state,
         city: warehouseData.city,
-        buyer_order_no: checked === true ? "Verbal" : inputValue.buyer_order_no,
+        buyer_order_no: checked === true ? "verbal" : inputValue.buyer_order_no,
         buyer_order_date: inputValue.buyer_order_date,
-        payment_terms: paymentTermData,
-        delivery_terms: deliveryTermData,
+        payment_terms: paymentTermData.value,
+        delivery_terms: deliveryTermData.value,
         status: "raised",
         // amount: Amount,
         products: products,
       };
-
-      console.log("req :>> ", req);
       setOpen(true);
       if (
         contactData.contact !== null &&
@@ -239,7 +261,20 @@ export const CreateCustomerProformaInvoice = (props) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="seller_account"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setSelectedSellerData(value)}
+              options={sellerData}
+              getOptionLabel={(option) => option.state}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Seller Account" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Seller Account
               </InputLabel>
@@ -255,19 +290,23 @@ export const CreateCustomerProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
-            {/* <TextField
-              fullWidth
-              name="seller_account"
-              size="small"
-              label="Seller Account"
-              variant="outlined"
-              value={inputValue.seller_account}
-              onChange={handleInputChange}
-            /> */}
+            </FormControl> */}
           </Grid>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="payment_terms"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setPaymentTermData(value)}
+              options={paymentTermsOptions}
+              getOptionLabel={(option) => option.label}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Payment Terms" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Payment Terms
               </InputLabel>
@@ -283,10 +322,23 @@ export const CreateCustomerProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
+            <Autocomplete
+              name="delivery_terms"
+              size="small"
+              disablePortal
+              id="combo-box-demo"
+              onChange={(event, value) => setDeliveryTermData(value)}
+              options={deliveryTermsOptions}
+              getOptionLabel={(option) => option.label}
+              sx={{ minWidth: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Delivery Terms" sx={tfStyle} />
+              )}
+            />
+            {/* <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">
                 Delivery Terms
               </InputLabel>
@@ -302,7 +354,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           <Grid item xs={12}>
             <Root>
@@ -312,24 +364,7 @@ export const CreateCustomerProformaInvoice = (props) => {
             </Root>
           </Grid>
           <Grid item xs={12} sm={4}>
-          <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">
-                Company Name
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Company Name"
-                onChange={(e, value) => setCompanyData(e.target.value)}
-              >
-                {companyOptions.map((option, i) => (
-                  <MenuItem key={i} value={option}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {/* <Autocomplete
+            <Autocomplete
               name="name"
               size="small"
               disablePortal
@@ -341,22 +376,38 @@ export const CreateCustomerProformaInvoice = (props) => {
               renderInput={(params) => (
                 <TextField {...params} label="Company Name" sx={tfStyle} />
               )}
-            /> */}
+            />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Autocomplete
+            <FormControl fullWidth size="small">
+              <InputLabel id="demo-simple-select-label">Contact</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Contact"
+                onChange={(e, value) => setContactData(e.target.value)}
+              >
+                {ContactOptions &&
+                  ContactOptions.map((option, i) => (
+                    <MenuItem key={i} value={option}>
+                      {option ? option.name : "Please First Select Company"}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            {/* <Autocomplete
               name="contact"
               size="small"
               disablePortal
               id="combo-box-demo"
               onChange={(event, value) => setContactData(value)}
-              options={companyData.contacts}
-              getOptionLabel={(option) => option.contact}
+              options={companyData ? companyData.contacts : ''}
+              getOptionLabel={(option) => option ? option.name ? option.name : '' : ''}
               sx={{ minWidth: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Contact" sx={tfStyle} />
               )}
-            />
+            /> */}
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
@@ -378,19 +429,41 @@ export const CreateCustomerProformaInvoice = (props) => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Autocomplete
+            <FormControl fullWidth size="small">
+              <InputLabel id="demo-simple-select-label">Address</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Address"
+                onChange={(e, value) => setWarehouseData(e.target.value)}
+              >
+                {AddressOption &&
+                  AddressOption.map((option, i) => (
+                    <MenuItem key={i} value={option}>
+                      {option ? option.address : "Please First Select Contact"}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            {/* <Autocomplete
               name="address"
               size="small"
               disablePortal
               id="combo-box-demo"
               onChange={(event, value) => setWarehouseData(value)}
-              options={companyData.warehouse}
-              getOptionLabel={(option) => option.address}
+              options={
+                companyData
+                  ? companyData.warehouse
+                    ? companyData.warehouse
+                    : ""
+                  : ""
+              }
+              getOptionLabel={(option) => option ? option.address ? option.address : '' : ''}
               sx={{ minWidth: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Address" sx={tfStyle} />
               )}
-            />
+            /> */}
           </Grid>
 
           <Grid item xs={12} sm={4}>
@@ -508,11 +581,30 @@ export const CreateCustomerProformaInvoice = (props) => {
             return (
               <>
                 <Grid item xs={12} sm={4}>
-                  <FormControl fullWidth size="small">
+                  <Autocomplete
+                    name="product"
+                    size="small"
+                    disablePortal
+                    id="combo-box-demo"
+                    onChange={(event, value) => handleFormChange(index, event)}
+                    options={product.map((option) => option.product)}
+                    getOptionLabel={(option) => option}
+                    sx={{ minWidth: 300 }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Product Name"
+                        sx={tfStyle}
+                      />
+                    )}
+                  />
+
+                  {/* <FormControl fullWidth size="small">
                     <InputLabel id="demo-simple-select-label">
                       Product Name
                     </InputLabel>
                     <Select
+                    type="search"
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       name="product"
@@ -525,7 +617,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
@@ -538,7 +630,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          {input.product ? input.product.unit : ""}
+                          {UNITS ? UNITS : ""}
                         </InputAdornment>
                       ),
                     }}
@@ -565,7 +657,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                     size="small"
                     label="Amount"
                     variant="outlined"
-                    // value={input.amount}
+                    // value={ input.rate * input.quantity}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
@@ -705,7 +797,7 @@ const deliveryTermsOptions = [
   },
   {
     label: "Customer Door Delivery (Freight to Prepaid)",
-    value: "customer_door_delivery_(freight_to_pay)",
+    value: "customer_door_delivery_(freight_to_prepaid)",
   },
   {
     label: "Add actual freight in invoice",
