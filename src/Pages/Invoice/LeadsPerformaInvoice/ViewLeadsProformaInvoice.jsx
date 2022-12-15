@@ -184,12 +184,12 @@ export const ViewLeadsProformaInvoice = () => {
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="center">PI NUMBER</StyledTableCell>
+                {/* <StyledTableCell align="center">TYPE</StyledTableCell> */}
+                  <StyledTableCell align="center">COMPANY NAME</StyledTableCell>
                   <StyledTableCell align="center">CONTACT</StyledTableCell>
                   <StyledTableCell align="center">
-                    VALIDITY
+                    ALT. CONTACT NO.
                   </StyledTableCell>
-                  <StyledTableCell align="center">TOTAL</StyledTableCell>
                   <StyledTableCell align="center">STATUS</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
@@ -198,18 +198,19 @@ export const ViewLeadsProformaInvoice = () => {
                 {invoiceData.map((row, i) => {
                   return (
                     <StyledTableRow key={i}>
+                      {/* <StyledTableCell align="center">
+                        {row.type.toUpperCase()}
+                      </StyledTableCell> */}
                       <StyledTableCell align="center">
-                        {row.pi_number}
+                        {row.company}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.contact}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.validity}
+                        {row.alternate_contact}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.total}
-                      </StyledTableCell>
+            
                       <StyledTableCell align="center">
                         {row.status}
                       </StyledTableCell>

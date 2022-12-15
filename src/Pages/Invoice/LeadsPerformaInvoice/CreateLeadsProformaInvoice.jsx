@@ -64,6 +64,7 @@ export const CreateLeadsProformaInvoice = (props) => {
   const [validationPrice, setValidationPrice] = useState("");
   const [checked, setChecked] = React.useState(true);
   const [productData, setProductData] = useState("");
+  const [unit, setUnit] = useState("");
   const [products, setProducts] = useState([
     {
       product: "",
@@ -86,12 +87,12 @@ export const CreateLeadsProformaInvoice = (props) => {
   function searchUnit(nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
       if (myArray[i].product === nameKey) {
-        return myArray[i].unit;
+        return myArray[i].id;
       }
     }
   }
 
-  const UNITS = searchUnit(productData, product);
+  const ID = searchUnit(productData, product);
 
   const addFields = () => {
     let newfield = {
@@ -153,6 +154,19 @@ export const CreateLeadsProformaInvoice = (props) => {
     } catch (err) {
       console.error("error potential", err);
       setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (ID) getPriceListData(ID);
+  }, [ID]);
+
+  const getPriceListData = async () => {
+    try {
+      const response = await ProductService.getPriceListById(ID);
+      setUnit(response.data.unit);
+    } catch (error) {
+      console.log("error", error);
     }
   };
 
@@ -623,7 +637,7 @@ export const CreateLeadsProformaInvoice = (props) => {
                     </Select>
                   </FormControl> */}
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     fullWidth
                     name="quantity"
@@ -631,18 +645,19 @@ export const CreateLeadsProformaInvoice = (props) => {
                     label="Quantity"
                     variant="outlined"
                     value={input.quantity}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {UNITS ? UNITS : ""}
-                        </InputAdornment>
-                      ),
-                    }}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
-
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Unit"
+                    variant="outlined"
+                    value={unit ? unit : ""}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     type={"number"}
                     fullWidth

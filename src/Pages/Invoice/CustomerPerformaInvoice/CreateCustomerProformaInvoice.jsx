@@ -67,7 +67,7 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [errorMessage, setErrorMessage] = useState();
   const [checked, setChecked] = useState(true);
   const [productData, setProductData] = useState();
-
+  const [unit, setUnit] = useState("");
   const [products, setProducts] = useState([
     {
       product: "",
@@ -98,12 +98,12 @@ export const CreateCustomerProformaInvoice = (props) => {
   function searchUnit(nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
       if (myArray[i].product === nameKey) {
-        return myArray[i].unit;
+        return myArray[i].id;
       }
     }
   }
 
-  const UNITS = searchUnit(productData, product);
+  const ID = searchUnit(productData, product);
 
   const addFields = () => {
     let newfield = {
@@ -186,6 +186,21 @@ export const CreateCustomerProformaInvoice = (props) => {
       setOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (ID) getPriceListData(ID);
+  }, [ID]);
+
+  const getPriceListData = async () => {
+    try {
+      const response = await ProductService.getPriceListById(ID);
+      setUnit(response.data.unit)
+
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -533,9 +548,6 @@ export const CreateCustomerProformaInvoice = (props) => {
                     : ""
                   : ""
               }
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -600,7 +612,7 @@ export const CreateCustomerProformaInvoice = (props) => {
           {products.map((input, index) => {
             return (
               <>
-                <Grid item xs={12} sm={4}>
+                <Grid key={index} item xs={12} sm={4}>
                   <Autocomplete
                     name="product"
                     size="small"
@@ -639,7 +651,7 @@ export const CreateCustomerProformaInvoice = (props) => {
                     </Select>
                   </FormControl> */}
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     fullWidth
                     name="quantity"
@@ -647,17 +659,19 @@ export const CreateCustomerProformaInvoice = (props) => {
                     label="Quantity"
                     variant="outlined"
                     value={input.quantity}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          {UNITS ? UNITS : ""}
-                        </InputAdornment>
-                      ),
-                    }}
                     onChange={(event) => handleFormChange(index, event)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Unit"
+                    variant="outlined"
+                    value={unit ? unit : ""}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     type={"number"}
                     fullWidth
