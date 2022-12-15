@@ -65,6 +65,7 @@ export const CreateCustomerProformaInvoice = (props) => {
   const [warehouseData, setWarehouseData] = useState([]);
   const [idForEdit, setIDForEdit] = useState();
   const [errorMessage, setErrorMessage] = useState();
+  const [validationPrice, setValidationPrice] = useState("");
   const [checked, setChecked] = useState(true);
   const [productData, setProductData] = useState();
   const [unit, setUnit] = useState("");
@@ -255,17 +256,16 @@ export const CreateCustomerProformaInvoice = (props) => {
         getCustomerPIDetails();
       } else {
         setIDForEdit(companyData.id);
-        setCompanyData([]);
         setOpenPopup2(true);
       }
       setOpen(false);
     } catch (err) {
       if (err.response.status === 400) {
         setErrorMessage(err.response.data.errors.buyer_order_no);
+        setValidationPrice(err.response.data.errors);
       }
       // setIDForEdit(leadIDData.lead_id);
       setOpen(false);
-      setCompanyData([]);
       // setOpenPopup2(true);
     }
   };
@@ -679,6 +679,8 @@ export const CreateCustomerProformaInvoice = (props) => {
                     size="small"
                     label="Rate"
                     variant="outlined"
+                    error={validationPrice}
+                    helperText={validationPrice}
                     // value={input.rate}
                     onChange={(event) => handleFormChange(index, event)}
                   />
