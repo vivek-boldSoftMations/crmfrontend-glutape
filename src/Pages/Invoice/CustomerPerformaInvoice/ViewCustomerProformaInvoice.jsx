@@ -14,13 +14,22 @@ import {
   TableCell,
   Button,
   Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TableFooter,
+  Pagination,
+  IconButton,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
 import InvoiceServices from "../../../services/InvoiceService";
-import { CreateCustomerProformaInvoice } from './CreateCustomerProformaInvoice';
-import { Popup } from './../../../Components/Popup';
-import { CustomerProformaInvoice } from './CustomerProformaInvoice';
+import { CreateCustomerProformaInvoice } from "./CreateCustomerProformaInvoice";
+import { Popup } from "./../../../Components/Popup";
+import { CustomerProformaInvoice } from "./CustomerProformaInvoice";
 import AddIcon from "@mui/icons-material/Add";
+import LeadServices from "../../../services/LeadService";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,6 +51,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const FilterOptions = [{ label: "Status", value: "status" }];
+
+const StatusOptions = [
+  { label: "Raised", value: "raised" },
+  { label: "Pending Approval", value: "pending_approval" },
+  { label: "Approved", value: "approved" },
+];
+
 export const ViewCustomerProformaInvoice = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -50,6 +67,29 @@ export const ViewCustomerProformaInvoice = () => {
   const [open, setOpen] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [invoiceData, setInvoiceData] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [pageCount, setpageCount] = useState(0);
+  const [filterQuery, setFilterQuery] = useState("status");
+  const [filterSelectedQuery, setFilterSelectedQuery] = useState("");
+
+  const handleInputChange = (event) => {
+    setFilterSelectedQuery(event.target.value);
+    getSearchData(event.target.value);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = async () => {
+    try {
+      const res = await LeadServices.getProfile();
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     getCustomerPIDetails();
   }, []);
@@ -59,6 +99,8 @@ export const ViewCustomerProformaInvoice = () => {
       setOpen(true);
       const response = await InvoiceServices.getCompanyPerformaInvoiceData();
       setInvoiceData(response.data.results);
+      const total = response.data.count;
+      setpageCount(Math.ceil(total / 25));
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -81,12 +123,69 @@ export const ViewCustomerProformaInvoice = () => {
     }
   };
 
+  const getSearchData = async (value) => {
+    try {
+      setOpen(true);
+      const filterSearch = value;
+      setFilterSelectedQuery(filterSearch);
+      if (filterQuery) {
+        const response = await InvoiceServices.getCompanyPIFilterBy(
+          filterQuery,
+          filterSearch
+        );
+        if (response) {
+          setInvoiceData(response.data.results);
+          const total = response.data.count;
+          setpageCount(Math.ceil(total / 25));
+        } else {
+          getCustomerPIDetails();
+          setFilterSelectedQuery("");
+        }
+      }
+      setOpen(false);
+    } catch (error) {
+      console.log("error Search leads", error);
+      setOpen(false);
+    }
+  };
 
+  const handlePageClick = async (value) => {
+    try {
+      const page = value;
+      setOpen(true);
 
-  // const getResetData = () => {
-  //   setSearchQuery("");
-  //   // getUnits();
-  // };
+      if (filterSelectedQuery) {
+        const response =
+          await InvoiceServices.getCompanyPIPaginationWithFilterBy(
+            page,
+            filterQuery,
+            filterSelectedQuery
+          );
+        if (response) {
+          setInvoiceData(response.data.results);
+          const total = response.data.count;
+          setpageCount(Math.ceil(total / 25));
+        } else {
+          getCustomerPIDetails();
+          setFilterSelectedQuery("");
+        }
+      } else {
+        const response = await InvoiceServices.getCompanyPIPagination(page);
+        setInvoiceData(response.data.results);
+      }
+
+      setOpen(false);
+    } catch (error) {
+      console.log("error", error);
+      setOpen(false);
+    }
+  };
+
+  const getResetData = () => {
+    // setSearchQuery("");
+    setFilterSelectedQuery("");
+    getCustomerPIDetails();
+  };
 
   const openInPopup = (item) => {
     setIDForEdit(item);
@@ -124,28 +223,89 @@ export const ViewCustomerProformaInvoice = () => {
         </p>
         <Paper sx={{ p: 2, m: 4, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
-            <Box flexGrow={2}>
+            <Box flexGrow={0.6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">Fliter By</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  name="values"
+                  label="Fliter By"
+                  value={filterQuery}
+                  onChange={(event) => setFilterQuery(event.target.value)}
+                >
+                  {FilterOptions.map((option, i) => (
+                    <MenuItem key={i} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box flexGrow={1}>
+              {filterQuery === "status" && (
+                <FormControl
+                  sx={{ minWidth: "200px", marginLeft: "1em" }}
+                  size="small"
+                >
+                  <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="values"
+                    label="Status"
+                    onChange={(event) => handleInputChange(event)}
+                    sx={{
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    endAdornment={
+                      <IconButton
+                        sx={{
+                          visibility: filterSelectedQuery
+                            ? "visible"
+                            : "hidden",
+                        }}
+                        onClick={getResetData}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    }
+                  >
+                    {StatusOptions.map((option, i) => (
+                      <MenuItem key={i} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+
               {/* <TextField
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 name="search"
                 size="small"
                 label="Search"
                 variant="outlined"
                 sx={{ backgroundColor: "#ffffff" }}
-              />
-  
-              <Button
-                // onClick={getSearchData}
+              /> */}
+
+              {/* <Button
+                onClick={getSearchData}
                 size="medium"
                 sx={{ marginLeft: "1em" }}
                 variant="contained"
-                // startIcon={<SearchIcon />}
+                startIcon={<SearchIcon />}
               >
                 Search
               </Button> */}
               {/* <Button
-                // onClick={getResetData}
+                onClick={getResetData}
                 sx={{ marginLeft: "1em" }}
                 size="medium"
                 variant="contained"
@@ -163,7 +323,7 @@ export const ViewCustomerProformaInvoice = () => {
                   fontWeight: 800,
                 }}
               >
-               Customer Proforma Invoice Details
+                Customer PI
               </h3>
             </Box>
             <Box flexGrow={0.5} align="right">
@@ -173,7 +333,7 @@ export const ViewCustomerProformaInvoice = () => {
                 color="success"
                 startIcon={<AddIcon />}
               >
-                Generate Proforma Invoice
+                Generate PI
               </Button>
             </Box>
           </Box>
@@ -210,14 +370,13 @@ export const ViewCustomerProformaInvoice = () => {
                       <StyledTableCell align="center">
                         {row.status}
                       </StyledTableCell>
-                      <StyledTableCell align="center" >
-                      <Button
+                      <StyledTableCell align="center">
+                        <Button
                           variant="contained"
                           onClick={() => openInPopup(row.pi_number)}
                         >
                           View
                         </Button>
-                  
                       </StyledTableCell>
                     </StyledTableRow>
                   );
@@ -225,6 +384,17 @@ export const ViewCustomerProformaInvoice = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TableFooter
+            sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}
+          >
+            <Pagination
+              count={pageCount}
+              onChange={handlePageClick}
+              color={"primary"}
+              variant="outlined"
+              shape="circular"
+            />
+          </TableFooter>
         </Paper>
       </Grid>
       <Popup
@@ -233,16 +403,20 @@ export const ViewCustomerProformaInvoice = () => {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <CreateCustomerProformaInvoice getCustomerPIDetails={getCustomerPIDetails} setOpenPopup={setOpenPopup} />
+        <CreateCustomerProformaInvoice
+          getCustomerPIDetails={getCustomerPIDetails}
+          setOpenPopup={setOpenPopup}
+        />
       </Popup>
       <Popup
-       maxWidth={"xl"}
+        maxWidth={"xl"}
         title={"View Proforma Invoice"}
         openPopup={openPopup2}
         setOpenPopup={setOpenPopup2}
       >
         <CustomerProformaInvoice
-        idForEdit={idForEdit}
+          idForEdit={idForEdit}
+          getCustomerPIDetails={getCustomerPIDetails}
           setOpenPopup={setOpenPopup2}
         />
       </Popup>

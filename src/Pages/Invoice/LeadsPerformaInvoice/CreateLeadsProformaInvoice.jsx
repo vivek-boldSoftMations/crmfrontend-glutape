@@ -208,7 +208,7 @@ export const CreateLeadsProformaInvoice = (props) => {
           : values.someDate,
         payment_terms: paymentTermData.value,
         delivery_terms: deliveryTermData.value,
-        status: "raised",
+        status: "pending_approval",
         products: products,
       };
       setOpen(true);

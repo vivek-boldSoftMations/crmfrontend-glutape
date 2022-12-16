@@ -32,7 +32,7 @@ const getAllAssignedUser = () => {
 };
 
 const getAllSearchLeads = (filter,search) => {
-  return CustomAxios.get(`/api/lead/list-lead/?&${filter}=${search}`);
+  return CustomAxios.get(`/api/lead/list-lead/?${filter}=${search}`);
 };
 
 const getFilterSearchLeads = (currentPage,filter,search) => {

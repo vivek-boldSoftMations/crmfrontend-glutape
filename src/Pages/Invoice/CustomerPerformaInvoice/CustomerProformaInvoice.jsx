@@ -11,10 +11,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import InvoiceServices from "../../../services/InvoiceService";
 import "../../CommonStyle.css";
 import logo from " ../../../public/images.ico";
+import LeadServices from "../../../services/LeadService";
 
 const typographyStyling = {
   fontWeight: "bold",
@@ -39,12 +40,27 @@ const commonStyles = {
 };
 
 export const CustomerProformaInvoice = (props) => {
-  const { idForEdit, setOpenPopup } = props;
+  const { idForEdit, setOpenPopup,getCustomerPIDetails } = props;
   const [invoiceData, setInvoiceData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
   const [sellerData, setSellerData] = useState([]);
   const [paymentTerms, setPaymentTerms] = useState("");
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = async () => {
+    try {
+      const res = await LeadServices.getProfile();
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     getAllProformaInvoiceDetails();
   }, []);
@@ -81,12 +97,11 @@ export const CustomerProformaInvoice = (props) => {
   };
 
   const SendForApprovalStatus = async (e) => {
-    console.log("e :>> ", e);
     try {
       e.preventDefault();
       const req = {
         type: invoiceData.type,
-        raised_by: invoiceData.raised_by,
+        raised_by: users.email,
         seller_account: invoiceData.seller_account,
         company: invoiceData.company,
         address: invoiceData.address,
@@ -100,7 +115,7 @@ export const CustomerProformaInvoice = (props) => {
         delivery_terms: invoiceData.delivery_terms,
         generation_date: invoiceData.generation_date,
         validity: invoiceData.validity,
-        status: "pending_approval",
+        status: "approved",
         amount: invoiceData.amount,
         sgst: invoiceData.sgst ? invoiceData.sgst : null,
         cgst: invoiceData.cgst ? invoiceData.cgst : null,
@@ -119,6 +134,24 @@ export const CustomerProformaInvoice = (props) => {
       );
       setOpenPopup(false);
       setOpen(false);
+      getCustomerPIDetails();
+    } catch (err) {
+      setOpen(false);
+    }
+  };
+
+  const SendForApprovalPI = async (e) => {
+    try {
+      e.preventDefault();
+      const req = {
+        proformainvoice: invoiceData.pi_number,
+        approved_by: users.email,
+        status: "approved",
+      };
+      await InvoiceServices.sendForApprovalData(req);
+      setOpenPopup(false);
+      setOpen(false);
+      getCustomerPIDetails();
     } catch (err) {
       setOpen(false);
     }
@@ -363,9 +396,17 @@ export const CustomerProformaInvoice = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
-          <Button variant="contained" onClick={(e) => SendForApprovalStatus(e)}>
-            Send For Approval
-          </Button>
+        {users.is_staff === true && invoiceData.status === "pending_approval" && (
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                SendForApprovalPI(e);
+                SendForApprovalStatus(e);
+              }}
+            >
+              Approve
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>

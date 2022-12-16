@@ -218,13 +218,14 @@ export const Viewleads = () => {
       setCurrentPage(page);
       setOpen(true);
 
-      if (searchQuery) {
+      if (searchQuery !== undefined) {
         const response = await LeadServices.getAllPaginateLeads(
           page,
           searchQuery
         );
         setLeads(response.data.results);
-      } else if (filterQuery) {
+      } 
+       if (filterQuery ) {
         const response = await LeadServices.getFilterSearchLeads(
           page,
           filterQuery,
@@ -237,7 +238,8 @@ export const Viewleads = () => {
         } else {
           getleads();
         }
-      } else {
+      } 
+      if(page && searchQuery === undefined){
         const response = await LeadServices.getAllPaginateLeads(page);
         setLeads(response.data.results);
       }

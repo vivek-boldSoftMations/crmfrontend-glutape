@@ -8,7 +8,6 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -239,7 +238,7 @@ export const CreateCustomerProformaInvoice = (props) => {
         buyer_order_date: inputValue.buyer_order_date,
         payment_terms: paymentTermData.value,
         delivery_terms: deliveryTermData.value,
-        status: "raised",
+        status: "pending_approval",
         // amount: Amount,
         products: products,
       };
