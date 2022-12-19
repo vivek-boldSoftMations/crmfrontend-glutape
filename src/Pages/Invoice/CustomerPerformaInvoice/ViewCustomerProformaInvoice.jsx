@@ -149,7 +149,7 @@ export const ViewCustomerProformaInvoice = () => {
     }
   };
 
-  const handlePageClick = async (value) => {
+  const handlePageClick = async (event,value) => {
     try {
       const page = value;
       setOpen(true);
@@ -183,7 +183,7 @@ export const ViewCustomerProformaInvoice = () => {
 
   const getResetData = () => {
     // setSearchQuery("");
-    setFilterSelectedQuery("");
+    setFilterSelectedQuery();
     getCustomerPIDetails();
   };
 
@@ -254,6 +254,7 @@ export const ViewCustomerProformaInvoice = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Status"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
                     sx={{
                       "& .MuiSelect-iconOutlined": {

@@ -21,7 +21,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
 } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import { tableCellClasses } from "@mui/material/TableCell";
 import AddIcon from "@mui/icons-material/Add";
 import LeadServices from "./../../services/LeadService";
@@ -55,7 +57,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const Viewleads = () => {
   const [leads, setLeads] = useState([]);
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
   const [filterSelectedQuery, setFilterSelectedQuery] = useState("");
   const errRef = useRef();
@@ -69,12 +70,12 @@ export const Viewleads = () => {
   const [referenceData, setReferenceData] = useState([]);
   const [descriptionMenuData, setDescriptionMenuData] = useState([]);
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFilterSelectedQuery({ ...filterSelectedQuery, [name]: value });
+    setFilterSelectedQuery(event.target.value);
+    getSearchData(event.target.value);
   };
   console.log("filterSelectedQuery :>> ", filterSelectedQuery);
   console.log("filterQuery :>> ", filterQuery);
-  console.log("searchQuery :>> ", searchQuery);
+
   useEffect(() => {
     getAssignedData();
   }, []);
@@ -121,12 +122,8 @@ export const Viewleads = () => {
   const getleads = async () => {
     try {
       setOpen(true);
-      console.log("curretPPage", currentPage);
       if (currentPage) {
-        const response = await LeadServices.getAllPaginateLeads(
-          currentPage,
-          searchQuery
-        );
+        const response = await LeadServices.getAllPaginateLeads(currentPage);
         setLeads(response.data.results);
       } else {
         let response = await LeadServices.getAllLeads();
@@ -164,14 +161,14 @@ export const Viewleads = () => {
   }, []);
   // console.log("filter", filterQuery.value);
 
-  const getSearchData = async () => {
+  const getSearchData = async (value) => {
     try {
       setOpen(true);
-      console.log("filter", filterQuery.value);
-      if (searchQuery) {
+      const filterSearch = value;
+      if (filterQuery) {
         const response = await LeadServices.getAllSearchLeads(
           filterQuery,
-          searchQuery
+          filterSearch
         );
         if (response) {
           setLeads(response.data.results);
@@ -179,18 +176,7 @@ export const Viewleads = () => {
           setpageCount(Math.ceil(total / 25));
         } else {
           getleads();
-        }
-      } else if (filterQuery) {
-        const response = await LeadServices.getAllSearchLeads(
-          filterQuery,
-          filterSelectedQuery.values
-        );
-        if (response) {
-          setLeads(response.data.results);
-          const total = response.data.count;
-          setpageCount(Math.ceil(total / 25));
-        } else {
-          getleads();
+          setFilterSelectedQuery("");
         }
       }
       setOpen(false);
@@ -203,7 +189,6 @@ export const Viewleads = () => {
   const getResetData = () => {
     setFilterSelectedQuery("");
     setFilterQuery("");
-    setSearchQuery("");
     getleads();
   };
 
@@ -215,21 +200,16 @@ export const Viewleads = () => {
   const handlePageClick = async (event, value) => {
     try {
       const page = value;
+      console.log("page", page);
       setCurrentPage(page);
       setOpen(true);
 
-      if (searchQuery !== undefined) {
-        const response = await LeadServices.getAllPaginateLeads(
-          page,
-          searchQuery
-        );
-        setLeads(response.data.results);
-      } 
-       if (filterQuery ) {
-        const response = await LeadServices.getFilterSearchLeads(
+      if (filterSelectedQuery) {
+        console.log("filter starting :>> ");
+        const response = await LeadServices.getFilterPaginateLeads(
           page,
           filterQuery,
-          filterSelectedQuery.values
+          filterSelectedQuery
         );
         if (response) {
           setLeads(response.data.results);
@@ -237,9 +217,10 @@ export const Viewleads = () => {
           setpageCount(Math.ceil(total / 25));
         } else {
           getleads();
+          setFilterSelectedQuery("");
         }
-      } 
-      if(page && searchQuery === undefined){
+      } else {
+        console.log("starting :>> ");
         const response = await LeadServices.getAllPaginateLeads(page);
         setLeads(response.data.results);
       }
@@ -293,6 +274,7 @@ export const Viewleads = () => {
                   id="demo-simple-select"
                   name="values"
                   label="Fliter By"
+                  value={filterQuery}
                   onChange={(event) => setFilterQuery(event.target.value)}
                 >
                   {FilterOptions.map((option, i) => (
@@ -329,7 +311,28 @@ export const Viewleads = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Assigned To"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
+                    sx={{
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    endAdornment={
+                      <IconButton
+                        sx={{
+                          visibility: filterSelectedQuery
+                            ? "visible"
+                            : "hidden",
+                        }}
+                        onClick={getResetData}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    }
                   >
                     {assigned.map((option, i) => (
                       <MenuItem key={i} value={option.email}>
@@ -352,7 +355,28 @@ export const Viewleads = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Reference"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
+                    sx={{
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    endAdornment={
+                      <IconButton
+                        sx={{
+                          visibility: filterSelectedQuery
+                            ? "visible"
+                            : "hidden",
+                        }}
+                        onClick={getResetData}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    }
                   >
                     {referenceData.map((option) => (
                       <MenuItem key={option.id} value={option.source}>
@@ -373,7 +397,28 @@ export const Viewleads = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Stage"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
+                    sx={{
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    endAdornment={
+                      <IconButton
+                        sx={{
+                          visibility: filterSelectedQuery
+                            ? "visible"
+                            : "hidden",
+                        }}
+                        onClick={getResetData}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    }
                   >
                     {StageOptions.map((option, i) => (
                       <MenuItem key={i} value={option.value}>
@@ -396,7 +441,28 @@ export const Viewleads = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Description"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
+                    sx={{
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    endAdornment={
+                      <IconButton
+                        sx={{
+                          visibility: filterSelectedQuery
+                            ? "visible"
+                            : "hidden",
+                        }}
+                        onClick={getResetData}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    }
                   >
                     {descriptionMenuData.map((option) => (
                       <MenuItem key={option.id} value={option.name}>
@@ -407,33 +473,59 @@ export const Viewleads = () => {
                 </FormControl>
               )}
               {filterQuery === "search" && (
-                <TextField
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  name="search"
-                  size="small"
-                  label="Search"
-                  variant="outlined"
-                  sx={{ backgroundColor: "#ffffff", marginLeft: "1em" }}
-                />
+                <>
+                  <TextField
+                    value={filterSelectedQuery}
+                    onChange={(event) => handleInputChange(event)}
+                    name="search"
+                    size="small"
+                    label="Search"
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#ffffff",
+                      marginLeft: "1em",
+                      "& .MuiSelect-iconOutlined": {
+                        display: filterSelectedQuery ? "none" : "",
+                      },
+                      "&.Mui-focused .MuiIconButton-root": {
+                        color: "primary.main",
+                      },
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          sx={{
+                            visibility: filterSelectedQuery
+                              ? "visible"
+                              : "hidden",
+                          }}
+                          onClick={getResetData}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      ),
+                    }}
+                  />
+
+                  {/* <Button
+                    onClick={getSearchData}
+                    size="medium"
+                    sx={{ marginLeft: "1em" }}
+                    variant="contained"
+                    startIcon={<SearchIcon />}
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    onClick={getResetData}
+                    sx={{ marginLeft: "1em" }}
+                    size="medium"
+                    variant="contained"
+                  >
+                    Reset
+                  </Button> */}
+                </>
               )}
-              <Button
-                onClick={getSearchData}
-                size="medium"
-                sx={{ marginLeft: "1em" }}
-                variant="contained"
-                startIcon={<SearchIcon />}
-              >
-                Search
-              </Button>
-              <Button
-                onClick={getResetData}
-                sx={{ marginLeft: "1em" }}
-                size="medium"
-                variant="contained"
-              >
-                Reset
-              </Button>
             </Box>
             <Box flexGrow={1} align="center">
               <h3
@@ -484,7 +576,6 @@ export const Viewleads = () => {
                 {leads.length > 0 ? (
                   <>
                     {leads.map((row, i) => {
-                      console.log("row :>> ", row);
                       return (
                         <StyledTableRow key={i}>
                           <StyledTableCell align="center">

@@ -16,6 +16,8 @@ import InvoiceServices from "../../../services/InvoiceService";
 import "../../CommonStyle.css";
 import logo from " ../../../public/images.ico";
 import LeadServices from "../../../services/LeadService";
+import { Popup } from "./../../../Components/Popup";
+import { LeadConfirmationPayment } from "./LeadConfirmationPayment";
 const typographyStyling = {
   fontWeight: "bold",
 };
@@ -32,13 +34,14 @@ const rows = [
 
 export const LeadsPerformaInvoice = (props) => {
   const { idForEdit, setOpenPopup, getAllLeadsPIDetails } = props;
+  const [openPopup2, setOpenPopup2] = useState(false);
   const [invoiceData, setInvoiceData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
   const [sellerData, setSellerData] = useState([]);
   const [paymentTerms, setPaymentTerms] = useState("");
   const [users, setUsers] = useState([]);
-
+  const [approve, setApprove] = useState("");
   useEffect(() => {
     getAllProformaInvoiceDetails();
   }, []);
@@ -53,6 +56,7 @@ export const LeadsPerformaInvoice = (props) => {
       setInvoiceData(response.data);
       setProductData(response.data.products);
       setPaymentTerms(response.data.payment_terms.split("_").join(" "));
+      setApprove(response.data.approval);
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -147,6 +151,8 @@ export const LeadsPerformaInvoice = (props) => {
       setOpen(false);
     }
   };
+
+  console.log("invoiceData :>> ", invoiceData);
 
   return (
     <Box component={Paper} noValidate sx={{ m: "2em", p: "2em" }}>
@@ -417,27 +423,54 @@ export const LeadsPerformaInvoice = (props) => {
           );
         })}
         <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography align={"center"}>Glutape India Pvt. Ltd.</Typography>
+          <Typography align={"center"}>
+            {approve !== null ? approve.approved_by : "Glutape India Pvt. Ltd."}
+          </Typography>
+          <Typography align={"center"}>
+            {approve !== null ? approve.approval_date : ""}
+          </Typography>
           <Typography align={"center"}>
             <Box sx={{ ...typographyStyling }} display="inline">
               ATHORISED SIGNATORY
             </Box>
           </Typography>
         </Grid>
-        <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
-          {users.is_staff === true && invoiceData.status === "pending_approval" && (
-            <Button
-              variant="contained"
-              onClick={(e) => {
-                SendForApprovalPI(e);
-                SendForApprovalStatus(e);
-              }}
-            >
-              Approve
-            </Button>
+        {users.is_staff === true &&
+          invoiceData.status === "pending_approval" && (
+            <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
+              <Button
+                variant="contained"
+                onClick={(e) => {
+                  SendForApprovalPI(e);
+                  SendForApprovalStatus(e);
+                }}
+              >
+                Approve
+              </Button>
+            </Grid>
           )}
-        </Grid>
+        {invoiceData.status === "approved" &&
+          users.groups[0] === "Accounts" && (
+            <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
+              <Button variant="contained" onClick={() => setOpenPopup2(true)}>
+                Confirmation Payment
+              </Button>
+            </Grid>
+          )}
       </Grid>
+      <Popup
+        maxWidth={"md"}
+        title={"Lead Confirmation of payment detail"}
+        openPopup={openPopup2}
+        setOpenPopup={setOpenPopup2}
+      >
+        <LeadConfirmationPayment
+          users={users}
+          invoiceData={invoiceData}
+          setOpenPopup={setOpenPopup2}
+          getAllProformaInvoiceDetails={getAllProformaInvoiceDetails}
+        />
+      </Popup>
     </Box>
   );
 };

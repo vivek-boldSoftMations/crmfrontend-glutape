@@ -16,6 +16,8 @@ import InvoiceServices from "../../../services/InvoiceService";
 import "../../CommonStyle.css";
 import logo from " ../../../public/images.ico";
 import LeadServices from "../../../services/LeadService";
+import { CustomerConfirmationPayment } from "./CustomerConfirmationPayment";
+import { Popup } from "./../../../Components/Popup";
 
 const typographyStyling = {
   fontWeight: "bold",
@@ -40,7 +42,8 @@ const commonStyles = {
 };
 
 export const CustomerProformaInvoice = (props) => {
-  const { idForEdit, setOpenPopup,getCustomerPIDetails } = props;
+  const { idForEdit, setOpenPopup, getCustomerPIDetails } = props;
+  const [openPopup2, setOpenPopup2] = useState(false);
   const [invoiceData, setInvoiceData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -396,19 +399,43 @@ export const CustomerProformaInvoice = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
-        {users.is_staff === true && invoiceData.status === "pending_approval" && (
-            <Button
-              variant="contained"
-              onClick={(e) => {
-                SendForApprovalPI(e);
-                SendForApprovalStatus(e);
-              }}
-            >
-              Approve
-            </Button>
-          )}
+          {users.is_staff === true &&
+            invoiceData.status === "pending_approval" && (
+              <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
+                <Button
+                  variant="contained"
+                  onClick={(e) => {
+                    SendForApprovalPI(e);
+                    SendForApprovalStatus(e);
+                  }}
+                >
+                  Approve
+                </Button>
+              </Grid>
+            )}
+          {invoiceData.status === "approved" &&
+            users.groups[0] === "Accounts" && (
+              <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
+                <Button variant="contained" onClick={() => setOpenPopup2(true)}>
+                  Confirmation Payment
+                </Button>
+              </Grid>
+            )}
         </Grid>
       </Grid>
+      <Popup
+        maxWidth={"md"}
+        title={"Customer Confirmation of payment detail"}
+        openPopup={openPopup2}
+        setOpenPopup={setOpenPopup2}
+      >
+        <CustomerConfirmationPayment
+          users={users}
+          invoiceData={invoiceData}
+          setOpenPopup={setOpenPopup2}
+          getAllProformaInvoiceDetails={getAllProformaInvoiceDetails}
+        />
+      </Popup>
     </Box>
   );
 };

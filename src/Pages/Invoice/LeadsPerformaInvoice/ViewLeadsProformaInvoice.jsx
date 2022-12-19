@@ -127,7 +127,7 @@ export const ViewLeadsProformaInvoice = () => {
     try {
       setOpen(true);
       const filterSearch = value;
-      setFilterSelectedQuery(filterSearch);
+
       if (filterQuery) {
         const response = await InvoiceServices.getLeadsPerformaInvoiceFilterBy(
           filterQuery,
@@ -149,7 +149,7 @@ export const ViewLeadsProformaInvoice = () => {
     }
   };
 
-  const handlePageClick = async ( value) => {
+  const handlePageClick = async (event,value) => {
     try {
       const page = value;
       setOpen(true);
@@ -254,6 +254,7 @@ export const ViewLeadsProformaInvoice = () => {
                     id="demo-simple-select"
                     name="values"
                     label="Status"
+                    value={filterSelectedQuery}
                     onChange={(event) => handleInputChange(event)}
                     sx={{
                       "& .MuiSelect-iconOutlined": {
@@ -358,9 +359,9 @@ export const ViewLeadsProformaInvoice = () => {
               <TableBody>
                 {invoiceData.map((row, i) => {
                   return (
-                  // users.groups === "Accounts" &&
-                  //   row.status === "approved" ? 
-                    
+                    // users.groups === "Accounts" &&
+                    //   row.status === "approved" ?
+
                     <StyledTableRow key={i}>
                       {/* <StyledTableCell align="center">
                         {row.type.toUpperCase()}
@@ -387,33 +388,33 @@ export const ViewLeadsProformaInvoice = () => {
                         </Button>
                       </StyledTableCell>
                     </StyledTableRow>
-                //   ) : (
-                //     <StyledTableRow key={i}>
-                //       {/* <StyledTableCell align="center">
-                //   {row.type.toUpperCase()}
-                // </StyledTableCell> */}
-                //       <StyledTableCell align="center">
-                //         {row.company}
-                //       </StyledTableCell>
-                //       <StyledTableCell align="center">
-                //         {row.contact}
-                //       </StyledTableCell>
-                //       <StyledTableCell align="center">
-                //         {row.alternate_contact}
-                //       </StyledTableCell>
+                    //   ) : (
+                    //     <StyledTableRow key={i}>
+                    //       {/* <StyledTableCell align="center">
+                    //   {row.type.toUpperCase()}
+                    // </StyledTableCell> */}
+                    //       <StyledTableCell align="center">
+                    //         {row.company}
+                    //       </StyledTableCell>
+                    //       <StyledTableCell align="center">
+                    //         {row.contact}
+                    //       </StyledTableCell>
+                    //       <StyledTableCell align="center">
+                    //         {row.alternate_contact}
+                    //       </StyledTableCell>
 
-                //       <StyledTableCell align="center">
-                //         {row.status}
-                //       </StyledTableCell>
-                //       <StyledTableCell align="center">
-                //         <Button
-                //           variant="contained"
-                //           onClick={() => openInPopup(row.pi_number)}
-                //         >
-                //           View
-                //         </Button>
-                //       </StyledTableCell>
-                //     </StyledTableRow>
+                    //       <StyledTableCell align="center">
+                    //         {row.status}
+                    //       </StyledTableCell>
+                    //       <StyledTableCell align="center">
+                    //         <Button
+                    //           variant="contained"
+                    //           onClick={() => openInPopup(row.pi_number)}
+                    //         >
+                    //           View
+                    //         </Button>
+                    //       </StyledTableCell>
+                    //     </StyledTableRow>
                   );
                 })}
               </TableBody>
