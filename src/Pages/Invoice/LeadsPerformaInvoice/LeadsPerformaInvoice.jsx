@@ -15,9 +15,9 @@ import React, { useEffect, useState } from "react";
 import InvoiceServices from "../../../services/InvoiceService";
 import "../../CommonStyle.css";
 import logo from " ../../../public/images.ico";
-import LeadServices from "../../../services/LeadService";
 import { Popup } from "./../../../Components/Popup";
 import { LeadConfirmationPayment } from "./LeadConfirmationPayment";
+import { useSelector } from "react-redux";
 const typographyStyling = {
   fontWeight: "bold",
 };
@@ -38,10 +38,10 @@ export const LeadsPerformaInvoice = (props) => {
   const [invoiceData, setInvoiceData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [sellerData, setSellerData] = useState([]);
-  const [paymentTerms, setPaymentTerms] = useState("");
-  const [users, setUsers] = useState([]);
   const [approve, setApprove] = useState("");
+  const data = useSelector((state) => state.auth);
+  const users = data.profile;
+  const sellerData = data.sellerAccount;
   useEffect(() => {
     getAllProformaInvoiceDetails();
   }, []);
@@ -55,36 +55,7 @@ export const LeadsPerformaInvoice = (props) => {
       console.log("object :>> ", response.data);
       setInvoiceData(response.data);
       setProductData(response.data.products);
-      setPaymentTerms(response.data.payment_terms.split("_").join(" "));
       setApprove(response.data.approval);
-      setOpen(false);
-    } catch (err) {
-      setOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  const getUsers = async () => {
-    try {
-      const res = await LeadServices.getProfile();
-      setUsers(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    getAllSellerAccountsDetails();
-  }, []);
-
-  const getAllSellerAccountsDetails = async () => {
-    try {
-      setOpen(true);
-      const response = await InvoiceServices.getAllSellerAccountData();
-      setSellerData(response.data.results);
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -110,7 +81,7 @@ export const LeadsPerformaInvoice = (props) => {
         delivery_terms: invoiceData.delivery_terms,
         generation_date: invoiceData.generation_date,
         validity: invoiceData.validity,
-        status: "approved",
+        status: "Approved",
         amount: invoiceData.amount,
         sgst: invoiceData.sgst ? invoiceData.sgst : null,
         cgst: invoiceData.cgst ? invoiceData.cgst : null,
@@ -141,7 +112,7 @@ export const LeadsPerformaInvoice = (props) => {
       const req = {
         proformainvoice: invoiceData.pi_number,
         approved_by: users.email,
-        status: "approved",
+        status: "Approved",
       };
       await InvoiceServices.sendForApprovalData(req);
       setOpenPopup(false);
@@ -151,8 +122,6 @@ export const LeadsPerformaInvoice = (props) => {
       setOpen(false);
     }
   };
-
-  console.log("invoiceData :>> ", invoiceData);
 
   return (
     <Box component={Paper} noValidate sx={{ m: "2em", p: "2em" }}>
@@ -200,7 +169,7 @@ export const LeadsPerformaInvoice = (props) => {
           </Typography>
           <Typography>
             <Box sx={{ ...typographyStyling }}>Payment Terms :- </Box>{" "}
-            {paymentTerms}
+            {invoiceData.payment_terms}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={2} sx={{ border: 1 }}>
@@ -436,7 +405,7 @@ export const LeadsPerformaInvoice = (props) => {
           </Typography>
         </Grid>
         {users.is_staff === true &&
-          invoiceData.status === "pending_approval" && (
+          invoiceData.status === "Pending Approval" && (
             <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
               <Button
                 variant="contained"
@@ -449,7 +418,7 @@ export const LeadsPerformaInvoice = (props) => {
               </Button>
             </Grid>
           )}
-        {invoiceData.status === "approved" &&
+        {invoiceData.status === "Approved" &&
           users.groups[0] === "Accounts" && (
             <Grid item xs={12} sx={{ m: "2em" }} align={"right"}>
               <Button variant="contained" onClick={() => setOpenPopup2(true)}>
