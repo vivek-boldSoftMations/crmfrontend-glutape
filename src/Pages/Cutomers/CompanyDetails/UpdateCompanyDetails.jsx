@@ -134,13 +134,13 @@ export const UpdateCompanyDetails = (props) => {
                   value={typeData ? typeData : ""}
                   onChange={handleChange}
                 >
-                  <FormControlLabel
-                    value="industrial_customer"
+                   <FormControlLabel
+                    value="Industrial Customer"
                     control={<Radio />}
                     label="Industrial Customer"
                   />
                   <FormControlLabel
-                    value="distribution_customer"
+                    value="Distribution Customer"
                     control={<Radio />}
                     label="Distribution Customer"
                   />
@@ -174,10 +174,10 @@ export const UpdateCompanyDetails = (props) => {
                 label="Busniess Type"
                 onChange={(event) => setBusinessType(event.target.value)}
               >
-                <MenuItem value={"proprietor"}>Proprietor </MenuItem>
-                <MenuItem value={"pvt_ltd"}>Pvt.Ltd</MenuItem>
-                <MenuItem value={"partnership"}>Partnership</MenuItem>
-                <MenuItem value={"limited"}>Limited</MenuItem>
+              <MenuItem value={"Proprietor"}>Proprietor </MenuItem>
+                <MenuItem value={"Private Limited"}>Private Limited</MenuItem>
+                <MenuItem value={"Partnership"}>Partnership</MenuItem>
+                <MenuItem value={"Limited"}>Limited</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -322,13 +322,12 @@ export const UpdateCompanyDetails = (props) => {
                 label="Category"
                 onChange={(event) => setCategory(event.target.value)}
               >
-                <MenuItem value={"hardware"}>Hardware </MenuItem>
-                <MenuItem value={"electrical"}>Electrical</MenuItem>
-                <MenuItem value={"plywood"}>Plywood</MenuItem>
-                <MenuItem value={"auto_retail"}>Auto Retail</MenuItem>
-                <MenuItem value={"plumbing"}>Plumbing</MenuItem>
-                <MenuItem value={"stationary"}>Stationary</MenuItem>
-                <MenuItem value={"others"}>Others</MenuItem>
+                <MenuItem value={"Hardware & Electrical"}>Hardware & Electrical</MenuItem>
+                <MenuItem value={"Plywood"}>Plywood</MenuItem>
+                <MenuItem value={"Plumbing"}>Plumbing</MenuItem>
+                <MenuItem value={"Auto Retail"}>Auto Retail</MenuItem>
+                <MenuItem value={"Stationary"}>Stationary</MenuItem>
+                <MenuItem value={"Others"}>Others</MenuItem>
               </Select>
               <FormHelperText>
                 Applicable Only For Distribution Customer

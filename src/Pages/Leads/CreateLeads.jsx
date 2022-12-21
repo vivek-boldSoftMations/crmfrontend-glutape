@@ -326,7 +326,7 @@ export const CreateLeads = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <InputLabel id="demo-simple-select-label">
                         Busniess Type
                       </InputLabel>
@@ -339,7 +339,7 @@ export const CreateLeads = (props) => {
                         }
                       >
                         {BusinessTypeData.map((option, i) => (
-                          <MenuItem key={i} value={option.value}>
+                          <MenuItem key={i} value={option.label}>
                             {option.label}
                           </MenuItem>
                         ))}
@@ -599,15 +599,15 @@ export const CreateLeads = (props) => {
                           onChange={handleChange}
                         >
                           <FormControlLabel
-                            value="industrial_customer"
-                            control={<Radio />}
-                            label="Industrial Customer"
-                          />
-                          <FormControlLabel
-                            value="distribution_customer"
-                            control={<Radio />}
-                            label="Distribution Customer"
-                          />
+                    value="Industrial Customer"
+                    control={<Radio />}
+                    label="Industrial Customer"
+                  />
+                  <FormControlLabel
+                    value="Distribution Customer"
+                    control={<Radio />}
+                    label="Distribution Customer"
+                  />
                         </RadioGroup>
                       </FormControl>
                     </>

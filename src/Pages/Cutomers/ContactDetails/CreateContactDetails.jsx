@@ -142,13 +142,13 @@ export const CreateContactDetails = (props) => {
                 label="Designation"
                 onChange={(event) => setDesignation(event.target.value)}
               >
-                <MenuItem value={"owner"}>Owner </MenuItem>
-                <MenuItem value={"partner"}>Partner</MenuItem>
-                <MenuItem value={"director"}>Director</MenuItem>
-                <MenuItem value={"accounts"}>Accounts</MenuItem>
-                <MenuItem value={"purchase"}>Purchase</MenuItem>
-                <MenuItem value={"quality"}>Quality</MenuItem>
-                <MenuItem value={"stores"}>Stores</MenuItem>
+                <MenuItem value={"Owner"}>Owner </MenuItem>
+                <MenuItem value={"Partner"}>Partner</MenuItem>
+                <MenuItem value={"Director"}>Director</MenuItem>
+                <MenuItem value={"Accounts"}>Accounts</MenuItem>
+                <MenuItem value={"Purchase"}>Purchase</MenuItem>
+                <MenuItem value={"Quality"}>Quality</MenuItem>
+                <MenuItem value={"Stores"}>Stores</MenuItem>
               </Select>
             </FormControl>
           </Grid>

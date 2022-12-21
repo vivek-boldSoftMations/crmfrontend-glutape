@@ -373,7 +373,7 @@ export const UpdateLeads = (props) => {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       select
                       fullWidth
@@ -385,11 +385,22 @@ export const UpdateLeads = (props) => {
                       onChange={(e, value) => setBusinesTypes(e.target.value)}
                     >
                       {businessType.map((option, i) => (
-                        <MenuItem key={i} value={option.value}>
+                        <MenuItem key={i} value={option.label}>
                           {option.name}
                         </MenuItem>
                       ))}
                     </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      fullWidth
+                      name="lead_exists"
+                      size="small"
+                      label="Lead Exists"
+                      variant="outlined"
+                      value={leads.lead_exists ? leads.lead_exists : ""}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <TextField
@@ -407,7 +418,7 @@ export const UpdateLeads = (props) => {
                       }
                     >
                       {businessMismatchs.map((option, i) => (
-                        <MenuItem key={i} value={option.value}>
+                        <MenuItem key={i} value={option.label}>
                           {option.name}
                         </MenuItem>
                       ))}
@@ -425,7 +436,7 @@ export const UpdateLeads = (props) => {
                       onChange={(e, value) => setInterests(e.target.value)}
                     >
                       {interest.map((option, i) => (
-                        <MenuItem key={i} value={option.value}>
+                        <MenuItem key={i} value={option.label}>
                           {option.name}
                         </MenuItem>
                       ))}
@@ -672,16 +683,16 @@ export const UpdateLeads = (props) => {
                           defaultValue={leads.type_of_customer}
                           onChange={handleChange}
                         >
-                          <FormControlLabel
-                            value="industrial_customer"
-                            control={<Radio />}
-                            label="Industrial Customer"
-                          />
-                          <FormControlLabel
-                            value="distribution_customer"
-                            control={<Radio />}
-                            label="Distribution Customer"
-                          />
+                       <FormControlLabel
+                    value="Industrial Customer"
+                    control={<Radio />}
+                    label="Industrial Customer"
+                  />
+                  <FormControlLabel
+                    value="Distribution Customer"
+                    control={<Radio />}
+                    label="Distribution Customer"
+                  />
                         </RadioGroup>
                       </FormControl>
                     </>
@@ -708,7 +719,9 @@ export const UpdateLeads = (props) => {
                       label="Pin Code"
                       variant="outlined"
                       value={
-                        leads.shipping_pincode ? leads.shipping_pincode : ""
+                        leads.shipping_pincode
+ ? leads.shipping_pincode
+ : ""
                       }
                       onChange={handleInputChange}
                     />
@@ -730,7 +743,7 @@ export const UpdateLeads = (props) => {
                       value={
                         pinCodeData.District
                           ? pinCodeData.District
-                          : leads.shipping_city
+                          : leads.shipping_city ? leads.shipping_city : ''
                       }
                     />
                   </Grid>
@@ -744,7 +757,8 @@ export const UpdateLeads = (props) => {
                       value={
                         pinCodeData.State
                           ? pinCodeData.State
-                          : leads.shipping_state
+                          : leads.shipping_state ? leads.shipping_state : ''
+
                       }
                     />
                   </Grid>
