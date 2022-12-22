@@ -179,18 +179,18 @@ export const LeadsPerformaInvoice = (props) => {
             </Box>
             {invoiceData.generation_date}
           </Typography>
-          {invoiceData.amount_recieved && (
+          {/* {invoiceData.amount_recieved && (
             <Typography>
               <Box sx={{ ...typographyStyling }} display="inline">
                 Advance :-{" "}
               </Box>
               {invoiceData.amount_recieved}
             </Typography>
-          )}
+          )} */}
           {invoiceData.balance_amount && (
             <Typography>
               <Box sx={{ ...typographyStyling }} display="inline">
-                Balance :-{" "}
+                Balance :-
               </Box>
               {invoiceData.balance_amount}
             </Typography>

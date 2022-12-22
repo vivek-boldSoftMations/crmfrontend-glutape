@@ -191,7 +191,7 @@ export const CreateLeadsProformaInvoice = (props) => {
         leadIDData.shipping_city !== null &&
         leadIDData.shipping_pincode !== null &&
         (leadIDData.pan_number !== null || leadIDData.gst_number !== null) &&
-        leadIDData.company !== null
+        leadIDData.company != null
       ) {
         await InvoiceServices.createLeadsProformaInvoiceData(req);
         setOpenPopup(false);
@@ -207,6 +207,8 @@ export const CreateLeadsProformaInvoice = (props) => {
         setErrorMessage(err.response.data.errors.buyer_order_no);
         setValidationPrice(err.response.data.errors.non_field_errors ? err.response.data.errors.non_field_errors : err.response.data.errors);
       }
+      setIDForEdit(leadIDData.lead_id);
+      setOpenPopup2(true);
       setOpen(false);
       setLeadIDData([]);
     }

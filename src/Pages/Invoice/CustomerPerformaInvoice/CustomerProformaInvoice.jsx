@@ -47,6 +47,7 @@ export const CustomerProformaInvoice = (props) => {
   const [invoiceData, setInvoiceData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [approve, setApprove] = useState("");
   const data = useSelector((state) => state.auth);
   const users = data.profile;
   const sellerData = data.sellerAccount;
@@ -63,6 +64,7 @@ export const CustomerProformaInvoice = (props) => {
       console.log("object :>> ", response.data);
       setInvoiceData(response.data);
       setProductData(response.data.products);
+      setApprove(response.data.approval);
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -186,12 +188,12 @@ export const CustomerProformaInvoice = (props) => {
             </Box>
             {invoiceData.generation_date}
           </Typography>
-          <Typography>
+          {/* <Typography>
             <Box sx={{ ...typographyStyling }} display="inline">
-              Advance :-{" "}
+              Advance :-
             </Box>
             {invoiceData.amount_recieved}
-          </Typography>
+          </Typography> */}
           <Typography>
             <Box sx={{ ...typographyStyling }} display="inline">
               Balance :-{" "}
@@ -361,7 +363,12 @@ export const CustomerProformaInvoice = (props) => {
           );
         })}
         <Grid item xs={12} sm={6} sx={{ border: 1 }}>
-          <Typography align={"center"}>Glutape India Pvt. Ltd.</Typography>
+        <Typography align={"center"}>
+            {approve !== null ? approve.approved_by : "Glutape India Pvt. Ltd."}
+          </Typography>
+          <Typography align={"center"}>
+            {approve !== null ? approve.approval_date : ""}
+          </Typography>
           <Typography align={"center"}>
             <Box sx={{ ...typographyStyling }} display="inline">
               ATHORISED SIGNATORY

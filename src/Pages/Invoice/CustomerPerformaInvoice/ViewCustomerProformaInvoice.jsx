@@ -337,6 +337,7 @@ export const ViewCustomerProformaInvoice = () => {
             >
               <TableHead>
                 <TableRow>
+                <StyledTableCell align="center">PI NUMBER</StyledTableCell>
                   <StyledTableCell align="center">COMPANY NAME</StyledTableCell>
                   <StyledTableCell align="center">CONTACT</StyledTableCell>
                   <StyledTableCell align="center">
@@ -350,6 +351,9 @@ export const ViewCustomerProformaInvoice = () => {
                 {invoiceData.map((row, i) => {
                   return (
                     <StyledTableRow key={i}>
+                               <StyledTableCell align="center">
+                        {row.pi_number}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.company}
                       </StyledTableCell>

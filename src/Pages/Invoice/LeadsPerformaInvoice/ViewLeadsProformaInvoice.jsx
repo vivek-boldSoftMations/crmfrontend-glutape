@@ -31,8 +31,11 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Popup } from "./../../../Components/Popup";
 import { LeadsPerformaInvoice } from "./LeadsPerformaInvoice";
 import LeadServices from "../../../services/LeadService";
-import { useDispatch } from 'react-redux';
-import { getProfileUser, getSellerAccountData } from './../../../Redux/Action/Action';
+import { useDispatch } from "react-redux";
+import {
+  getProfileUser,
+  getSellerAccountData,
+} from "./../../../Redux/Action/Action";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -86,7 +89,6 @@ export const ViewLeadsProformaInvoice = () => {
     try {
       const res = await LeadServices.getProfile();
       dispatch(getProfileUser(res.data));
-
     } catch (err) {
       console.error(err);
     }
@@ -166,7 +168,7 @@ export const ViewLeadsProformaInvoice = () => {
     }
   };
 
-  const handlePageClick = async (event,value) => {
+  const handlePageClick = async (event, value) => {
     try {
       const page = value;
       setOpen(true);
@@ -302,8 +304,6 @@ export const ViewLeadsProformaInvoice = () => {
                   </Select>
                 </FormControl>
               )}
-
-             
             </Box>
             <Box flexGrow={2}>
               <h3
@@ -337,7 +337,7 @@ export const ViewLeadsProformaInvoice = () => {
             >
               <TableHead>
                 <TableRow>
-    
+                  <StyledTableCell align="center">PI NUMBER</StyledTableCell>
                   <StyledTableCell align="center">COMPANY NAME</StyledTableCell>
                   <StyledTableCell align="center">CONTACT</StyledTableCell>
                   <StyledTableCell align="center">
@@ -350,10 +350,10 @@ export const ViewLeadsProformaInvoice = () => {
               <TableBody>
                 {invoiceData.map((row, i) => {
                   return (
-                  
-
                     <StyledTableRow key={i}>
-
+                      <StyledTableCell align="center">
+                        {row.pi_number}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.company}
                       </StyledTableCell>
@@ -365,7 +365,7 @@ export const ViewLeadsProformaInvoice = () => {
                       </StyledTableCell>
 
                       <StyledTableCell align="center">
-                        { row.status }
+                        {row.status}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         <Button
@@ -376,7 +376,6 @@ export const ViewLeadsProformaInvoice = () => {
                         </Button>
                       </StyledTableCell>
                     </StyledTableRow>
-             
                   );
                 })}
               </TableBody>
