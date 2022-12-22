@@ -196,7 +196,7 @@ export const CreateCustomerProformaInvoice = (props) => {
     try {
       e.preventDefault();
       const req = {
-        type: "customer",
+        type: "Customer",
         raised_by: users.email,
         seller_account: selectedSellerData.gst_number,
         company: companyData.name,
@@ -233,7 +233,7 @@ export const CreateCustomerProformaInvoice = (props) => {
     } catch (err) {
       if (err.response.status === 400) {
         setErrorMessage(err.response.data.errors.buyer_order_no);
-        setValidationPrice(err.response.data.errors);
+        setValidationPrice(err.response.data.errors.non_field_errors ? err.response.data.errors.non_field_errors : err.response.data.errors);
       }
       // setIDForEdit(leadIDData.lead_id);
       setOpen(false);

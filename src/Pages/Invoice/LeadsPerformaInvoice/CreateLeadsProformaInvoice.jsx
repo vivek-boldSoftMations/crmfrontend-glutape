@@ -160,7 +160,7 @@ export const CreateLeadsProformaInvoice = (props) => {
     try {
       e.preventDefault();
       const req = {
-        type: "lead",
+        type: "Lead",
         raised_by: users.email,
         seller_account: selectedSellerData.gst_number,
         lead: leadIDData.lead_id,
@@ -205,7 +205,7 @@ export const CreateLeadsProformaInvoice = (props) => {
     } catch (err) {
       if (err.response.status === 400) {
         setErrorMessage(err.response.data.errors.buyer_order_no);
-        setValidationPrice(err.response.data.errors);
+        setValidationPrice(err.response.data.errors.non_field_errors ? err.response.data.errors.non_field_errors : err.response.data.errors);
       }
       setOpen(false);
       setLeadIDData([]);
