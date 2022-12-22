@@ -27,8 +27,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { tableCellClasses } from "@mui/material/TableCell";
 import AddIcon from "@mui/icons-material/Add";
 import LeadServices from "./../../services/LeadService";
-
-import SearchIcon from "@mui/icons-material/Search";
 import "../CommonStyle.css";
 import { CreateLeads } from "./CreateLeads";
 import { UpdateLeads } from "./UpdateLeads";
@@ -200,12 +198,10 @@ export const Viewleads = () => {
   const handlePageClick = async (event, value) => {
     try {
       const page = value;
-      console.log("page", page);
       setCurrentPage(page);
       setOpen(true);
 
       if (filterSelectedQuery) {
-        console.log("filter starting :>> ");
         const response = await LeadServices.getFilterPaginateLeads(
           page,
           filterQuery,
@@ -220,7 +216,6 @@ export const Viewleads = () => {
           setFilterSelectedQuery("");
         }
       } else {
-        console.log("starting :>> ");
         const response = await LeadServices.getAllPaginateLeads(page);
         setLeads(response.data.results);
       }
