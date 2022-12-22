@@ -296,7 +296,7 @@ export const CreateLeadsProformaInvoice = (props) => {
               id="combo-box-demo"
               onChange={(event, value) => setLeadIDData(value)}
               options={leadsOptions}
-              getOptionLabel={(option) => option.lead_id}
+              getOptionLabel={(option) => option.name}
               sx={{ minWidth: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Lead ID" sx={tfStyle} />

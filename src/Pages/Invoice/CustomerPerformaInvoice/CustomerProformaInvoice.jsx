@@ -69,49 +69,49 @@ export const CustomerProformaInvoice = (props) => {
     }
   };
 
-  const SendForApprovalStatus = async (e) => {
-    try {
-      e.preventDefault();
-      const req = {
-        type: invoiceData.type,
-        raised_by: users.email,
-        seller_account: invoiceData.seller_account,
-        company: invoiceData.company,
-        address: invoiceData.address,
-        pincode: invoiceData.pincode,
-        state: invoiceData.state,
-        city: invoiceData.city,
-        buyer_order_no: invoiceData.buyer_order_no,
-        contact: invoiceData.contact,
-        alternate_contact: invoiceData.alternate_contact,
-        payment_terms: invoiceData.payment_terms,
-        delivery_terms: invoiceData.delivery_terms,
-        generation_date: invoiceData.generation_date,
-        validity: invoiceData.validity,
-        status: "Approved",
-        amount: invoiceData.amount,
-        sgst: invoiceData.sgst ? invoiceData.sgst : null,
-        cgst: invoiceData.cgst ? invoiceData.cgst : null,
-        igst: invoiceData.igst ? invoiceData.igst : null,
-        total: invoiceData.total,
-        amount_recieved: invoiceData.amount_recieved,
-        balance_amount: invoiceData.balance_amount,
-        gst_number: invoiceData.gst_number,
-        pan_number: invoiceData.pan_number ? invoiceData.pan_number : null,
-      };
+  // const SendForApprovalStatus = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     const req = {
+  //       type: invoiceData.type,
+  //       raised_by: users.email,
+  //       seller_account: invoiceData.seller_account,
+  //       company: invoiceData.company,
+  //       address: invoiceData.address,
+  //       pincode: invoiceData.pincode,
+  //       state: invoiceData.state,
+  //       city: invoiceData.city,
+  //       buyer_order_no: invoiceData.buyer_order_no,
+  //       contact: invoiceData.contact,
+  //       alternate_contact: invoiceData.alternate_contact,
+  //       payment_terms: invoiceData.payment_terms,
+  //       delivery_terms: invoiceData.delivery_terms,
+  //       generation_date: invoiceData.generation_date,
+  //       validity: invoiceData.validity,
+  //       status: "Approved",
+  //       amount: invoiceData.amount,
+  //       sgst: invoiceData.sgst ? invoiceData.sgst : null,
+  //       cgst: invoiceData.cgst ? invoiceData.cgst : null,
+  //       igst: invoiceData.igst ? invoiceData.igst : null,
+  //       total: invoiceData.total,
+  //       amount_recieved: invoiceData.amount_recieved,
+  //       balance_amount: invoiceData.balance_amount,
+  //       gst_number: invoiceData.gst_number,
+  //       pan_number: invoiceData.pan_number ? invoiceData.pan_number : null,
+  //     };
 
-      setOpen(true);
-      await InvoiceServices.sendForApprovalCompanyData(
-        invoiceData.pi_number,
-        req
-      );
-      setOpenPopup(false);
-      setOpen(false);
-      getCustomerPIDetails();
-    } catch (err) {
-      setOpen(false);
-    }
-  };
+  //     setOpen(true);
+  //     await InvoiceServices.sendForApprovalCompanyData(
+  //       invoiceData.pi_number,
+  //       req
+  //     );
+  //     setOpenPopup(false);
+  //     setOpen(false);
+  //     getCustomerPIDetails();
+  //   } catch (err) {
+  //     setOpen(false);
+  //   }
+  // };
 
   const SendForApprovalPI = async (e) => {
     try {
@@ -376,7 +376,7 @@ export const CustomerProformaInvoice = (props) => {
                   variant="contained"
                   onClick={(e) => {
                     SendForApprovalPI(e);
-                    SendForApprovalStatus(e);
+                    // SendForApprovalStatus(e);
                   }}
                 >
                   Approve
