@@ -48,8 +48,8 @@ const headers = [
   { label: "Billing City", key: "billing_city" },
   { label: "Shipping City", key: "shipping_city" },
   {
-    label: "Products",
-    key: "products",
+    label: "Product",
+    key: "product",
   },
   {
     label: "Quantity",
@@ -59,8 +59,14 @@ const headers = [
     label: "Amount",
     key: "amount",
   },
+  {
+    label: "Pending Quantity",
+    key: "pending_quantity",
+  },
+
 
 ];
+
 
 function Row(props) {
   const { row } = props;
@@ -119,15 +125,49 @@ function Row(props) {
 
 export const CustomerOrderBookDetails = () => {
   const [orderBookData, setOrderBookData] = useState([]);
+  const [productOrderBookData, setProductOrderBookData] = useState([]);
   const errRef = useRef();
   const [open, setOpen] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    getAllLeadsPIDetails();
+    getAllProductWiseOrderBook();
   }, []);
 
-  const getAllLeadsPIDetails = async () => {
+  const getAllProductWiseOrderBook = async () => {
+    try {
+      setOpen(true);
+      const response = await InvoiceServices.getOrderBookProductsData();
+      setProductOrderBookData(response.data.results);
+      //   const total = response.data.count;
+      //   setpageCount(Math.ceil(total / 25));
+      setOpen(false);
+    } catch (err) {
+      setOpen(false);
+      if (!err.response) {
+        setErrMsg(
+          "“Sorry, You Are Not Allowed to Access This Page” Please contact to admin"
+        );
+      } else if (err.response.status === 400) {
+        setErrMsg(
+          err.response.data.errors.name
+            ? err.response.data.errors.name
+            : err.response.data.errors.non_field_errors
+        );
+      } else if (err.response.status === 401) {
+        setErrMsg(err.response.data.errors.code);
+      } else {
+        setErrMsg("Server Error");
+      }
+      errRef.current.focus();
+    }
+  };
+
+  useEffect(() => {
+    getAllCustomerWiseOrderBook();
+  }, []);
+
+  const getAllCustomerWiseOrderBook = async () => {
     try {
       setOpen(true);
       const response = await InvoiceServices.getOrderBookCustomerData();
@@ -156,16 +196,23 @@ export const CustomerOrderBookDetails = () => {
     }
   };
 
+  // let data = orderBookData.map(item => ({
+  //   company: item.company,
+  //   billing_city: item.billing_city,
+  //   shipping_city: item.shipping_city,
+  // }))
 
-  const data = orderBookData.map(item => ({
-    company: item.company,
-    billing_city: item.billing_city,
-    shipping_city: item.shipping_city,
-    products:  item.products.map(role => role.product),
-    quantity:  item.products.map(role => role.quantity),
-    amount:  item.products.map(role => role.amount),
-  }))
+  const data = productOrderBookData.map(item => ({
+    company: item.orderbook.company,
+    billing_city: item.orderbook.billing_city,
+    shipping_city: item.orderbook.shipping_city,
+    product: item.product,
+    quantity: item.quantity,
+    amount: item.amount,
+    pending_quantity: item.pending_quantity,
+  }));
   
+
   console.log(data);
 
   console.log("data :>> ", data);
@@ -216,8 +263,8 @@ export const CustomerOrderBookDetails = () => {
           </Box>
           <Box flexGrow={0.5}>
           <CSVLink
-            data={orderBookData}
-            // headers={headers}
+            data={data}
+            headers={headers}
             filename={"my-file.csv"}
             target="_blank"
             style={{ textDecoration: 'none', outline: 'none', height: '5vh' }}
