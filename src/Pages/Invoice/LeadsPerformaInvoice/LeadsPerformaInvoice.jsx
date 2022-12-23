@@ -393,7 +393,7 @@ export const LeadsPerformaInvoice = (props) => {
         })}
         <Grid item xs={12} sm={6} sx={{ border: 1 }}>
           <Typography align={"center"}>
-            {approve !== null ? approve.approved_by : "Glutape India Pvt. Ltd."}
+            {approve !== null ? approve.approved_by : "Pending Approval"}
           </Typography>
           <Typography align={"center"}>
             {approve !== null ? approve.approval_date : ""}
