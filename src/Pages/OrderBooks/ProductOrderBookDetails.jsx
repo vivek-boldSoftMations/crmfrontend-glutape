@@ -12,15 +12,10 @@ import {
   TableCell,
   Button,
   Box,
-  Collapse,
-  Typography,
-  IconButton,
   Paper,
   Grid,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { CSVLink } from "react-csv";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,69 +39,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const headers = [
+
+  {
+    label: "Product",
+    key: "product",
+  },
+  {
+    label: "Quantity",
+    key: "quantity",
+  },
+  {
+    label: "Amount",
+    key: "amount",
+  },
+  {
+    label: "Pending Quantity",
+    key: "pending_quantity",
+  },
   { label: "Customer", key: "company" },
   { label: "Billing City", key: "billing_city" },
   { label: "Shipping City", key: "shipping_city" },
-  {
-    label: "products",
-    key: "products",
-  },
 ];
 
-function Row(props) {
-  const { row } = props;
-  const [tableExpand, setTableExpand] = useState(false);
-
-  return (
-    <React.Fragment>
-      <StyledTableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <StyledTableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setTableExpand(!tableExpand)}
-          >
-            {tableExpand ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </StyledTableCell>
-        <StyledTableCell align="center">{row.company}</StyledTableCell>
-        <StyledTableCell align="center">{row.billing_city}</StyledTableCell>
-        <StyledTableCell align="center">{row.shipping_city}</StyledTableCell>
-      </StyledTableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={tableExpand} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Product
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>PRODUCT CODE</TableCell>
-                    <TableCell>QUANTITY</TableCell>
-                    <TableCell align="right">AMOUNT</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.products.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.product}
-                      </TableCell>
-                      <TableCell>{historyRow.quantity}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
 
 export const ProductOrderBookDetails = () => {
   const [orderBookData, setOrderBookData] = useState([]);
@@ -147,13 +101,16 @@ export const ProductOrderBookDetails = () => {
     }
   };
 
-  const data = orderBookData.map(item => ({
+  const data = orderBookData.map((item) => ({
+    product: item.product,
+    quantity: item.quantity,
+    amount: item.amount,
+    pending_quantity: item.pending_quantity,
     company: item.orderbook.company,
     billing_city: item.orderbook.billing_city,
     shipping_city: item.orderbook.shipping_city,
-    products:  item.orderbook.products.map(role => role.product),
-  }))
-  
+  }));
+
   console.log(data);
 
   console.log("data :>> ", data);
@@ -227,17 +184,57 @@ export const ProductOrderBookDetails = () => {
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="center"></StyledTableCell>
-                  <StyledTableCell align="center">CUSTOMER</StyledTableCell>
-                  <StyledTableCell align="center">BILLING CITY</StyledTableCell>
+                  <StyledTableCell align="center">PRODUCT</StyledTableCell>
+                  <StyledTableCell align="center">QUANTITY</StyledTableCell>
+                  <StyledTableCell align="center">AMOUNT</StyledTableCell>
+            
                   <StyledTableCell align="center">
-                    SHIPPING CITY
+                    PENDING QUANTITY
                   </StyledTableCell>
+                  <StyledTableCell align="center">COMPANY</StyledTableCell>
+                  <StyledTableCell align="center">BILLING CITY</StyledTableCell>
+                  <StyledTableCell align="center">SHIPPING CITY</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {orderBookData.map((row) => (
-                  <Row key={row.id} row={row.orderbook} />
+                  <StyledTableRow
+                    key={row.id}
+                    sx={{ "& > *": { borderBottom: "unset" } }}
+                  >
+                    {/* <StyledTableCell>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => setTableExpand(!tableExpand)}
+                      >
+                        {tableExpand ? (
+                          <KeyboardArrowUpIcon />
+                        ) : (
+                          <KeyboardArrowDownIcon />
+                        )}
+                      </IconButton>
+                    </StyledTableCell> */}
+                    <StyledTableCell align="center">
+                      {row.product}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.quantity}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.amount}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.pending_quantity}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                        {row.orderbook.company}
+                     </StyledTableCell>
+                     <StyledTableCell align="center">{row.orderbook.billing_city}</StyledTableCell>
+                     <StyledTableCell align="center">
+                     {row.orderbook.shipping_city}
+                      </StyledTableCell>
+                  </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
