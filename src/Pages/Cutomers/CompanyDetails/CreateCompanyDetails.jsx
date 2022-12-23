@@ -75,10 +75,8 @@ export const CreateCompanyDetails = (props) => {
   };
 
   useEffect(() => {
-    if (users.is_staff === true) {
       getLAssignedData();
-    }
-  }, [users]);
+  }, []);
 
   const getLAssignedData = async (id) => {
     try {
@@ -324,7 +322,7 @@ export const CreateCompanyDetails = (props) => {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={4}>
-            {users.is_staff === true && (
+   
               <Autocomplete
                 fullWidth
                 size="small"
@@ -339,7 +337,7 @@ export const CreateCompanyDetails = (props) => {
                   <TextField {...params} label="Assignied To" />
                 )}
               />
-            )}
+   
           </Grid>
           <Grid item xs={12}>
             <TextField
