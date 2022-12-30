@@ -99,6 +99,19 @@ const getOrderBookProductsData = () => {
   return CustomAxios.get(`/api/invoice/list-order-book-product`);
 };
 
+const getSalesInvoiceData = () => {
+  return CustomAxios.get(`/api/invoice/list-sales-invoice`);
+};
+
+const createSalesnvoiceData = (data) => {
+  return CustomAxios.post("/api/invoice/list-sales-invoice/", data);
+};
+
+const getSalesnvoiceDataById = (id) => {
+  return CustomAxios.get(`/api/invoice/list-sales-invoice/${id}`);
+};
+
+
  const InvoiceServices = {
     getAllSellerAccountData,
     getAllSearchSellerAccountData,
@@ -122,7 +135,10 @@ const getOrderBookProductsData = () => {
     createLeadsProformaInvoiceData,
     createCustomerProformaInvoiceData,
     getOrderBookCustomerData,
-    getOrderBookProductsData
+    getOrderBookProductsData,
+    getSalesInvoiceData,
+    createSalesnvoiceData,
+    getSalesnvoiceDataById
 };
 
 export default InvoiceServices;
