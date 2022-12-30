@@ -67,15 +67,7 @@ export const SalesInvoiceCreate = (props) => {
     console.log("value", value);
     const Data = value;
     const productData = Data.products.map((name) => name);
-
-    console.log("productData :>> ", productData);
     var arr = [];
-    // for (let i = 0; i <= productData.length - 1; i++) {
-    //   var obj = {};
-    //   obj["product"] = productData[i].product;
-    //   obj["quantity"] = productData[i].quantity;
-    //   arr.push(obj);
-    // }
     var arr = productData.map((fruit) => ({
       product: fruit.product,
       pending_quantity: fruit.pending_quantity,
@@ -84,17 +76,13 @@ export const SalesInvoiceCreate = (props) => {
     setCustomerOrderBookData(value);
   };
 
-  console.log("products :>> ", products);
-  console.log("customerorderBookData", customerorderBookData);
   const createSalesInvoiceDetails = async (e) => {
     try {
       e.preventDefault();
       const req = {
-        invoice_no: "GIPLMUM24",
         order_book: customerorderBookData.id,
         products: products,
       };
-      console.log("sales req :>> ", req);
       setOpen(true);
 
       await InvoiceServices.createSalesnvoiceData(req);
@@ -170,9 +158,7 @@ export const SalesInvoiceCreate = (props) => {
                         variant="outlined"
                         value={input.quantity}
                         onChange={(event) => handleFormChange(index, event)}
-                        error={
-                          input.pending_quantity < input.quantity
-                        }
+                        error={input.pending_quantity < input.quantity}
                         helperText={
                           input.pending_quantity < input.quantity
                             ? "qunatity will less than pending quantity"
