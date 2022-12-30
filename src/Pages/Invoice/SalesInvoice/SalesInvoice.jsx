@@ -257,7 +257,7 @@ export const SalesInvoice = (props) => {
               <Typography sx={{ ml: "2em" }}>
                 <Box sx={{ ...typographyStyling }} display="inline">
                   {" "}
-                  Buyer GST No :-{" "}
+                  Buyer PAN No :-{" "}
                 </Box>{" "}
                 {salesInvoiceData.buyer_pan}
               </Typography>
