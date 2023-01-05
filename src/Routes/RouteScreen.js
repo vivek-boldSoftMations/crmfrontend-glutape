@@ -6,11 +6,8 @@ import { AssignTo } from "../Pages/Leads/AssignTo";
 import { ChangePassword } from "./../Pages/Auth/ChangePassword";
 import { Dashboard } from "../Pages/Dashboard/Dashboard";
 import { ForgotPassword } from "./../Pages/Auth/ForgotPassword";
-import { Home } from "../Pages/Home";
-import { Login } from "../Pages/Auth/Login";
 import { PageNotFound } from "../Components/Page/PageNotFound";
 import { PendingFollowup } from "../Pages/FollowUp/PendingFollowup";
-import { SignUp } from "../Pages/Auth/SignUp";
 import { TodayFollowup } from "../Pages/FollowUp/TodayFollowup";
 import { UpcomingFollowup } from "../Pages/FollowUp/UpcomingFollowup";
 import { ViewBasicUnit } from "./../Pages/Products/BasicUnit/ViewBasicUnit";
@@ -29,20 +26,19 @@ import "../App.css";
 import { CompanyDetails } from "../Pages/Cutomers/CompanyDetails/CompanyDetails";
 import { PriceList } from "./../Pages/Products/PriceList/PriceList";
 import { SellerAccount } from "./../Pages/Invoice/Seller Account/SellerAccount";
-import { ViewCustomerProformaInvoice } from '../Pages/Invoice/CustomerPerformaInvoice/ViewCustomerProformaInvoice';
-import { ViewLeadsProformaInvoice } from './../Pages/Invoice/LeadsPerformaInvoice/ViewLeadsProformaInvoice';
-import { CustomerOrderBookDetails } from '../Pages/OrderBooks/CustomerOrderBookDetails';
-import { ProductOrderBookDetails } from './../Pages/OrderBooks/ProductOrderBookDetails';
-import { SalesInvoiceView } from './../Pages/Invoice/SalesInvoice/SalesInvoiceView';
+import { ViewCustomerProformaInvoice } from "../Pages/Invoice/CustomerPerformaInvoice/ViewCustomerProformaInvoice";
+import { ViewLeadsProformaInvoice } from "./../Pages/Invoice/LeadsPerformaInvoice/ViewLeadsProformaInvoice";
+import { CustomerOrderBookDetails } from "../Pages/OrderBooks/CustomerOrderBookDetails";
+import { ProductOrderBookDetails } from "./../Pages/OrderBooks/ProductOrderBookDetails";
+import { SalesInvoiceView } from "./../Pages/Invoice/SalesInvoice/SalesInvoiceView";
+import { Auths } from "../Pages/Auth/Auths";
 
 export const RouteScreen = () => {
   const token = useSelector((state) => state.auth);
   return (
     <div className="appcontainer">
       <Routes>
-        <Route path="/crmfrontend-glutape" exact element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" exact element={<Auths />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/change-password/:id/:token"
@@ -111,17 +107,23 @@ export const RouteScreen = () => {
               path="/invoice/performa-invoice"
               element={<ViewCustomerProformaInvoice />}
             />
-             <Route
+            <Route
               path="/invoice/leads-performa-invoice"
               element={<ViewLeadsProformaInvoice />}
             />
-               <Route
+            <Route
               path="/invoice/sales-invoice"
               element={<SalesInvoiceView />}
             />
-             {/* Order Book */}
-             <Route path="/invoice/customer-order-book" element={<CustomerOrderBookDetails />} />
-             <Route path="/invoice/product-order-book" element={<ProductOrderBookDetails />} />
+            {/* Order Book */}
+            <Route
+              path="/invoice/customer-order-book"
+              element={<CustomerOrderBookDetails />}
+            />
+            <Route
+              path="/invoice/product-order-book"
+              element={<ProductOrderBookDetails />}
+            />
             <Route path="*" element={<PageNotFound />} />
           </>
         )}
