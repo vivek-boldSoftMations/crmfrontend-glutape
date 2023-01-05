@@ -31,6 +31,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { getProfileUser, getSellerAccountData } from './../../../Redux/Action/Action';
 import { useDispatch } from 'react-redux';
 import { CustomLoader } from "../../../Components/CustomLoader";
+import { ErrorMessage } from './../../../Components/ErrorMessage/ErrorMessage';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -213,23 +214,7 @@ export const ViewCustomerProformaInvoice = () => {
 <CustomLoader open={open}/> 
 
       <Grid item xs={12}>
-        <p
-          style={{
-            width: "100%",
-            padding: 10,
-            marginBottom: 10,
-            borderRadius: 4,
-            backgroundColor: errMsg ? "red" : "offscreen",
-            textAlign: "center",
-            color: "white",
-            textTransform: "capitalize",
-          }}
-          ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
+      <ErrorMessage errRef={errRef} errMsg={errMsg} />
         <Paper sx={{ p: 2, m: 4, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
             <Box flexGrow={0.6}>

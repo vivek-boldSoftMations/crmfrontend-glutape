@@ -31,6 +31,7 @@ import ProductService from "../../../services/ProductService";
 import { Popup } from "./../../../Components/Popup";
 import { CreateFinishGoods } from "./CreateFinishGoods";
 import { UpdateFinishGoods } from "./UpdateFinishGoods";
+import { ErrorMessage } from './../../../Components/ErrorMessage/ErrorMessage';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -173,23 +174,7 @@ export const ViewFinishGoods = () => {
       </div>
 
       <Grid item xs={12}>
-        <p
-          style={{
-            width: "100%",
-            padding: 10,
-            marginBottom: 10,
-            borderRadius: 4,
-            backgroundColor: errMsg ? "red" : "offscreen",
-            textAlign: "center",
-            color: "white",
-            textTransform: "capitalize",
-          }}
-          ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
+      <ErrorMessage errRef={errRef} errMsg={errMsg} />
         <Paper sx={{ p: 2, m: 4, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
             <Box flexGrow={0.9}>

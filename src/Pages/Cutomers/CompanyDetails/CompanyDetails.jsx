@@ -16,11 +16,15 @@ import {
   TextField,
   TableCell,
   Button,
+  TableFooter,
+  Pagination,
+  IconButton,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
 import { Popup } from "./../../../Components/Popup";
 import CustomerServices from "../../../services/CustomerService";
-
+import ClearIcon from "@mui/icons-material/Clear";
+import { ErrorMessage } from './../../../Components/ErrorMessage/ErrorMessage';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -49,6 +53,14 @@ export const CompanyDetails = () => {
   const [errMsg, setErrMsg] = useState("");
   const [companyData, setCompanyData] = useState([]);
   const [recordForEdit, setRecordForEdit] = useState();
+  const [pageCount, setpageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [filterSelectedQuery, setFilterSelectedQuery] = useState("");
+
+  const handleInputChange = (event) => {
+    setFilterSelectedQuery(event.target.value);
+    getSearchData(event.target.value);
+  };
 
   useEffect(() => {
     getAllCompanyDetails();
@@ -57,8 +69,17 @@ export const CompanyDetails = () => {
   const getAllCompanyDetails = async () => {
     try {
       setOpen(true);
-      const response = await CustomerServices.getAllCompanyData();
-      setCompanyData(response.data.results);
+      if (currentPage) {
+        const response = await CustomerServices.getCompanyPaginateData(
+          currentPage
+        );
+        setCompanyData(response.data.results);
+      } else {
+        const response = await CustomerServices.getAllCompanyData();
+        setCompanyData(response.data.results);
+        const total = response.data.count;
+        setpageCount(Math.ceil(total / 25));
+      }
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -81,10 +102,63 @@ export const CompanyDetails = () => {
     }
   };
 
-  // const getResetData = () => {
-  //   setSearchQuery("");
-  //   // getUnits();
-  // };
+  const getSearchData = async (value) => {
+    try {
+      setOpen(true);
+      const filterSearch = value;
+      if (filterSearch !== "") {
+        const response = await CustomerServices.getAllSearchCompanyData(
+          filterSearch
+        );
+        setCompanyData(response.data.results);
+        const total = response.data.count;
+        setpageCount(Math.ceil(total / 25));
+      } else {
+        getAllCompanyDetails();
+        setFilterSelectedQuery("");
+      }
+      setOpen(false);
+    } catch (error) {
+      console.log("error Search leads", error);
+      setOpen(false);
+    }
+  };
+  const handlePageClick = async (event, value) => {
+    try {
+      const page = value;
+      console.log("page", page);
+      setCurrentPage(page);
+      setOpen(true);
+
+      if (filterSelectedQuery) {
+        const response = await CustomerServices.getSearchCompanyPaginateData(
+          page,
+          filterSelectedQuery
+        );
+        if (response) {
+          setCompanyData(response.data.results);
+          const total = response.data.count;
+          setpageCount(Math.ceil(total / 25));
+        } else {
+          getAllCompanyDetails();
+          setFilterSelectedQuery("");
+        }
+      } else {
+        const response = await CustomerServices.getCompanyPaginateData(page);
+        setCompanyData(response.data.results);
+      }
+
+      setOpen(false);
+    } catch (error) {
+      console.log("error", error);
+      setOpen(false);
+    }
+  };
+
+  const getResetData = () => {
+    setFilterSelectedQuery("");
+    getAllCompanyDetails();
+  };
 
   const openInPopup = (item) => {
     setRecordForEdit(item);
@@ -103,53 +177,40 @@ export const CompanyDetails = () => {
       </div>
 
       <Grid item xs={12}>
-        <p
-          style={{
-            width: "100%",
-            padding: 10,
-            marginBottom: 10,
-            borderRadius: 4,
-            backgroundColor: errMsg ? "red" : "offscreen",
-            textAlign: "center",
-            color: "white",
-            textTransform: "capitalize",
-          }}
-          ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
+      <ErrorMessage errRef={errRef} errMsg={errMsg} />
         <Paper sx={{ p: 2, m: 4, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
             <Box flexGrow={0.9}>
               <TextField
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
+                value={filterSelectedQuery}
+                onChange={(event) => handleInputChange(event)}
                 name="search"
                 size="small"
                 label="Search"
                 variant="outlined"
-                sx={{ backgroundColor: "#ffffff" }}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  marginLeft: "1em",
+                  "& .MuiSelect-iconOutlined": {
+                    display: filterSelectedQuery ? "none" : "",
+                  },
+                  "&.Mui-focused .MuiIconButton-root": {
+                    color: "primary.main",
+                  },
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      sx={{
+                        visibility: filterSelectedQuery ? "visible" : "hidden",
+                      }}
+                      onClick={getResetData}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  ),
+                }}
               />
-
-              <Button
-                // onClick={getSearchData}
-                size="medium"
-                sx={{ marginLeft: "1em" }}
-                variant="contained"
-                // startIcon={<SearchIcon />}
-              >
-                Search
-              </Button>
-              <Button
-                // onClick={getResetData}
-                sx={{ marginLeft: "1em" }}
-                size="medium"
-                variant="contained"
-              >
-                Reset
-              </Button>
             </Box>
             <Box flexGrow={2}>
               <h3
@@ -224,6 +285,17 @@ export const CompanyDetails = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TableFooter
+            sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}
+          >
+            <Pagination
+              count={pageCount}
+              onChange={handlePageClick}
+              color={"primary"}
+              variant="outlined"
+              shape="circular"
+            />
+          </TableFooter>
         </Paper>
       </Grid>
       <Popup
