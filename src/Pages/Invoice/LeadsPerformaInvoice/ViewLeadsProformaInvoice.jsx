@@ -102,8 +102,8 @@ export const ViewLeadsProformaInvoice = () => {
   const getAllSellerAccountsDetails = async () => {
     try {
       setOpen(true);
-      const response = await InvoiceServices.getAllSellerAccountData();
-      dispatch(getSellerAccountData(response.data.results));
+      const response = await InvoiceServices.getAllPaginateSellerAccountData('all');
+      dispatch(getSellerAccountData(response.data));
       setOpen(false);
     } catch (err) {
       setOpen(false);

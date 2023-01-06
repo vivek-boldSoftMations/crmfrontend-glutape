@@ -13,18 +13,16 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   TableCell,
   Button,
   TableFooter,
   Pagination,
-  IconButton,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
 import { Popup } from "./../../../Components/Popup";
 import CustomerServices from "../../../services/CustomerService";
-import ClearIcon from "@mui/icons-material/Clear";
-import { ErrorMessage } from './../../../Components/ErrorMessage/ErrorMessage';
+import { ErrorMessage } from "./../../../Components/ErrorMessage/ErrorMessage";
+import { CustomSearch } from "./../../../Components/CustomSearch";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -177,39 +175,14 @@ export const CompanyDetails = () => {
       </div>
 
       <Grid item xs={12}>
-      <ErrorMessage errRef={errRef} errMsg={errMsg} />
+        <ErrorMessage errRef={errRef} errMsg={errMsg} />
         <Paper sx={{ p: 2, m: 4, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
             <Box flexGrow={0.9}>
-              <TextField
-                value={filterSelectedQuery}
-                onChange={(event) => handleInputChange(event)}
-                name="search"
-                size="small"
-                label="Search"
-                variant="outlined"
-                sx={{
-                  backgroundColor: "#ffffff",
-                  marginLeft: "1em",
-                  "& .MuiSelect-iconOutlined": {
-                    display: filterSelectedQuery ? "none" : "",
-                  },
-                  "&.Mui-focused .MuiIconButton-root": {
-                    color: "primary.main",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      sx={{
-                        visibility: filterSelectedQuery ? "visible" : "hidden",
-                      }}
-                      onClick={getResetData}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  ),
-                }}
+              <CustomSearch
+                filterSelectedQuery={filterSelectedQuery}
+                handleInputChange={handleInputChange}
+                getResetData={getResetData}
               />
             </Box>
             <Box flexGrow={2}>

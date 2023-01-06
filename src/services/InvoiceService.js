@@ -5,6 +5,10 @@ const getAllSellerAccountData = () => {
   return CustomAxios.get(`/api/invoice/list-seller-account`);
 };
 
+const getAllPaginateSellerAccountData = (all) => {
+  return CustomAxios.get(`/api/invoice/list-seller-account/?page=${all}`);
+};
+
 const getAllSearchSellerAccountData = (search) => {
   return CustomAxios.get(`/api/invoice/list-seller-account/?search=${search}`);
 };
@@ -114,6 +118,7 @@ const getSalesnvoiceDataById = (id) => {
 
  const InvoiceServices = {
     getAllSellerAccountData,
+    getAllPaginateSellerAccountData,
     getAllSearchSellerAccountData,
     getAllSellerAccountDataPaginate,
     createSellerAccountData,

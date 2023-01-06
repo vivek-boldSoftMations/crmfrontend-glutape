@@ -419,7 +419,7 @@ export const CreateLeads = (props) => {
       case 1:
         return (
           <>
-            <div className="Auth-form-container">
+            <div className="Auth-form-container" style={{ backgroundColor:'#aaa9ac'}}>
               <Backdrop
                 sx={{
                   color: "#fff",
@@ -435,6 +435,7 @@ export const CreateLeads = (props) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+               
               }}
             >
               <h3 className="Auth-form-title">Create Company Detail</h3>
@@ -803,7 +804,7 @@ export const CreateLeads = (props) => {
               </Step>
             ))}
           </Stepper>
-          <Typography>{getStepContent(activeStep)}</Typography>
+          <>{getStepContent(activeStep)}</>
           <div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               {activeStep !== 0 && (

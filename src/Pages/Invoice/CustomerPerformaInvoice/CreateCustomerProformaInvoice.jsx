@@ -130,8 +130,8 @@ export const CreateCustomerProformaInvoice = (props) => {
   const getAllCompanyDetails = async () => {
     try {
       setOpen(true);
-      let response = await CustomerServices.getAllCompanyData();
-      setCompanyOptions(response.data.results);
+      let response = await CustomerServices.getAllPaginateCompanyData('all');
+      setCompanyOptions(response.data);
       setOpen(false);
     } catch (err) {
       setOpen(false);
@@ -165,8 +165,11 @@ export const CreateCustomerProformaInvoice = (props) => {
   const getProduct = async () => {
     try {
       setOpen(true);
-      const res = await ProductService.getAllPriceList();
-      setProduct(res.data.valid_prices);
+      const res = await ProductService.getAllPaginatePriceList(
+        "validity",
+        "valid"
+      );
+      setProduct(res.data.results);
       setOpen(false);
     } catch (err) {
       console.error("error potential", err);

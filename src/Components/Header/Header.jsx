@@ -1,7 +1,6 @@
-import { Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState } from "react";
-
+import { Link as RouterLink } from "react-router-dom";
 import {
   Button,
   AppBar,
@@ -11,15 +10,19 @@ import {
   List,
   CssBaseline,
   Divider,
-  Drawer
+  Drawer,
+  MenuItem,
+  // Menu,
 } from "@mui/material";
+import Menu from '@mui/material/Menu';
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { logoutUser } from "../../Redux/Action/Action";
 import "./Header.css";
-import { ListItems } from './ListItems';
+import { ListItems } from "./ListItems";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -35,10 +38,17 @@ export const Header = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const [isHoverLogout, setIsHoverLogout] = useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const logout = () => {
@@ -66,13 +76,17 @@ export const Header = () => {
           style={{ width: "100%", marginBottom: "2em" }}
           disablePadding
         >
-         <ListItems />
+          <ListItems />
         </List>
       </Drawer>
       {/* Header */}
-      <AppBar position="fixed" sx={{backgroundColor:"#006ba1"}} className="not-scrolled">
-        <Toolbar>
-          {auth.user && (
+      {auth.user && (
+        <AppBar
+          position="fixed"
+          sx={{ backgroundColor: "#006ba1" }}
+          className="not-scrolled"
+        >
+          <Toolbar>
             <IconButton
               edge="start"
               style={{
@@ -86,92 +100,46 @@ export const Header = () => {
             >
               <MenuIcon />
             </IconButton>
-          )}
-          <Typography variant="h6" style={{ marginRight: "auto" }}>
-            Bold-SoftMation
-          </Typography>
-          <>
-            {/* {!auth.user ? (
-              <>
-                <Button
-                  {...{
-                    color: "inherit",
-                    to: "/login",
-                    component: RouterLink,
-                  }}
-                  style={
-                    isHoverLogin === true
-                      ? {
-                          backgroundColor: isHoverLogin
-                            ? "rgb(0, 191, 255)"
-                            : "rgb(0, 191, 255)",
-                          fontFamily: "Open Sans; sans-serif",
-                          fontWeight: "bolder",
-                          size: "18px",
-                        }
-                      : null
-                  }
-                  onMouseEnter={() => setIsHoverLogin(true)}
-                  onMouseLeave={() => setIsHoverLogin(false)}
-                >
-                  Login
-                </Button>
-                <Button
-                  {...{
-                    color: "inherit",
-                    to: "/signup",
-                    component: RouterLink,
-                  }}
-                  style={
-                    isHoverSignup === true
-                      ? {
-                          backgroundColor: isHoverSignup
-                            ? "rgb(0, 191, 255)"
-                            : "rgb(0, 191, 255)",
-                          fontFamily: "Open Sans; sans-serif",
-                          fontWeight: "bolder",
-                          size: "18px",
-                        }
-                      : null
-                  }
-                  className="menuButton"
-                  onMouseEnter={() => setIsHoverSignup(true)}
-                  onMouseLeave={() => setIsHoverSignup(false)}
-                >
-                  Signup
-                </Button>
-              </>
-            ) : ( */}
-            {auth.user && 
-              <Button
-                {...{
-                  color: "inherit",
-                  to: "/",
-                  component: RouterLink,
-                }}
-                style={
-                  isHoverLogout === true
-                    ? {
-                        backgroundColor: isHoverLogout
-                          ? "rgb(0, 191, 255)"
-                          : "rgb(0, 191, 255)",
-                        fontFamily: "Open Sans; sans-serif",
-                        fontWeight: "bolder",
-                        size: "18px",
-                      }
-                    : null
-                }
-                onMouseEnter={() => setIsHoverLogout(true)}
-                onMouseLeave={() => setIsHoverLogout(false)}
-                onClick={logout}
+
+            <Typography variant="h6" style={{ marginRight: "auto" }}>
+              Bold-SoftMation
+            </Typography>
+            <>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
               >
-                Logout
-              </Button>
-}
-            {/* )} */}
-          </>
-        </Toolbar>
-      </AppBar>
+                <AccountCircleIcon />
+              </IconButton>
+     
+                <Menu
+                  id="menu-appbar"
+                  // anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={anchorEl}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem component={RouterLink} to={"/"} onClick={logout}>
+                    Logout
+                  </MenuItem>
+                </Menu>
+            </>
+          </Toolbar>
+        </AppBar>
+      )}
     </div>
   );
 };

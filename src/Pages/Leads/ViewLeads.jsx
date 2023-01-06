@@ -9,14 +9,9 @@ import {
   Grid,
   Button,
   Paper,
-  Backdrop,
-  CircularProgress,
   styled,
-  TextField,
   Box,
   TableContainer,
-  TableFooter,
-  Pagination,
   FormControl,
   InputLabel,
   Select,
@@ -32,7 +27,10 @@ import { CreateLeads } from "./CreateLeads";
 import { UpdateLeads } from "./UpdateLeads";
 import { Popup } from "./../../Components/Popup";
 import ProductService from "../../services/ProductService";
-import { ErrorMessage } from './../../Components/ErrorMessage/ErrorMessage';
+import { ErrorMessage } from "./../../Components/ErrorMessage/ErrorMessage";
+import { CustomSearch } from "./../../Components/CustomSearch";
+import { CustomPagination } from "../../Components/CustomPagination";
+import { CustomLoader } from './../../Components/CustomLoader';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -231,19 +229,10 @@ export const Viewleads = () => {
   console.log("leads", leads.length);
   return (
     <>
-      <div className="Auth-form-container">
-        <div>
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={open}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        </div>
-      </div>
+  <CustomLoader open={open} />
 
       <Grid item xs={12}>
-      <ErrorMessage errRef={errRef} errMsg={errMsg} />
+        <ErrorMessage errRef={errRef} errMsg={errMsg} />
         <Paper sx={{ p: 2, m: 3, display: "flex", flexDirection: "column" }}>
           <Box display="flex">
             <Box flexGrow={0.6}>
@@ -453,58 +442,11 @@ export const Viewleads = () => {
                 </FormControl>
               )}
               {filterQuery === "search" && (
-                <>
-                  <TextField
-                    value={filterSelectedQuery}
-                    onChange={(event) => handleInputChange(event)}
-                    name="search"
-                    size="small"
-                    label="Search"
-                    variant="outlined"
-                    sx={{
-                      backgroundColor: "#ffffff",
-                      marginLeft: "1em",
-                      "& .MuiSelect-iconOutlined": {
-                        display: filterSelectedQuery ? "none" : "",
-                      },
-                      "&.Mui-focused .MuiIconButton-root": {
-                        color: "primary.main",
-                      },
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          sx={{
-                            visibility: filterSelectedQuery
-                              ? "visible"
-                              : "hidden",
-                          }}
-                          onClick={getResetData}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      ),
-                    }}
-                  />
-
-                  {/* <Button
-                    onClick={getSearchData}
-                    size="medium"
-                    sx={{ marginLeft: "1em" }}
-                    variant="contained"
-                    startIcon={<SearchIcon />}
-                  >
-                    Search
-                  </Button>
-                  <Button
-                    onClick={getResetData}
-                    sx={{ marginLeft: "1em" }}
-                    size="medium"
-                    variant="contained"
-                  >
-                    Reset
-                  </Button> */}
-                </>
+                <CustomSearch
+                  filterSelectedQuery={filterSelectedQuery}
+                  handleInputChange={handleInputChange}
+                  getResetData={getResetData}
+                />
               )}
             </Box>
             <Box flexGrow={1} align="center">
@@ -612,17 +554,10 @@ export const Viewleads = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <TableFooter
-            sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}
-          >
-            <Pagination
-              count={pageCount}
-              onChange={handlePageClick}
-              color={"primary"}
-              variant="outlined"
-              shape="circular"
-            />
-          </TableFooter>
+          <CustomPagination
+            pageCount={pageCount}
+            handlePageClick={handlePageClick}
+          />
         </Paper>
       </Grid>
       <Popup
