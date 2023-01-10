@@ -1,23 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 // import { images } from "../../Helpers/CarouselData";
 // import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 // import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // import { Carousel } from 'react-bootstrap';
-import Slider1 from "../../Images/gt_slide01.jpg";
-import Slider2 from "../../Images/gt_slide02.jpg";
-import Slider3 from "../../Images/gt_slide03.jpg";
-import Slider4 from "../../Images/gt_slide04.jpg";
-import Slider5 from "../../Images/gt_slide05.jpg";
-import Slider6 from "../../Images/gt_slide06.jpg";
-import Slider7 from "../../Images/gt_slide07.jpg";
-import Slider8 from "../../Images/gt_slide08.jpg";
-import Slider9 from "../../Images/gt_slide09.jpg";
+// import Slider1 from "../../Images/gt_slide01.jpg";
+// import Slider2 from "../../Images/gt_slide02.jpg";
+// import Slider3 from "../../Images/gt_slide03.jpg";
+// import Slider4 from "../../Images/gt_slide04.jpg";
+// import Slider5 from "../../Images/gt_slide05.jpg";
+// import Slider6 from "../../Images/gt_slide06.jpg";
+// import Slider7 from "../../Images/gt_slide07.jpg";
+// import Slider8 from "../../Images/gt_slide08.jpg";
+// import Slider9 from "../../Images/gt_slide09.jpg";
+import { getProfileUser } from './../../Redux/Action/Action';
+import LeadServices from "../../services/LeadService";
+import { useDispatch } from 'react-redux';
 
 export function Dashboard() {
+  const dispatch = useDispatch();
   const [currImg, setCurrImg] = useState(0);
   const [index, setIndex] = useState(0);
+  const [userData, setUserData] = useState([]);
+  useEffect(() => {
+    getUsers();
+  }, []);
 
+  const getUsers = async () => {
+    try {
+      const res = await LeadServices.getProfile();
+      dispatch(getProfileUser(res.data));
+    } catch (err) {
+      console.error(err);
+    }
+  }
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };

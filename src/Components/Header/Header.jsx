@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   MenuItem,
   // Menu,
 } from "@mui/material";
-import Menu from '@mui/material/Menu';
+import Menu from "@mui/material/Menu";
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -34,11 +34,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export const Header = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const [anchorEl, setAnchorEl] = useState(null);
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -109,33 +110,39 @@ export const Header = () => {
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
-                aria-haspopup="true"
+                aria-haspopup="false"
                 onClick={handleMenu}
                 color="inherit"
               >
                 <AccountCircleIcon />
               </IconButton>
-     
-                <Menu
-                  id="menu-appbar"
-                  // anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={anchorEl}
-                  onClose={handleClose}
+
+              <Menu
+                id="menu-appbar"
+                // anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={anchorEl}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  component={RouterLink}
+                  to={"/user/profile"}
+                  onClick={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem component={RouterLink} to={"/"} onClick={logout}>
-                    Logout
-                  </MenuItem>
-                </Menu>
+                  Profile
+                </MenuItem>
+                <MenuItem component={RouterLink} to={"/"} onClick={logout}>
+                  Logout
+                </MenuItem>
+              </Menu>
             </>
           </Toolbar>
         </AppBar>
