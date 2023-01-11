@@ -28,13 +28,13 @@ export const LeadConfirmationPayment = (props) => {
     const { name, value } = event.target;
     setInputValue({ ...inputValue, [name]: value });
   };
-
+  console.log('invoiceData :>> ', invoiceData);
   const SendForApprovalStatus = async (e) => {
     try {
       e.preventDefault();
       const req = {
         type: invoiceData.type,
-        raised_by: users.email,
+        raised_by: invoiceData.raised_by,
         seller_account: invoiceData.seller_account,
         lead: invoiceData.lead,
         address: invoiceData.address,

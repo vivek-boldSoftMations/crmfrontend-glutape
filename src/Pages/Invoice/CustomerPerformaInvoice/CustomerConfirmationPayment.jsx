@@ -28,13 +28,12 @@ export const CustomerConfirmationPayment = (props) => {
     const { name, value } = event.target;
     setInputValue({ ...inputValue, [name]: value });
   };
-
   const SendForApprovalStatus = async (e) => {
     try {
       e.preventDefault();
       const req = {
         type: invoiceData.type,
-        raised_by: users.email,
+        raised_by: invoiceData.raised_by,
         seller_account: invoiceData.seller_account,
         company: invoiceData.company,
         address: invoiceData.address,

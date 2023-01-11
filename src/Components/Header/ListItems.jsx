@@ -17,7 +17,7 @@ export const ListItems = () => {
   const userData = data.profile;
   return (
     <div>
-      {userData.is_staff === true ? (
+      {userData.is_staff && userData.is_staff === true ? (
         <>
           {/* Products */}
           <ListItem
