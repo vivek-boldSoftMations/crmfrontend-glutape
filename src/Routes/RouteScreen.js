@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
 
 import { AssignTo } from "../Pages/Leads/AssignTo";
 import { ChangePassword } from "./../Pages/Auth/ChangePassword";
@@ -33,14 +33,30 @@ import { ProductOrderBookDetails } from "./../Pages/OrderBooks/ProductOrderBookD
 import { SalesInvoiceView } from "./../Pages/Invoice/SalesInvoice/SalesInvoiceView";
 import { Auths } from "../Pages/Auth/Auths";
 import { Profile } from "./../Pages/Profile/Profile";
+import LeadServices from "./../services/LeadService";
+import { getProfileUser } from "./../Redux/Action/Action";
 
 export const RouteScreen = () => {
+  const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.auth);
   const token = tokenData.user;
-  console.log("tokenData", tokenData);
-  const users = tokenData.profile ? tokenData.profile.groups.toString() : [];
-  console.log("users", users);
-  // const token = localStorage.getItem('user')
+
+  useEffect(() => {
+    if (token) {
+      getUsers();
+    }
+  }, [token]);
+
+  const getUsers = async () => {
+    try {
+      const res = await LeadServices.getProfile();
+      dispatch(getProfileUser(res.data));
+      // setUserData(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="appcontainer">
       <Routes>
@@ -54,82 +70,67 @@ export const RouteScreen = () => {
             />
           </>
         )}
+
         {token && (
           <>
             {/* <Route path="/" exact element={<Dashboard />} /> */}
             <Route path="/user/dashoard" element={<Dashboard />} />
             <Route path="/user/profile" exact element={<Profile />} />
             {/* Leads Routes */}
-            {users !== "Accounts" && (
-              <>
-                <Route path="/leads/view-lead" element={<Viewleads />} />
-                <Route
-                  path="/leads/view-today-followup"
-                  element={<TodayFollowup />}
-                />
-                <Route
-                  path="/leads/view-pending-followup"
-                  element={<PendingFollowup />}
-                />{" "}
-                <Route
-                  path="/leads/view-upcoming-followup"
-                  element={<UpcomingFollowup />}
-                />
-                <Route path="/leads/view-assignedto" element={<AssignTo />} />
-              </>
-            )}
+            <Route path="/leads/view-lead" element={<Viewleads />} />
+            <Route
+              path="/leads/view-today-followup"
+              element={<TodayFollowup />}
+            />
+            <Route
+              path="/leads/view-pending-followup"
+              element={<PendingFollowup />}
+            />{" "}
+            <Route
+              path="/leads/view-upcoming-followup"
+              element={<UpcomingFollowup />}
+            />
+            <Route path="/leads/view-assignedto" element={<AssignTo />} />
             {/* Products Routes */}
-            {users !== "Sales" && (
-              <>
-                <Route path="/products/view-colors" element={<ViewColors />} />
-                <Route path="/products/view-brand" element={<ViewBrand />} />
-                <Route
-                  path="/products/view-basic-unit"
-                  element={<ViewBasicUnit />}
-                />
-                <Route path="/products/view-unit" element={<ViewUnit />} />
-                <Route
-                  path="/products/view-packing-unit"
-                  element={<ViewPackingUnit />}
-                />
-                <Route
-                  path="/products/view-description"
-                  element={<ViewDescription />}
-                />
-                <Route
-                  path="/products/view-product-code"
-                  element={<ViewProductCode />}
-                />
-                <Route
-                  path="/products/view-consumable"
-                  element={<ViewConsumable />}
-                />
-                <Route
-                  path="/products/view-finish-goods"
-                  element={<ViewFinishGoods />}
-                />
-                <Route
-                  path="/products/view-raw-materials"
-                  element={<ViewRawMaterials />}
-                />
-                <Route
-                  path="/products/view-price-list"
-                  element={<PriceList />}
-                />
-              </>
-            )}
+            <Route path="/products/view-colors" element={<ViewColors />} />
+            <Route path="/products/view-brand" element={<ViewBrand />} />
+            <Route
+              path="/products/view-basic-unit"
+              element={<ViewBasicUnit />}
+            />
+            <Route path="/products/view-unit" element={<ViewUnit />} />
+            <Route
+              path="/products/view-packing-unit"
+              element={<ViewPackingUnit />}
+            />
+            <Route
+              path="/products/view-description"
+              element={<ViewDescription />}
+            />
+            <Route
+              path="/products/view-product-code"
+              element={<ViewProductCode />}
+            />
+            <Route
+              path="/products/view-consumable"
+              element={<ViewConsumable />}
+            />
+            <Route
+              path="/products/view-finish-goods"
+              element={<ViewFinishGoods />}
+            />
+            <Route
+              path="/products/view-raw-materials"
+              element={<ViewRawMaterials />}
+            />
+            <Route path="/products/view-price-list" element={<PriceList />} />
             {/* Customers Route */}
             <Route
               path="/customers/company-details"
               element={<CompanyDetails />}
             />
             {/* Invoice - Seller Account Route */}
-            {users !== "Sales" && (
-              <Route
-                path="/invoice/seller-account"
-                element={<SellerAccount />}
-              />
-            )}
+            <Route path="/invoice/seller-account" element={<SellerAccount />} />
             <Route
               path="/invoice/performa-invoice"
               element={<ViewCustomerProformaInvoice />}

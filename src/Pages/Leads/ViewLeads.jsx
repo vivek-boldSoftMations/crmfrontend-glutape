@@ -137,6 +137,8 @@ export const Viewleads = () => {
       if (currentPage) {
         const response = await LeadServices.getAllPaginateLeads(currentPage);
         setLeads(response.data.results);
+        const total = response.data.count;
+        setpageCount(Math.ceil(total / 25));
       } else {
         let response = await LeadServices.getAllLeads();
         if (response) {
@@ -232,6 +234,8 @@ export const Viewleads = () => {
       } else {
         const response = await LeadServices.getAllPaginateLeads(page);
         setLeads(response.data.results);
+        const total = response.data.count;
+        setpageCount(Math.ceil(total / 25));
       }
 
       setOpen(false);
