@@ -18,7 +18,7 @@ import logo from " ../../../public/images.ico";
 import { Popup } from "./../../../Components/Popup";
 import { useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
-import { CustomerConfirmationPayment } from './../CustomerPerformaInvoice/CustomerConfirmationPayment';
+import { LeadConfirmationPayment } from "./LeadConfirmationPayment";
 const typographyStyling = {
   fontWeight: "bold",
 };
@@ -429,7 +429,7 @@ export const LeadsPerformaInvoice = (props) => {
           openPopup={openPopup2}
           setOpenPopup={setOpenPopup2}
         >
-          <CustomerConfirmationPayment
+          <LeadConfirmationPayment
             users={users}
             invoiceData={invoiceData}
             setOpenPopup={setOpenPopup2}
